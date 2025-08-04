@@ -1,0 +1,23 @@
+# Compilados
+*.class
+
+# IntelliJ IDEA
+.idea/
+*.iml
+out/
+
+# Logs
+*.log
+
+# Maven target directory (caso use Maven)
+target/
+
+# OS / IDE system files
+.DS_Store
+Thumbs.db
+
+# Arquivos txt gerados para guardas dados
+clientes_cadastrados.txt
+cryptos_cadastradas.txt
+transacoes_cryptos.txt
+transacoes_entre_contas.txt
