@@ -12,11 +12,11 @@ public class TestConnection {
             String password = "140206";
 
             Connection conn = DriverManager.getConnection(url, user, password);
-            System.out.println("✅ Conexão estabelecida com sucesso!");
+            System.out.println("Conexão estabelecida com sucesso!");
 
             conn.close();
         } catch (Exception e) {
-            System.out.println("❌ Falha ao conectar ao banco de dados. Verifique as credenciais ou a URL.");
+            System.out.println("Falha ao conectar ao banco de dados. Verifique as credenciais ou a URL.");
             e.printStackTrace();
         }
     }
