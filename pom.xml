@@ -17,12 +17,11 @@
     <dependencies>
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
-            <artifactId>ojdbc8</artifactId>
+            <artifactId>ojdbc11</artifactId>
             <version>23.2.0.0</version>
         </dependency>
     </dependencies>
 
-    <!-- Make sure Maven Central is used even if settings.xml has mirrors -->
     <repositories>
         <repository>
             <id>central</id>
