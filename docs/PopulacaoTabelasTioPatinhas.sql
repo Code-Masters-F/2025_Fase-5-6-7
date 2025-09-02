@@ -7,51 +7,51 @@
 -- INSERT - POPULAÇÃO DAS TABELAS
 -- ========================================
 
--- Inserção de Clientes (Oracle)
-INSERT INTO CLIENTE (id_cliente, nome, email, cpf, data_nascimento) VALUES (1, 'João Silva Santos', 'joao.silva@email.com', '12345678901', TO_DATE('1985-03-15', 'YYYY-MM-DD'));
-INSERT INTO CLIENTE (id_cliente, nome, email, cpf, data_nascimento) VALUES (2, 'Maria Oliveira Costa', 'maria.oliveira@email.com', '23456789012', TO_DATE('1990-07-22', 'YYYY-MM-DD'));
-INSERT INTO CLIENTE (id_cliente, nome, email, cpf, data_nascimento) VALUES (3, 'Pedro Ferreira Lima', 'pedro.ferreira@email.com', '34567890123', TO_DATE('1988-11-08', 'YYYY-MM-DD'));
-INSERT INTO CLIENTE (id_cliente, nome, email, cpf, data_nascimento) VALUES (4, 'Ana Carolina Souza', 'ana.souza@email.com', '45678901234', TO_DATE('1992-02-14', 'YYYY-MM-DD'));
-INSERT INTO CLIENTE (id_cliente, nome, email, cpf, data_nascimento) VALUES (5, 'Carlos Eduardo Pereira', 'carlos.pereira@email.com', '56789012345', TO_DATE('1987-09-30', 'YYYY-MM-DD'));
-INSERT INTO CLIENTE (id_cliente, nome, email, cpf, data_nascimento) VALUES (6, 'Fernanda Almeida', 'fernanda.almeida@email.com', '67890123456', TO_DATE('1991-12-05', 'YYYY-MM-DD'));
-INSERT INTO CLIENTE (id_cliente, nome, email, cpf, data_nascimento) VALUES (7, 'Ricardo Barbosa', 'ricardo.barbosa@email.com', '78901234567', TO_DATE('1984-06-18', 'YYYY-MM-DD'));
-INSERT INTO CLIENTE (id_cliente, nome, email, cpf, data_nascimento) VALUES (8, 'Juliana Rodrigues', 'juliana.rodrigues@email.com', '89012345678', TO_DATE('1993-04-25', 'YYYY-MM-DD'));
+-- Inserção de Clientes 
+INSERT INTO CLIENTE (nome, email, cpf, data_nascimento) VALUES ('João Silva Santos', 'joao.silva@email.com', '12345678901', TO_DATE('1985-03-15', 'YYYY-MM-DD'));
+INSERT INTO CLIENTE (nome, email, cpf, data_nascimento) VALUES ('Maria Oliveira Costa', 'maria.oliveira@email.com', '23456789012', TO_DATE('1990-07-22', 'YYYY-MM-DD'));
+INSERT INTO CLIENTE (nome, email, cpf, data_nascimento) VALUES ('Pedro Ferreira Lima', 'pedro.ferreira@email.com', '34567890123', TO_DATE('1988-11-08', 'YYYY-MM-DD'));
+INSERT INTO CLIENTE (nome, email, cpf, data_nascimento) VALUES ('Ana Carolina Souza', 'ana.souza@email.com', '45678901234', TO_DATE('1992-02-14', 'YYYY-MM-DD'));
+INSERT INTO CLIENTE (nome, email, cpf, data_nascimento) VALUES ('Carlos Eduardo Pereira', 'carlos.pereira@email.com', '56789012345', TO_DATE('1987-09-30', 'YYYY-MM-DD'));
+INSERT INTO CLIENTE (nome, email, cpf, data_nascimento) VALUES ('Fernanda Almeida', 'fernanda.almeida@email.com', '67890123456', TO_DATE('1991-12-05', 'YYYY-MM-DD'));
+INSERT INTO CLIENTE (nome, email, cpf, data_nascimento) VALUES ('Ricardo Barbosa', 'ricardo.barbosa@email.com', '78901234567', TO_DATE('1984-06-18', 'YYYY-MM-DD'));
+INSERT INTO CLIENTE (nome, email, cpf, data_nascimento) VALUES ('Juliana Rodrigues', 'juliana.rodrigues@email.com', '89012345678', TO_DATE('1993-04-25', 'YYYY-MM-DD'));
 
--- Inserção de Criptomoedas (Oracle)
-INSERT INTO CRYPTO (id_crypto, nome, sigla, data_lancamento) VALUES (1, 'Bitcoin', 'BTC', TO_DATE('2009-01-03', 'YYYY-MM-DD'));
-INSERT INTO CRYPTO (id_crypto, nome, sigla, data_lancamento) VALUES (2, 'Ethereum', 'ETH', TO_DATE('2015-07-30', 'YYYY-MM-DD'));
-INSERT INTO CRYPTO (id_crypto, nome, sigla, data_lancamento) VALUES (3, 'Cardano', 'ADA', TO_DATE('2017-09-29', 'YYYY-MM-DD'));
-INSERT INTO CRYPTO (id_crypto, nome, sigla, data_lancamento) VALUES (4, 'Polygon', 'MATIC', TO_DATE('2017-10-01', 'YYYY-MM-DD'));
-INSERT INTO CRYPTO (id_crypto, nome, sigla, data_lancamento) VALUES (5, 'Chainlink', 'LINK', TO_DATE('2017-09-20', 'YYYY-MM-DD'));
-INSERT INTO CRYPTO (id_crypto, nome, sigla, data_lancamento) VALUES (6, 'Litecoin', 'LTC', TO_DATE('2011-10-07', 'YYYY-MM-DD'));
-INSERT INTO CRYPTO (id_crypto, nome, sigla, data_lancamento) VALUES (7, 'Polkadot', 'DOT', TO_DATE('2020-08-19', 'YYYY-MM-DD'));
-INSERT INTO CRYPTO (id_crypto, nome, sigla, data_lancamento) VALUES (8, 'Solana', 'SOL', TO_DATE('2020-03-16', 'YYYY-MM-DD'));
-INSERT INTO CRYPTO (id_crypto, nome, sigla, data_lancamento) VALUES (9, 'Avalanche', 'AVAX', TO_DATE('2020-09-21', 'YYYY-MM-DD'));
-INSERT INTO CRYPTO (id_crypto, nome, sigla, data_lancamento) VALUES (10, 'Uniswap', 'UNI', TO_DATE('2020-09-16', 'YYYY-MM-DD'));
+-- Inserção de Criptomoedas 
+INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Bitcoin', 'BTC', TO_DATE('2009-01-03', 'YYYY-MM-DD'));
+INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Ethereum', 'ETH', TO_DATE('2015-07-30', 'YYYY-MM-DD'));
+INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Cardano', 'ADA', TO_DATE('2017-09-29', 'YYYY-MM-DD'));
+INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Polygon', 'MATIC', TO_DATE('2017-10-01', 'YYYY-MM-DD'));
+INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Chainlink', 'LINK', TO_DATE('2017-09-20', 'YYYY-MM-DD'));
+INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Litecoin', 'LTC', TO_DATE('2011-10-07', 'YYYY-MM-DD'));
+INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Polkadot', 'DOT', TO_DATE('2020-08-19', 'YYYY-MM-DD'));
+INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Solana', 'SOL', TO_DATE('2020-03-16', 'YYYY-MM-DD'));
+INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Avalanche', 'AVAX', TO_DATE('2020-09-21', 'YYYY-MM-DD'));
+INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Uniswap', 'UNI', TO_DATE('2020-09-16', 'YYYY-MM-DD'));
 
--- Inserção de Contas (Oracle)
-INSERT INTO CONTA (id_conta, CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (1, 1, '0001234567', '1001', TO_DATE('2023-01-15', 'YYYY-MM-DD'));
-INSERT INTO CONTA (id_conta, CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (2, 2, '0002345678', '1001', TO_DATE('2023-02-20', 'YYYY-MM-DD'));
-INSERT INTO CONTA (id_conta, CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (3, 3, '0003456789', '1002', TO_DATE('2023-03-10', 'YYYY-MM-DD'));
-INSERT INTO CONTA (id_conta, CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (4, 4, '0004567890', '1002', TO_DATE('2023-04-05', 'YYYY-MM-DD'));
-INSERT INTO CONTA (id_conta, CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (5, 5, '0005678901', '1003', TO_DATE('2023-05-12', 'YYYY-MM-DD'));
-INSERT INTO CONTA (id_conta, CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (6, 6, '0006789012', '1003', TO_DATE('2023-06-18', 'YYYY-MM-DD'));
-INSERT INTO CONTA (id_conta, CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (7, 7, '0007890123', '1004', TO_DATE('2023-07-22', 'YYYY-MM-DD'));
-INSERT INTO CONTA (id_conta, CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (8, 8, '0008901234', '1004', TO_DATE('2023-08-30', 'YYYY-MM-DD'));
-INSERT INTO CONTA (id_conta, CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (9, 1, '0009012345', '1001', TO_DATE('2023-09-15', 'YYYY-MM-DD')); -- João tem segunda conta
-INSERT INTO CONTA (id_conta, CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (10, 2, '0010123456', '1002', TO_DATE('2023-10-20', 'YYYY-MM-DD')); -- Maria tem segunda conta
+-- Inserção de Contas 
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (1, '0001234567', '1001', TO_DATE('2023-01-15', 'YYYY-MM-DD'));
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (2, '0002345678', '1001', TO_DATE('2023-02-20', 'YYYY-MM-DD'));
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (3, '0003456789', '1002', TO_DATE('2023-03-10', 'YYYY-MM-DD'));
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (4, '0004567890', '1002', TO_DATE('2023-04-05', 'YYYY-MM-DD'));
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (5, '0005678901', '1003', TO_DATE('2023-05-12', 'YYYY-MM-DD'));
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (6, '0006789012', '1003', TO_DATE('2023-06-18', 'YYYY-MM-DD'));
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (7, '0007890123', '1004', TO_DATE('2023-07-22', 'YYYY-MM-DD'));
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (8, '0008901234', '1004', TO_DATE('2023-08-30', 'YYYY-MM-DD'));
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (1, '0009012345', '1001', TO_DATE('2023-09-15', 'YYYY-MM-DD')); -- João tem segunda conta
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (2, '0010123456', '1002', TO_DATE('2023-10-20', 'YYYY-MM-DD')); -- Maria tem segunda conta
 
--- Inserção de Carteiras
-INSERT INTO CARTEIRA (id_carteira, CONTA_id_conta) VALUES (1, 1);
-INSERT INTO CARTEIRA (id_carteira, CONTA_id_conta) VALUES (2, 2);
-INSERT INTO CARTEIRA (id_carteira, CONTA_id_conta) VALUES (3, 3);
-INSERT INTO CARTEIRA (id_carteira, CONTA_id_conta) VALUES (4, 4);
-INSERT INTO CARTEIRA (id_carteira, CONTA_id_conta) VALUES (5, 5);
-INSERT INTO CARTEIRA (id_carteira, CONTA_id_conta) VALUES (6, 6);
-INSERT INTO CARTEIRA (id_carteira, CONTA_id_conta) VALUES (7, 7);
-INSERT INTO CARTEIRA (id_carteira, CONTA_id_conta) VALUES (8, 8);
-INSERT INTO CARTEIRA (id_carteira, CONTA_id_conta) VALUES (9, 9);
-INSERT INTO CARTEIRA (id_carteira, CONTA_id_conta) VALUES (10, 10);
+-- Inserção de Carteiras 
+INSERT INTO CARTEIRA (CONTA_id_conta) VALUES (1);
+INSERT INTO CARTEIRA (CONTA_id_conta) VALUES (2);
+INSERT INTO CARTEIRA (CONTA_id_conta) VALUES (3);
+INSERT INTO CARTEIRA (CONTA_id_conta) VALUES (4);
+INSERT INTO CARTEIRA (CONTA_id_conta) VALUES (5);
+INSERT INTO CARTEIRA (CONTA_id_conta) VALUES (6);
+INSERT INTO CARTEIRA (CONTA_id_conta) VALUES (7);
+INSERT INTO CARTEIRA (CONTA_id_conta) VALUES (8);
+INSERT INTO CARTEIRA (CONTA_id_conta) VALUES (9);
+INSERT INTO CARTEIRA (CONTA_id_conta) VALUES (10);
 
 -- Inserção de Posses (Criptomoedas nas Carteiras)
 -- Carteira 1 (João)
@@ -89,37 +89,37 @@ INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto) VA
 INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto) VALUES (8, 6, 12.00000000); -- 12 LTC
 INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto) VALUES (8, 7, 25.00000000); -- 25 DOT
 
--- Inserção de Transações Fiat (Oracle - formato de data)
-INSERT INTO TRANSACAO_FIAT (id_transacao_fiat, CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (1, 1, 2, 1500.00, TO_TIMESTAMP('2024-01-15 10:30:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO TRANSACAO_FIAT (id_transacao_fiat, CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (2, 3, 4, 2500.00, TO_TIMESTAMP('2024-01-16 14:22:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO TRANSACAO_FIAT (id_transacao_fiat, CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (3, 5, 6, 800.00, TO_TIMESTAMP('2024-01-17 09:15:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO TRANSACAO_FIAT (id_transacao_fiat, CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (4, 7, 8, 1200.00, TO_TIMESTAMP('2024-01-18 16:45:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO TRANSACAO_FIAT (id_transacao_fiat, CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (5, 2, 1, 500.00, TO_TIMESTAMP('2024-01-19 11:20:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO TRANSACAO_FIAT (id_transacao_fiat, CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (6, 4, 3, 1800.00, TO_TIMESTAMP('2024-01-20 13:30:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO TRANSACAO_FIAT (id_transacao_fiat, CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (7, 6, 5, 900.00, TO_TIMESTAMP('2024-01-21 15:10:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO TRANSACAO_FIAT (id_transacao_fiat, CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (8, 8, 7, 1100.00, TO_TIMESTAMP('2024-01-22 08:25:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO TRANSACAO_FIAT (id_transacao_fiat, CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (9, 1, 3, 2200.00, TO_TIMESTAMP('2024-01-23 12:40:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO TRANSACAO_FIAT (id_transacao_fiat, CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (10, 9, 10, 3000.00, TO_TIMESTAMP('2024-01-24 17:55:00', 'YYYY-MM-DD HH24:MI:SS'));
+-- Inserção de Transações Fiat 
+INSERT INTO TRANSACAO_FIAT (CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (1, 2, 1500.00, TO_TIMESTAMP('2024-01-15 10:30:00', 'YYYY-MM-DD HH24:MI:SS'));
+INSERT INTO TRANSACAO_FIAT (CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (3, 4, 2500.00, TO_TIMESTAMP('2024-01-16 14:22:00', 'YYYY-MM-DD HH24:MI:SS'));
+INSERT INTO TRANSACAO_FIAT (CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (5, 6, 800.00, TO_TIMESTAMP('2024-01-17 09:15:00', 'YYYY-MM-DD HH24:MI:SS'));
+INSERT INTO TRANSACAO_FIAT (CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (7, 8, 1200.00, TO_TIMESTAMP('2024-01-18 16:45:00', 'YYYY-MM-DD HH24:MI:SS'));
+INSERT INTO TRANSACAO_FIAT (CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (2, 1, 500.00, TO_TIMESTAMP('2024-01-19 11:20:00', 'YYYY-MM-DD HH24:MI:SS'));
+INSERT INTO TRANSACAO_FIAT (CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (4, 3, 1800.00, TO_TIMESTAMP('2024-01-20 13:30:00', 'YYYY-MM-DD HH24:MI:SS'));
+INSERT INTO TRANSACAO_FIAT (CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (6, 5, 900.00, TO_TIMESTAMP('2024-01-21 15:10:00', 'YYYY-MM-DD HH24:MI:SS'));
+INSERT INTO TRANSACAO_FIAT (CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (8, 7, 1100.00, TO_TIMESTAMP('2024-01-22 08:25:00', 'YYYY-MM-DD HH24:MI:SS'));
+INSERT INTO TRANSACAO_FIAT (CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (1, 3, 2200.00, TO_TIMESTAMP('2024-01-23 12:40:00', 'YYYY-MM-DD HH24:MI:SS'));
+INSERT INTO TRANSACAO_FIAT (CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (9, 10, 3000.00, TO_TIMESTAMP('2024-01-24 17:55:00', 'YYYY-MM-DD HH24:MI:SS'));
 
--- Inserção de Transações Crypto (Oracle - formato de data)
+-- Inserção de Transações Crypto 
 -- Compras
-INSERT INTO TRANSACAO_CRYPTO (id_transacao_crypto, CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status) VALUES (1, 1, 1, 'COMPRA', 0.25000000000, 45000.00000000, TO_TIMESTAMP('2024-01-15 09:30:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
-INSERT INTO TRANSACAO_CRYPTO (id_transacao_crypto, CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status) VALUES (2, 2, 2, 'COMPRA', 1.50000000000, 2800.00000000, TO_TIMESTAMP('2024-01-15 10:45:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
-INSERT INTO TRANSACAO_CRYPTO (id_transacao_crypto, CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status) VALUES (3, 3, 3, 'COMPRA', 500.000000000000, 0.45000000, TO_TIMESTAMP('2024-01-16 11:20:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
-INSERT INTO TRANSACAO_CRYPTO (id_transacao_crypto, CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status) VALUES (4, 4, 8, 'COMPRA', 5.000000000000, 95.50000000, TO_TIMESTAMP('2024-01-16 14:30:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
-INSERT INTO TRANSACAO_CRYPTO (id_transacao_crypto, CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status) VALUES (5, 5, 1, 'COMPRA', 0.50000000000, 44500.00000000, TO_TIMESTAMP('2024-01-17 08:15:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
+INSERT INTO TRANSACAO_CRYPTO (CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status) VALUES (1, 1, 'COMPRA', 0.25000000000, 45000.00000000, TO_TIMESTAMP('2024-01-15 09:30:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
+INSERT INTO TRANSACAO_CRYPTO (CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status) VALUES (2, 2, 'COMPRA', 1.50000000000, 2800.00000000, TO_TIMESTAMP('2024-01-15 10:45:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
+INSERT INTO TRANSACAO_CRYPTO (CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status) VALUES (3, 3, 'COMPRA', 500.000000000000, 0.45000000, TO_TIMESTAMP('2024-01-16 11:20:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
+INSERT INTO TRANSACAO_CRYPTO (CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status) VALUES (4, 8, 'COMPRA', 5.000000000000, 95.50000000, TO_TIMESTAMP('2024-01-16 14:30:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
+INSERT INTO TRANSACAO_CRYPTO (CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status) VALUES (5, 1, 'COMPRA', 0.50000000000, 44500.00000000, TO_TIMESTAMP('2024-01-17 08:15:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
 
 -- Vendas
-INSERT INTO TRANSACAO_CRYPTO (id_transacao_crypto, CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status) VALUES (6, 1, 1, 'VENDA', 0.10000000000, 46000.00000000, TO_TIMESTAMP('2024-01-18 16:20:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
-INSERT INTO TRANSACAO_CRYPTO (id_transacao_crypto, CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status) VALUES (7, 2, 2, 'VENDA', 0.50000000000, 2850.00000000, TO_TIMESTAMP('2024-01-19 13:45:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
-INSERT INTO TRANSACAO_CRYPTO (id_transacao_crypto, CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status) VALUES (8, 3, 3, 'VENDA', 200.000000000000, 0.47000000, TO_TIMESTAMP('2024-01-20 10:30:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
+INSERT INTO TRANSACAO_CRYPTO (CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status) VALUES (1, 1, 'VENDA', 0.10000000000, 46000.00000000, TO_TIMESTAMP('2024-01-18 16:20:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
+INSERT INTO TRANSACAO_CRYPTO (CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status) VALUES (2, 2, 'VENDA', 0.50000000000, 2850.00000000, TO_TIMESTAMP('2024-01-19 13:45:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
+INSERT INTO TRANSACAO_CRYPTO (CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status) VALUES (3, 3, 'VENDA', 200.000000000000, 0.47000000, TO_TIMESTAMP('2024-01-20 10:30:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
 
 -- Transações pendentes e outras
-INSERT INTO TRANSACAO_CRYPTO (id_transacao_crypto, CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status) VALUES (9, 6, 4, 'COMPRA', 300.000000000000, 0.85000000, TO_TIMESTAMP('2024-01-21 15:10:00', 'YYYY-MM-DD HH24:MI:SS'), 'PENDENTE');
-INSERT INTO TRANSACAO_CRYPTO (id_transacao_crypto, CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status) VALUES (10, 7, 5, 'COMPRA', 20.000000000000, 12.50000000, TO_TIMESTAMP('2024-01-22 12:25:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
-INSERT INTO TRANSACAO_CRYPTO (id_transacao_crypto, CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status) VALUES (11, 8, 6, 'COMPRA', 8.000000000000, 85.00000000, TO_TIMESTAMP('2024-01-23 09:40:00', 'YYYY-MM-DD HH24:MI:SS'), 'FALHOU');
-INSERT INTO TRANSACAO_CRYPTO (id_transacao_crypto, CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status) VALUES (12, 9, 7, 'COMPRA', 12.000000000000, 6.25000000, TO_TIMESTAMP('2024-01-24 14:55:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
-INSERT INTO TRANSACAO_CRYPTO (id_transacao_crypto, CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status) VALUES (13, 10, 10, 'COMPRA', 25.000000000000, 8.40000000, TO_TIMESTAMP('2024-01-25 11:30:00', 'YYYY-MM-DD HH24:MI:SS'), 'CANCELADA');
+INSERT INTO TRANSACAO_CRYPTO (CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status) VALUES (6, 4, 'COMPRA', 300.000000000000, 0.85000000, TO_TIMESTAMP('2024-01-21 15:10:00', 'YYYY-MM-DD HH24:MI:SS'), 'PENDENTE');
+INSERT INTO TRANSACAO_CRYPTO (CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status) VALUES (7, 5, 'COMPRA', 20.000000000000, 12.50000000, TO_TIMESTAMP('2024-01-22 12:25:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
+INSERT INTO TRANSACAO_CRYPTO (CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status) VALUES (8, 6, 'COMPRA', 8.000000000000, 85.00000000, TO_TIMESTAMP('2024-01-23 09:40:00', 'YYYY-MM-DD HH24:MI:SS'), 'FALHOU');
+INSERT INTO TRANSACAO_CRYPTO (CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status) VALUES (9, 7, 'COMPRA', 12.000000000000, 6.25000000, TO_TIMESTAMP('2024-01-24 14:55:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
+INSERT INTO TRANSACAO_CRYPTO (CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status) VALUES (10, 10, 'COMPRA', 25.000000000000, 8.40000000, TO_TIMESTAMP('2024-01-25 11:30:00', 'YYYY-MM-DD HH24:MI:SS'), 'CANCELADA');
 
 -- ========================================
 -- UPDATE - EXEMPLOS DE ATUALIZAÇÕES
@@ -128,27 +128,22 @@ INSERT INTO TRANSACAO_CRYPTO (id_transacao_crypto, CONTA_id_conta, CRYPTO_id_cry
 -- Atualizar email de um cliente
 UPDATE CLIENTE 
 SET email = 'joao.silva.novo@email.com' 
-WHERE id_cliente = 1;
+WHERE nome = 'João Silva Santos';
 
 -- Atualizar status de uma transação pendente para concluída
 UPDATE TRANSACAO_CRYPTO 
 SET status = 'CONCLUIDA' 
-WHERE id_transacao_crypto = 9;
+WHERE status = 'PENDENTE' AND CONTA_id_conta = 6;
 
 -- Atualizar quantidade de crypto em uma posse após compra
 UPDATE POSSE 
 SET quantidade_crypto = quantidade_crypto + 300.00000000 
 WHERE CARTEIRA_id_carteira = 6 AND CRYPTO_id_crypto = 4;
 
--- Atualizar data de nascimento de um cliente (Oracle)
+-- Atualizar data de nascimento de um cliente
 UPDATE CLIENTE 
 SET data_nascimento = TO_DATE('1985-03-20', 'YYYY-MM-DD') 
-WHERE id_cliente = 1;
-
--- Atualizar valor unitário de uma transação
-UPDATE TRANSACAO_CRYPTO 
-SET valor_unitario = 46500.00000000 
-WHERE id_transacao_crypto = 1 AND tipo_operacao = 'COMPRA';
+WHERE nome = 'João Silva Santos';
 
 -- ========================================
 -- DELETE - EXEMPLOS DE EXCLUSÕES
@@ -162,7 +157,7 @@ WHERE quantidade_crypto = 0;
 DELETE FROM TRANSACAO_CRYPTO 
 WHERE status = 'FALHOU';
 
--- Remover transações canceladas antigas (mais de 30 dias) - Oracle
+-- Remover transações canceladas antigas (mais de 30 dias)
 DELETE FROM TRANSACAO_CRYPTO 
 WHERE status = 'CANCELADA' 
 AND data_hora < SYSDATE - 30;
@@ -196,7 +191,7 @@ INNER JOIN POSSE p ON car.id_carteira = p.CARTEIRA_id_carteira
 INNER JOIN CRYPTO cr ON p.CRYPTO_id_crypto = cr.id_crypto
 ORDER BY c.nome, cr.nome;
 
--- 3. Relatório de transações fiat por período (CORRIGIDO)
+-- 3. Relatório de transações fiat por período
 SELECT 
     tf.id_transacao_fiat,
     co.nome AS cliente_origem,
