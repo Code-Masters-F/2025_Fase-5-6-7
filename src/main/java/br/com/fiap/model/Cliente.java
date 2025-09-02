@@ -1,5 +1,7 @@
 package br.com.fiap.model;
 
+import java.time.LocalDate;
+
 public class Cliente extends Pessoa{
 
     private int id;
@@ -20,6 +22,11 @@ public class Cliente extends Pessoa{
         this.id = id;
     }
 
+    // Construtor 3
+    public Cliente() {
+        super();
+
+    }
 
     public void criarConta(String numeroConta, String agencia, int id) {
         this.contaCliente = new ContaCliente(numeroConta, agencia, this, id);
@@ -35,6 +42,26 @@ public class Cliente extends Pessoa{
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int novoId) {
+        this.id = novoId;
+    }
+
+    public void setNome(String novoNome) {
+        super.setNome(novoNome);
+    }
+
+    public void setEmail(String novoEmail) {
+        this.email = novoEmail;
+    }
+
+    public void setCPF(String novoCpf) {
+        super.setCpf(novoCpf);
+    }
+
+    public void setDataNascimento(LocalDate novaDataNascimento) {
+        super.setDataNascimento(novaDataNascimento);
     }
 
 

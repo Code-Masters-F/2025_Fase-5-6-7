@@ -19,11 +19,26 @@ public class Pessoa {
         this.dataNascimento = LocalDate.parse(dataNascimento, formatter); // yyyy-MM-dd
     }
 
+    public Pessoa() {
+
+    }
 
     public int getIdade() {
         LocalDate hoje = LocalDate.now();
         Period idade = Period.between(dataNascimento, hoje);
         return idade.getYears();
+    }
+
+    public void setNome(String novoNome) {
+        this.nome = novoNome;
+    }
+
+    public void setCpf(String novoCpf) {
+        this.cpf = novoCpf;
+    }
+
+    public void setDataNascimento(LocalDate novaDataNascimento) {
+        this.dataNascimento = novaDataNascimento;
     }
 
     /**

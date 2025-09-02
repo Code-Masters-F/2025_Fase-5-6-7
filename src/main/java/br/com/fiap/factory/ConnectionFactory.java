@@ -9,7 +9,7 @@ import java.sql.SQLException;
 // repetindo usuario e senha no codigo inteiro
 /**
  * Essa classe retorna um objeto Connection. Depois de usa-la precisa
- * fechar a instancia de connecton, com o .close().
+ * fechar a instancia de connection, com o .close().
  */
 public class ConnectionFactory {
     public static final String URL = "jdbc:oracle:thin:@oracle.fiap.com.br:1521:orcl";

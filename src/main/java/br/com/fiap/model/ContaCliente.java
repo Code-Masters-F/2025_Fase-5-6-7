@@ -54,7 +54,7 @@ public class ContaCliente extends Conta {
         return cliente;
     }
 
-    public boolean transferirParaContaExterna(double valor, String contaDestino, String agenciaDestino) {
+    public boolean transferirParaContaExterna(double valor, int contaDestino, int agenciaDestino) {
         if (this.saldo < valor) {
             return false;
         }

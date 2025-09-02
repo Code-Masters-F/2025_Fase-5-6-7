@@ -82,7 +82,7 @@ public class Main {
         do {
             exibirMenu();
             opcao = scanner.nextLine();
-            System.out.println(System.lineSeparator());
+            System.out.println();
             try {
                 switch (opcao) {
                     case "1": cadastrarCliente(scanner); break;

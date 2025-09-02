@@ -6,13 +6,13 @@ import java.time.format.DateTimeFormatter;
 
 public class TransacaoCrypto {
     private int id;
-    private String tipoOperacao; // Tipo da operação (ex: "compra", "venda")
+    private final String tipoOperacao; // Tipo da operação (ex: "compra", "venda")
     private double valorTotal;
     private double quantidadeCrypto;
     private LocalDateTime dataHora;
     private double valorUnitarioCrypto;
     private ContaCliente contaCliente;
-    private boolean status;
+    private StatusOperacao status;
     private Crypto crypto;
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
@@ -30,8 +30,7 @@ public class TransacaoCrypto {
         this.tipoOperacao = tipoOperacao;
         this.dataHora = LocalDateTime.now(); // Define a data atual
         this.valorTotal = quantidadeCrypto * valorUnitarioCrypto; // Calcula o valor total comprado/vendido
-        this.status = true;
-        this.id = proximoId++;
+        this.status = StatusOperacao.PENDENTE;
 
         // Registra na main a transação
         Main.todasTransacoesCrypto.put(this.id, this);
@@ -63,7 +62,7 @@ public class TransacaoCrypto {
         return contaCliente;
     }
 
-    public boolean getStatus() {
+    public StatusOperacao getStatus() {
         return status;
     }
 
@@ -79,7 +78,7 @@ public class TransacaoCrypto {
     /**
      * Altera o status da transação (ativa ou cancelada).
      */
-    public void setStatus(boolean status) {
+    public void setStatus(StatusOperacao status) {
         this.status = status;
     }
 
