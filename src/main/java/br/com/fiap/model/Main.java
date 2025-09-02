@@ -1,9 +1,12 @@
 package br.com.fiap.model;
 
 
+import br.com.fiap.dao.TransacaoContaDao;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.time.LocalDate;
@@ -144,9 +147,9 @@ public class Main {
         Cliente cliente = new Cliente(cpf, nome, email, dataNascimento, proximoClienteId);
 
         System.out.print("Digite o numero da conta: ");
-        String numeroConta = scanner.nextLine();
+        int numeroConta = scanner.nextInt();
         System.out.print("Digite a agencia: ");
-        String agencia = scanner.nextLine();
+        int agencia = scanner.nextInt();
 
         cliente.criarConta(numeroConta, agencia, proximoClienteId++);
 
@@ -228,9 +231,9 @@ public class Main {
     }
 
     private static void consultarCarteira(Scanner scanner) {
-        System.out.print("Digite o ID do cliente que deseja consultar a carteira: ");
-        int idCliente = Integer.parseInt(scanner.nextLine());
-        Cliente cliente = buscarCliente(idCliente);
+        System.out.print("Digite o ID da conta que deseja consultar a carteira: ");
+        int idConta = Integer.parseInt(scanner.nextLine());
+        Cliente cliente = buscarCliente(idConta);
 
         if(cliente == null) {
             System.out.println("Cliente não encontrado.");
@@ -240,7 +243,7 @@ public class Main {
         cliente.contaCliente.getCarteira().verCarteira();
     }
 
-    private static void enviarTransferenciaContaExterna(Scanner scanner) {
+    private static void enviarTransferenciaContaExterna(Scanner scanner) throws SQLException {
         System.out.print("Digite o numero do id do cliente que realizará a transferencia: ");
         int idCliente = Integer.parseInt(scanner.nextLine());
         Cliente cliente = buscarCliente(idCliente);
@@ -251,15 +254,21 @@ public class Main {
         }
 
         System.out.print("Digite o numero da conta que deseja enviar a transferencia: ");
-        String numeroConta = scanner.nextLine();
+        int numeroConta = scanner.nextInt();
 
         System.out.print("Digite a agencia que deseja enviar a transferencia: ");
-        String agencia = scanner.nextLine();
+        int agencia = scanner.nextInt();
+
+        //Vou ter que buscar uma conta no banco de dados cujo numero da conta e numero da agencia corresponde a uma conta válida no banco
+        //Caso eu encontre passo id da conta na transação para registrar-la
 
         System.out.print("Digite o valor da transferencia: ");
         double valorTransferencia = Double.parseDouble(scanner.nextLine());
 
         cliente.contaCliente.transferirParaContaExterna(valorTransferencia, numeroConta, agencia);
+
+        TransacaoContaDao transacaoConta = new TransacaoContaDao();
+        transacaoConta.buscarConta(numeroConta, agencia);
 
         guardarEmTxtTransacaoContas();
     }
@@ -301,10 +310,10 @@ public class Main {
         }
 
         System.out.print("Digite o numero da conta que enviou a transferencia: ");
-        String numeroConta = scanner.nextLine();
+        int numeroConta = scanner.nextInt();
 
         System.out.print("Digite a agencia da conta que enviou a transferencia: ");
-        String agencia = scanner.nextLine();
+        int agencia = scanner.nextInt();
 
         System.out.print("Digite o valor da transferencia: ");
         double valorTransferencia = Double.parseDouble(scanner.nextLine());

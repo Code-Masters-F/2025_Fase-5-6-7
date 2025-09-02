@@ -49,7 +49,7 @@ public class Carteira {
         return null;
     }
 
-    void verCarteira() {
+    public void verCarteira() {
         System.out.println("Criptomoedas da carteira:");
         for(PosseClienteCrypto posseCrypto : listaDeCryptos) {
             System.out.print("Criptoativo: " + posseCrypto.getCrypto().getNome() +

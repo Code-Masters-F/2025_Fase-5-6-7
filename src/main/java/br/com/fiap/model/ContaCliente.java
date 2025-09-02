@@ -15,7 +15,7 @@ public class ContaCliente extends Conta {
     // esse id precisa ser automatizado, pois quem recebe é a carteira
     private static int proximoId = 1;
 
-    public ContaCliente(String numeroConta, String agencia, Cliente cliente, int id) {
+    public ContaCliente(int numeroConta, int agencia, Cliente cliente, int id) {
         super(numeroConta, agencia, id);
         this.cliente = cliente;
         this.saldo = 0.0;
@@ -66,11 +66,11 @@ public class ContaCliente extends Conta {
 
     public void receberTransferencia(double valor) {
         this.saldo += valor;
-        TransacaoConta transacaoRecebida = new TransacaoConta(valor, null, this.getNumeroConta(), null, this.getAgencia());
+        TransacaoConta transacaoRecebida = new TransacaoConta(valor, 0, this.getNumeroConta(), null, this.getAgencia());
         transacoesContas.add(transacaoRecebida);
     }
 
-    public boolean receberTransacaoConta(double valor, String contaOrigem, String agenciaOrigem) {
+    public boolean receberTransacaoConta(double valor, int contaOrigem, int agenciaOrigem) {
         TransacaoConta transacao = new TransacaoConta(valor, contaOrigem, this.getNumeroConta(), agenciaOrigem, this.getAgencia());
         saldo += valor;
         transacoesContas.add(transacao);

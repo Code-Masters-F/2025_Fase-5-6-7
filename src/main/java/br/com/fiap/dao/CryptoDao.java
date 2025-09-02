@@ -19,14 +19,13 @@ public class CryptoDao {
     public void inserirCrypto(Crypto crypto) throws SQLException {
         String sql = "INSERT INTO crypto (nome, sigla, data_lancamento) VALUES (?, ?, ?)";
 
-        PreparedStatement stmt = conexao.prepareStatement(sql);
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setString(1, crypto.getNome());
+            stmt.setString(2, crypto.getSigla());
+            stmt.setDate(3, java.sql.Date.valueOf(crypto.getDataLancamento()));
 
-        stmt.setString(1, crypto.getNome());
-        stmt.setString(2, crypto.getSigla());
-        stmt.setDate(3, java.sql.Date.valueOf(crypto.getDataLancamento()));
-
-        stmt.executeUpdate();
-        fecharConexao();
+            stmt.executeUpdate();
+        }
     }
 
     public void exibirCryptos() throws SQLException {
@@ -50,7 +49,6 @@ public class CryptoDao {
                                 ", Sigla: " + sigla +
                                 ", Data de Lançamento: " + data_lancamento
                 );
-
             }
         } else {
             System.out.println("Nenhuma Crypto foi encontrada!");
