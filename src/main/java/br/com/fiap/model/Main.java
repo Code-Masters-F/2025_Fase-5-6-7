@@ -1,4 +1,4 @@
-package com.finance.app;
+package br.com.fiap.model;
 
 
 import java.io.BufferedWriter;
@@ -9,6 +9,11 @@ import java.util.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.regex.Pattern;
+
+// ================ ATENÇÃO =============
+// Essa main está só para teste de funcionamento da lógica de sistema. A main de verdade
+// ficará em view e utilizará a logica do CRUD que ainda será implementado pelo Victor
+
 
 public class Main {
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$");
