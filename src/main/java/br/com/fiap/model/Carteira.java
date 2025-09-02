@@ -1,4 +1,4 @@
-package com.finance.app;
+package br.com.fiap.model;
 
 import java.util.HashMap;
 import java.util.HashSet;

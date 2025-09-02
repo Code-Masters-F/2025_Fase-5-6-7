@@ -1,4 +1,4 @@
-package com.finance.app;
+package br.com.fiap.factory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

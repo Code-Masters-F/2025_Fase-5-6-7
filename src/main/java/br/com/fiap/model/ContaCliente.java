@@ -1,8 +1,7 @@
-package com.finance.app;
+package br.com.fiap.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ContaCliente extends Conta {
 
