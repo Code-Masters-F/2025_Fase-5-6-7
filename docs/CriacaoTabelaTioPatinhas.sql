@@ -107,10 +107,12 @@ CREATE TABLE CONTA (
     numero_conta CHAR(10) NOT NULL,
     agencia CHAR(4) NOT NULL,
     data_abertura DATE NOT NULL,
+    saldo NUMBER(18,2) DEFAULT 0.00 NOT NULL,
     CONSTRAINT CONTA_PK PRIMARY KEY (id_conta),
     CONSTRAINT CONTA_numero_conta_agencia_UN UNIQUE (numero_conta, agencia),
     CONSTRAINT CONTA_CLIENTE_FK FOREIGN KEY (CLIENTE_id_cliente) 
-        REFERENCES CLIENTE(id_cliente)
+        REFERENCES CLIENTE(id_cliente),
+    CONSTRAINT CONTA_saldo_CHECK CHECK (saldo >= 0)
 );
 
 -- Índice para otimizar consultas por cliente
@@ -203,6 +205,7 @@ COMMENT ON TABLE TRANSACAO_CRYPTO IS 'Tabela de transações de criptomoedas';
 COMMENT ON COLUMN CLIENTE.cpf IS 'CPF do cliente (apenas números)';
 COMMENT ON COLUMN CONTA.numero_conta IS 'Número da conta bancária';
 COMMENT ON COLUMN CONTA.agencia IS 'Código da agência';
+COMMENT ON COLUMN CONTA.saldo IS 'Saldo disponível na conta bancária';
 COMMENT ON COLUMN POSSE.quantidade_crypto IS 'Quantidade de criptomoeda possuída';
 COMMENT ON COLUMN TRANSACAO_CRYPTO.tipo_operacao IS 'Tipo da operação: COMPRA ou VENDA';
 COMMENT ON COLUMN TRANSACAO_CRYPTO.status IS 'Status da transação';
