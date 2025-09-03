@@ -117,11 +117,21 @@ public class MainView {
         String email = lerEmail(scanner);
         LocalDate dataNascimento = lerData(scanner);
 
-        System.out.print("Digite o numero da conta: ");
-        int numeroConta = Integer.parseInt(scanner.nextLine().trim());
+        System.out.print("Digite o numero da conta (até 9 dígitos): ");
+        String contaInput = scanner.nextLine().trim();
+        if (!contaInput.matches("\\d{5,9}-[0-9X]")) {
+            System.err.println("Número da conta inválido. Deve conter até 9 dígitos númericos.");
+            return;
+        }
+        int numeroConta = Integer.parseInt(contaInput);
 
-        System.out.print("Digite a agencia: ");
-        int agencia = Integer.parseInt(scanner.nextLine().trim());
+        System.out.print("Digite a agencia (até 5 dígitos): ");
+        String agenciaInput = scanner.nextLine().trim();
+        if (!agenciaInput.matches("\\d{4,5}")) {
+            System.err.println("Número da agência inválido. Deve conter até 5 dígitos numéricos.");
+            return;
+        }
+        int agencia = Integer.parseInt(agenciaInput);
 
         try {
             Cliente cliente = new Cliente(cpf, nome, email, dataNascimento);

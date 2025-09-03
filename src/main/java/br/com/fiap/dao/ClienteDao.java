@@ -3,7 +3,6 @@ package br.com.fiap.dao;
 import br.com.fiap.factory.ConnectionFactory;
 import br.com.fiap.model.Cliente;
 
-import javax.xml.transform.Result;
 import java.math.BigDecimal;
 import java.sql.*;
 

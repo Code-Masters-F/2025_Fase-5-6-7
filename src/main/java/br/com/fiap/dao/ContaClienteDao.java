@@ -12,22 +12,21 @@ import java.sql.SQLException;
 public class ContaClienteDao {
     Connection conexao;
 
-
     public ContaClienteDao() throws SQLException {
         conexao = ConnectionFactory.getConnection();
     }
 
     public void inserirConta(int idCliente, int numeroConta, int agencia) throws SQLException {
         String sql = """
-                INSERT INTO conta (cliente_id_cliente, numero_conta, saldo)
-                VALUES (?, ?, ?)
+                INSERT INTO conta (cliente_id_cliente, numero_conta, agencia, data_abertura, saldo)
+                VALUES (?, ?, ?, ?, 0)
                 """;
 
         try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
             stmt.setInt(1, idCliente);
             stmt.setInt(2, numeroConta);
             stmt.setInt(3, agencia);
-            stmt.setDate();
+            stmt.setDate(4, java.sql.Date.valueOf(java.time.LocalDate.now()));
 
             int linhas = stmt.executeUpdate();
             if (linhas != 1) {
@@ -85,7 +84,6 @@ public class ContaClienteDao {
         final String sqlLockSaldo = "SELECT saldo FROM conta WHERE id_conta = ? FOR UPDATE";
         final String sqlDebito = "UPDATE conta SET saldo = saldo - ? WHERE id_conta = ?";
         final String sqlCredito = "UPDATE conta SET saldo = saldo + ? WHERE id_conta = ?";
-        final String sqlInsertTransacao = "INSERT INTO transacao_fiat (conta_id_conta_origem, conta_id_conta_destino, valor) VALUES (?, ?, ?)";
 
         try {
             double saldoOrigem;

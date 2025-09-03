@@ -1,7 +1,6 @@
 package br.com.fiap.dao;
 
 import br.com.fiap.factory.ConnectionFactory;
-import br.com.fiap.model.Conta;
 import br.com.fiap.model.TransacaoConta;
 
 import java.sql.Connection;
