@@ -30,16 +30,16 @@ INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Avalanche', 'AVAX', T
 INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Uniswap', 'UNI', TO_DATE('2020-09-16', 'YYYY-MM-DD'));
 
 -- Inserção de Contas 
-INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (1, '0001234567', '1001', TO_DATE('2023-01-15', 'YYYY-MM-DD'));
-INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (2, '0002345678', '1001', TO_DATE('2023-02-20', 'YYYY-MM-DD'));
-INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (3, '0003456789', '1002', TO_DATE('2023-03-10', 'YYYY-MM-DD'));
-INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (4, '0004567890', '1002', TO_DATE('2023-04-05', 'YYYY-MM-DD'));
-INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (5, '0005678901', '1003', TO_DATE('2023-05-12', 'YYYY-MM-DD'));
-INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (6, '0006789012', '1003', TO_DATE('2023-06-18', 'YYYY-MM-DD'));
-INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (7, '0007890123', '1004', TO_DATE('2023-07-22', 'YYYY-MM-DD'));
-INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (8, '0008901234', '1004', TO_DATE('2023-08-30', 'YYYY-MM-DD'));
-INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (1, '0009012345', '1001', TO_DATE('2023-09-15', 'YYYY-MM-DD')); -- João tem segunda conta
-INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura) VALUES (2, '0010123456', '1002', TO_DATE('2023-10-20', 'YYYY-MM-DD')); -- Maria tem segunda conta
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo) VALUES (1, '0001234567', '1001', TO_DATE('2023-01-15', 'YYYY-MM-DD'), 50000.00);
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo) VALUES (2, '0002345678', '1001', TO_DATE('2023-02-20', 'YYYY-MM-DD'), 35000.00);
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo) VALUES (3, '0003456789', '1002', TO_DATE('2023-03-10', 'YYYY-MM-DD'), 28000.00);
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo) VALUES (4, '0004567890', '1002', TO_DATE('2023-04-05', 'YYYY-MM-DD'), 42000.00);
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo) VALUES (5, '0005678901', '1003', TO_DATE('2023-05-12', 'YYYY-MM-DD'), 65000.00);
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo) VALUES (6, '0006789012', '1003', TO_DATE('2023-06-18', 'YYYY-MM-DD'), 38000.00);
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo) VALUES (7, '0007890123', '1004', TO_DATE('2023-07-22', 'YYYY-MM-DD'), 22000.00);
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo) VALUES (8, '0008901234', '1004', TO_DATE('2023-08-30', 'YYYY-MM-DD'), 45000.00);
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo) VALUES (1, '0009012345', '1001', TO_DATE('2023-09-15', 'YYYY-MM-DD'), 15000.00); -- João tem segunda conta
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo) VALUES (2, '0010123456', '1002', TO_DATE('2023-10-20', 'YYYY-MM-DD'), 25000.00); -- Maria tem segunda conta
 
 -- Inserção de Carteiras 
 INSERT INTO CARTEIRA (CONTA_id_conta) VALUES (1);
@@ -172,7 +172,8 @@ SELECT
     c.email,
     ct.numero_conta,
     ct.agencia,
-    ct.data_abertura
+    ct.data_abertura,
+    ct.saldo
 FROM CLIENTE c
 INNER JOIN CONTA ct ON c.id_cliente = ct.CLIENTE_id_cliente
 ORDER BY c.nome;
@@ -286,7 +287,8 @@ SELECT
     COUNT(DISTINCT ct.id_conta) AS total_contas,
     COUNT(DISTINCT car.id_carteira) AS total_carteiras,
     COUNT(DISTINCT p.CRYPTO_id_crypto) AS tipos_crypto_possuidos,
-    COALESCE(trans_stats.total_transacoes_crypto, 0) AS total_transacoes_crypto
+    COALESCE(trans_stats.total_transacoes_crypto, 0) AS total_transacoes_crypto,
+    SUM(ct.saldo) AS saldo_total_contas
 FROM CLIENTE c
 LEFT JOIN CONTA ct ON c.id_cliente = ct.CLIENTE_id_cliente
 LEFT JOIN CARTEIRA car ON ct.id_conta = car.CONTA_id_conta
@@ -301,6 +303,17 @@ LEFT JOIN (
 ) trans_stats ON c.id_cliente = trans_stats.CLIENTE_id_cliente
 GROUP BY c.id_cliente, c.nome, c.email, trans_stats.total_transacoes_crypto
 ORDER BY c.nome;
+
+-- 11. Saldo das contas por cliente
+SELECT 
+    c.nome AS cliente,
+    ct.numero_conta,
+    ct.agencia,
+    ct.saldo,
+    ct.data_abertura
+FROM CLIENTE c
+INNER JOIN CONTA ct ON c.id_cliente = ct.CLIENTE_id_cliente
+ORDER BY c.nome, ct.numero_conta;
 
 -- ========================================
 -- FIM DO SCRIPT DML
