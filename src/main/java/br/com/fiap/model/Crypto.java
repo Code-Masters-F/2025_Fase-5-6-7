@@ -11,10 +11,10 @@ public class Crypto {
     private LocalDate dataLancamento;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    public Crypto(String nome, String sigla, int id, String dataLancamento) {
+    public Crypto(String nome, String sigla, int id, LocalDate dataLancamento) {
         this.nome = nome;
         this.sigla = sigla;
-        this.dataLancamento = LocalDate.parse(dataLancamento, formatter);
+        this.dataLancamento = dataLancamento;
         this.id = id;
     }
 

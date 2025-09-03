@@ -55,6 +55,20 @@ public class CryptoDao {
         }
     }
 
+    public Crypto pesquisar(int id) throws SQLException{
+        PreparedStatement stm = conexao.prepareStatement("SELECT * FROM crypto WHERE cd_produto = ?");
+        stm.setInt(1, id);
+
+        ResultSet result = stm.executeQuery();
+
+
+        String nome = result.getString("nome");
+        String sigla = result.getString("sigla");
+        LocalDate dataLancamento = result.getDate("data_lancamento").toLocalDate();
+
+        return new Crypto(nome, sigla, id, dataLancamento);
+    }
+
 
     private void fecharConexao() throws SQLException {
         conexao.close();
