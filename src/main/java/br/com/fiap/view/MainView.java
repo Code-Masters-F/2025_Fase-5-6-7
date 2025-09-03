@@ -321,24 +321,42 @@ public class Main {
     private static void comprarCrypto(Scanner scanner) {
         System.out.print("Digite o id do cliente que deseja comprar: ");
         int idCliente = Integer.parseInt(scanner.nextLine());
-        Cliente cliente = buscarCliente(idCliente);
 
-        listarCriptoativos();
         System.out.print("Digite o id do criptoativo que deseja comprar: ");
-        int idCrypto = Integer.parseInt(scanner.nextLine());
-        Crypto crypto = buscarCrypto(idCrypto);
+        int idCrypto = Integer.parseInt(scanner.nextLine().trim());
 
-        if (crypto == null || cliente == null) {
-            System.out.println("Criptoativo e/ou cliente não encontrado(s).");
-            return;
+        System.out.println("Digite a quantidade: ");
+        double quantidade = Double.parseDouble(scanner.nextLine().trim());
+
+        try {
+            CarteiraDao carteiraDao = new CarteiraDao();
+            CarteiraDao.CompraResult result = carteiraDao.comprarCrypto(idCliente, idCrypto, quantidade);
+
+            TransacaoCrypto tx = new TransacaoCrypto();
+
+            ContaCliente conta = new ContaCliente();
+            conta.setId(result.contaId());
+            tx.setContaCliente(conta);
+
+            Crypto crypto = new Crypto();
+            crypto.setId(idCrypto);
+            tx.setCrypto(crypto);
+
+            tx.setTipoOperacao("COMPRA");
+            tx.setQuantidadeCrypto(quantidade);
+            tx.setValorUnitarioCrypto(result.precoUnitario());
+            tx.setStatus(StatusOperacao.CONCLUIDA);
+
+            TransacaoCryptoDao txDao = new TransacaoCryptoDao();
+            txDao.inserirTransacaoCrypto(tx);
+
+            System.out.printf(
+                            "Compra realizada!\nConta: %d | Crypto: %d | Qtde: %.8f | Preço: %.8f | Total: %.8f%n",
+                    result.contaId(), idCrypto, quantidade, result.precoUnitario(), result.total()
+            );
+        } catch (SQLException e) {
+            System.err.println("Erro na compra: " + e.getMessage());
         }
-
-        System.out.print("Digite a quantidade de criptoativos que deseja comprar: ");
-        double quantidade = Double.parseDouble(scanner.nextLine());
-
-        cliente.getContaCliente().comprarCrypto(quantidade, idCrypto);
-
-        guardarEmTxtTransacaoCryptos();
     }
 
     private static void venderCrypto(Scanner scanner) {
