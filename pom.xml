@@ -40,7 +40,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
-                    <mainClass>br.com.fiap.view.Main</mainClass>
+                    <mainClass>br.com.fiap.view.MainView</mainClass>
                 </configuration>
             </plugin>
         </plugins>

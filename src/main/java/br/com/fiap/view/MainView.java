@@ -18,8 +18,7 @@ import java.util.regex.Pattern;
 // Essa main está só para teste de funcionamento da lógica de sistema. A main de verdade
 // ficará em view e utilizará a logica do CRUD que ainda será implementado pelo Victor
 
-
-public class Main {
+public class MainView {
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$");
 
     private static String lerCPF(Scanner scanner) {
@@ -84,8 +83,8 @@ public class Main {
                     case "7": listarCriptoativos(); break;
                     case "8": comprarCrypto(scanner); break;
                     case "9": venderCrypto(scanner); break;
-                    case "10": listarTransacoesContas(); break;
-                    case "11": listarTransacoesCryptos(); break;
+//                    case "10": listarTransacoesContas(); break;
+//                    case "11": listarTransacoesCryptos(); break;
                     case "0": System.out.println("Saindo do sistema..."); break;
                     default: System.out.println("Opção inválida!");
                 }
@@ -138,7 +137,7 @@ public class Main {
             contaClienteDao.inserirConta(idCliente, numeroConta, agencia);
             System.out.println("Cliente cadastrado com sucesso!");
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            System.err.println("Erro ao cadastrar o usuário: " + e.getMessage());
         }
     }
 
@@ -158,7 +157,7 @@ public class Main {
             cryptoDao.inserirCrypto(crypto);
             System.out.println("Criptoativo cadastrado com sucesso!");
         } catch (RuntimeException | SQLException e) {
-            System.err.println(e.getMessage());
+            System.err.println("Erro ao cadastrar Criptoativo: " + e.getMessage());
         }
     }
 
@@ -332,26 +331,18 @@ public class Main {
             CarteiraDao carteiraDao = new CarteiraDao();
             CarteiraDao.CompraResult result = carteiraDao.comprarCrypto(idCliente, idCrypto, quantidade);
 
-            TransacaoCrypto tx = new TransacaoCrypto();
-
-            ContaCliente conta = new ContaCliente();
-            conta.setId(result.contaId());
-            tx.setContaCliente(conta);
-
-            Crypto crypto = new Crypto();
-            crypto.setId(idCrypto);
-            tx.setCrypto(crypto);
-
-            tx.setTipoOperacao("COMPRA");
-            tx.setQuantidadeCrypto(quantidade);
-            tx.setValorUnitarioCrypto(result.precoUnitario());
-            tx.setStatus(StatusOperacao.CONCLUIDA);
-
             TransacaoCryptoDao txDao = new TransacaoCryptoDao();
-            txDao.inserirTransacaoCrypto(tx);
+            txDao.inserirTransacaoCrypto(
+                    result.contaId(),
+                    idCrypto,
+                    "COMPRA",
+                    quantidade,
+                    result.precoUnitario(),
+                    StatusOperacao.CONCLUIDA
+            );
 
             System.out.printf(
-                            "Compra realizada!\nConta: %d | Crypto: %d | Qtde: %.8f | Preço: %.8f | Total: %.8f%n",
+                    "Compra realizada!\nConta: %d | Crypto: %d | Qtde: %.8f | Preço: %.8f | Total: %.8f%n",
                     result.contaId(), idCrypto, quantidade, result.precoUnitario(), result.total()
             );
         } catch (SQLException e) {
@@ -361,82 +352,57 @@ public class Main {
 
     private static void venderCrypto(Scanner scanner) {
         System.out.print("Digite o id do cliente que deseja vender: ");
-        int idCliente = Integer.parseInt(scanner.nextLine());
-        Cliente cliente = buscarCliente(idCliente);
+        int idCliente = Integer.parseInt(scanner.nextLine().trim());
 
-        listarCriptoativos();
         System.out.print("Digite o id do criptoativo: ");
-        int idCrypto = Integer.parseInt(scanner.nextLine());
-        Crypto crypto = buscarCrypto(idCrypto);
-
-        if (crypto == null || cliente == null) {
-            System.out.println("Criptoativo e/ou cliente não encontrado(s).");
-            return;
-        }
+        int idCrypto = Integer.parseInt(scanner.nextLine().trim());
 
         System.out.print("Digite a quantidade de criptoativos que deseja vender: ");
-        double quantidade = Double.parseDouble(scanner.nextLine());
+        double quantidade = Double.parseDouble(scanner.nextLine().trim());
 
-        cliente.getContaCliente().venderCrypto(quantidade, idCrypto);
+        try {
+            CarteiraDao carteiraDao = new CarteiraDao();
+            CarteiraDao.VendaResult result = carteiraDao.venderCrypto(idCliente, idCrypto, quantidade);
 
-        guardarEmTxtTransacaoCryptos();
-    }
+            TransacaoCryptoDao txDao = new TransacaoCryptoDao();
+            txDao.inserirTransacaoCrypto(result.contaId(), idCrypto, "VENDA", quantidade, result.precoUnitario(), StatusOperacao.CONCLUIDA);
 
-    private static void listarTransacoesContas(){
-        for (Map.Entry<Integer, TransacaoConta> transacao : todasTransacoesConta.entrySet()) {
-            System.out.println("----- ID da transação: " + transacao.getKey());
-
-            System.out.println("Conta origem: " + transacao.getValue().getNumeroContaOrigem() +
-                    " | Agência origem: " + transacao.getValue().getAgenciaOrigem());
-
-            System.out.println("Conta destino: " + transacao.getValue().getNumeroContaDestino() +
-                    " | Agência destino: " + transacao.getValue().getAgenciaDestino());
-
-            System.out.println(System.lineSeparator());
+            System.out.printf(
+                    "Venda realizada!\nConta: %d | Crypto: %d | Qtde: %.8f | Preço: %.8f | Crédito: %.8f%n",
+                    result.contaId(), idCrypto, quantidade, result.precoUnitario(), result.totalCreditado()
+            );
+        } catch (SQLException e) {
+            System.err.println("Erro na venda: " + e.getMessage());
         }
     }
 
-    private static void listarTransacoesCryptos() {
-        for (Map.Entry<Integer, TransacaoCrypto> transacao : todasTransacoesCrypto.entrySet()) {
-            System.out.println("----- ID da transação: " + transacao.getKey());
-
-            System.out.println("Numero da conta: " + transacao.getValue().getContaCliente().getNumeroConta() +
-                    " | Agência: " + transacao.getValue().getContaCliente().getAgencia());
-
-            System.out.print("Tipo de operação: " + transacao.getValue().getTipoOperacao() +
-                    " | Quantidade: " + transacao.getValue().getQuantidadeCrypto());
-            System.out.printf(" | Valor total: R$ %.2f", transacao.getValue().getValorTotal());
-
-            System.out.println(System.lineSeparator());
-        }
-    }
-
-    // Deve ser chamado pelas funções que instanciam os objetos, como por exemplo cadastrarCrypto().
-    // Deve ser passado o nome do arquivo .txt, mesmo que ainda não exista, e o toString() do objeto
-    public static void guardarEmTxt(String nomeArquivo, String conteudo) {
-        try (BufferedWriter bufferedW = new BufferedWriter(new FileWriter(nomeArquivo, true))) {
-            bufferedW.write(conteudo);
-            bufferedW.newLine();
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-//    public static void guardarEmTxtTransacaoContas() {
-//        TransacaoConta ultimaTransacao = null;
-//        for (Map.Entry<Integer, TransacaoConta> entry : todasTransacoesConta.entrySet()) {
-//            ultimaTransacao = entry.getValue();
+//    private static void listarTransacoesContas(){
+//        for (Map.Entry<Integer, TransacaoConta> transacao : todasTransacoesConta.entrySet()) {
+//            System.out.println("----- ID da transação: " + transacao.getKey());
+//
+//            System.out.println("Conta origem: " + transacao.getValue().getNumeroContaOrigem() +
+//                    " | Agência origem: " + transacao.getValue().getAgenciaOrigem());
+//
+//            System.out.println("Conta destino: " + transacao.getValue().getNumeroContaDestino() +
+//                    " | Agência destino: " + transacao.getValue().getAgenciaDestino());
+//
+//            System.out.println(System.lineSeparator());
 //        }
-//        if (ultimaTransacao != null)
-//            guardarEmTxt("transacoes_entre_contas.txt", ultimaTransacao.toString());
 //    }
 
-    public static void guardarEmTxtTransacaoCryptos() {
-        TransacaoCrypto ultimaTransacao = null;
-        for (Map.Entry<Integer, TransacaoCrypto> entry : todasTransacoesCrypto.entrySet()) {
-            ultimaTransacao = entry.getValue();
-        }
-        if (ultimaTransacao != null)
-            guardarEmTxt("transacoes_cryptos.txt", ultimaTransacao.toString());
-    }
+//    private static void listarTransacoesCryptos() {
+//        for (Map.Entry<Integer, TransacaoCrypto> transacao : todasTransacoesCrypto.entrySet()) {
+//            System.out.println("----- ID da transação: " + transacao.getKey());
+//
+//            System.out.println("Numero da conta: " + transacao.getValue().getContaCliente().getNumeroConta() +
+//                    " | Agência: " + transacao.getValue().getContaCliente().getAgencia());
+//
+//            System.out.print("Tipo de operação: " + transacao.getValue().getTipoOperacao() +
+//                    " | Quantidade: " + transacao.getValue().getQuantidadeCrypto());
+//            System.out.printf(" | Valor total: R$ %.2f", transacao.getValue().getValorTotal());
+//
+//            System.out.println(System.lineSeparator());
+//        }
+//    }
+
 }

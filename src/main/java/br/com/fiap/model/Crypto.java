@@ -9,6 +9,7 @@ public class Crypto {
     private String nome;
     private String sigla;
     private LocalDate dataLancamento;
+    private double precoUnitario;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     public Crypto(String nome, String sigla, int id, String dataLancamento) {
@@ -37,6 +38,14 @@ public class Crypto {
 
     public String getNome() {
         return nome;
+    }
+
+    public double getPrecoUnitario() {
+        return this.precoUnitario;
+    }
+
+    public void setPrecoUnitario(double novoPrecoUnitario) {
+        this.precoUnitario = novoPrecoUnitario;
     }
 
     public String getSigla() {

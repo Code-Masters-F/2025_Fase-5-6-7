@@ -67,12 +67,8 @@ public class CryptoDao {
         return new Crypto(nome, sigla, id, dataLancamento);
     }
 
-
     private void fecharConexao() throws SQLException {
         conexao.close();
     }
-
-
-
 
 }

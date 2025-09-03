@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 
 public class TransacaoCrypto {
     private int id;
-    private final String tipoOperacao; // Tipo da operação (ex: "compra", "venda")
+    private String tipoOperacao; // Tipo da operação (ex: "compra", "venda")
     private double valorTotal;
     private double quantidadeCrypto;
     private LocalDateTime dataHora;
@@ -36,6 +36,10 @@ public class TransacaoCrypto {
         Main.todasTransacoesCrypto.put(this.id, this);
     }
 
+    public TransacaoCrypto() {
+
+    }
+
     // Getters
 
     public int getId() {
@@ -50,6 +54,10 @@ public class TransacaoCrypto {
         return quantidadeCrypto;
     }
 
+    public void setQuantidadeCrypto(double novaQuantidadeCrypto) {
+        this.quantidadeCrypto = novaQuantidadeCrypto;
+    }
+
     public String getDataHora() {
         return dataHora.format(formatter);
     }
@@ -58,8 +66,16 @@ public class TransacaoCrypto {
         return valorUnitarioCrypto;
     }
 
-    public Conta getContaCliente() {
+    public void setValorUnitarioCrypto(double novoValorUnitario) {
+        this.valorUnitarioCrypto = novoValorUnitario;
+    }
+
+    public ContaCliente getContaCliente() {
         return contaCliente;
+    }
+
+    public void setContaCliente(ContaCliente novaContaCliente) {
+        this.contaCliente = novaContaCliente;
     }
 
     public StatusOperacao getStatus() {
@@ -70,8 +86,16 @@ public class TransacaoCrypto {
         return crypto;
     }
 
+    public void setCrypto(Crypto novaCrypto) {
+        this.crypto = novaCrypto;
+    }
+
     public String getTipoOperacao() {
         return tipoOperacao;
+    }
+
+    public void setTipoOperacao(String novoTipoOperacao) {
+        this.tipoOperacao = novoTipoOperacao;
     }
 
 

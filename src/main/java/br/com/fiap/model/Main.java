@@ -142,9 +142,9 @@ public class Main {
         String nome = scanner.nextLine();
         String cpf = lerCPF(scanner);
         String email = lerEmail(scanner);
-        String dataNascimento = lerData(scanner);
+        LocalDate dataNascimento;
 
-        Cliente cliente = new Cliente(cpf, nome, email, dataNascimento, proximoClienteId);
+        Cliente cliente = new Cliente();
 
         System.out.print("Digite o numero da conta: ");
         int numeroConta = scanner.nextInt();
@@ -291,7 +291,7 @@ public class Main {
         double valorTransferencia = Double.parseDouble(scanner.nextLine());
 
         // registra as transações e manipula ambos os saldos
-        clienteOrigem.contaCliente.transferirMesmoSistema(clienteDestino.contaCliente, valorTransferencia);
+//        clienteOrigem.contaCliente.transferirMesmoSistema(clienteDestino.contaCliente, valorTransferencia);
 
         guardarEmTxtTransacaoContas();
 
@@ -318,7 +318,7 @@ public class Main {
         System.out.print("Digite o valor da transferencia: ");
         double valorTransferencia = Double.parseDouble(scanner.nextLine());
 
-        cliente.contaCliente.receberTransacaoConta(valorTransferencia, numeroConta, agencia);
+//        cliente.contaCliente.receberTransacaoConta(valorTransferencia, numeroConta, agencia);
 
         guardarEmTxtTransacaoContas();
 
