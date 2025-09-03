@@ -25,6 +25,12 @@ public class Crypto {
         this.id = id;
     }
 
+    public Crypto(String nome, String sigla, LocalDate dataLancamento) {
+        this.nome = nome;
+        this.sigla = sigla;
+        this.dataLancamento = dataLancamento;
+    }
+
     public String getNome() {
         return nome;
     }

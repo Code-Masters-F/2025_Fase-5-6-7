@@ -3,10 +3,7 @@ package br.com.fiap.dao;
 import br.com.fiap.factory.ConnectionFactory;
 import br.com.fiap.model.Cliente;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class ClienteDao {
     private Connection conexao;
@@ -15,26 +12,37 @@ public class ClienteDao {
         conexao = ConnectionFactory.getConnection();
     }
 
-    public void inserirCliente(Cliente cliente) throws SQLException {
+    public int inserirCliente(Cliente cliente) throws SQLException {
         String sql = "INSERT INTO cliente (nome, email, cpf, data_nascimento) VALUES (?, ?, ?, ?)";
 
-        PreparedStatement stmt = conexao.prepareStatement(sql);
+        try (PreparedStatement stmt = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, cliente.getNome());
+            stmt.setString(2, cliente.getEmail());
+            stmt.setString(3, cliente.getCpf());
+            stmt.setDate(4, java.sql.Date.valueOf(cliente.getDataNascimento()));
 
-        stmt.setString(1, cliente.getNome());
-        stmt.setString(2, cliente.getEmail());
-        stmt.setString(3, cliente.getCpf());
-        stmt.setDate(4, java.sql.Date.valueOf(cliente.getDataNascimento()));
+            int rows = stmt.executeUpdate();
+            if (rows != 1) throw new SQLException("Falha ao inserir cliente");
 
-        stmt.executeUpdate();
-        fecharConexao();
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                } else {
+                    throw new SQLException("Não foi possível obter o id gerado do cliente.");
+                }
+            }
+        } catch (SQLException e) {
+            throw new SQLException(e);
+        }
     }
 
     public Cliente consultarClientePorId(int idCliente) throws SQLException {
         Cliente cliente = null;
         String sql = "SELECT * FROM cliente WHERE id_cliente = ?";
 
-        PreparedStatement stmt = conexao.prepareStatement(sql);
-        stmt.setInt(1, idCliente);
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+
+            stmt.setInt(1, idCliente);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
@@ -44,10 +52,10 @@ public class ClienteDao {
                 cliente.setEmail(rs.getString("email"));
                 cliente.setCPF(rs.getString("cpf"));
                 cliente.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
+                return cliente;
             }
-
-            fecharConexao();
-            return cliente;
+        }
+        return null;
     }
 
 

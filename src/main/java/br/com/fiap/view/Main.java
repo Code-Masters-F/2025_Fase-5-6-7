@@ -3,11 +3,9 @@ package br.com.fiap.view;
 
 import br.com.fiap.dao.ClienteDao;
 import br.com.fiap.dao.ContaClienteDao;
+import br.com.fiap.dao.CryptoDao;
 import br.com.fiap.dao.TransacaoContaDao;
-import br.com.fiap.model.Cliente;
-import br.com.fiap.model.Crypto;
-import br.com.fiap.model.TransacaoConta;
-import br.com.fiap.model.TransacaoCrypto;
+import br.com.fiap.model.*;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -26,9 +24,6 @@ import java.util.regex.Pattern;
 
 public class Main {
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$");
-
-    private static int proximoClienteId = 1;
-    private static int proximoCryptoId = 3;
 
     private static String lerCPF(Scanner scanner) {
         String cpf;
@@ -54,15 +49,13 @@ public class Main {
         }
     }
 
-    private static String lerData(Scanner scanner) {
-        String data;
+    private static LocalDate lerData(Scanner scanner) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         while (true) {
             System.out.print("Digite a data (dd/MM/yyyy): ");
-            data = scanner.nextLine();
+            String entrada = scanner.nextLine();
             try {
-                LocalDate.parse(data, formatter);
-                return data;
+                return LocalDate.parse(entrada, formatter);
             } catch (DateTimeParseException e) {
                 System.out.println("Formato de data inválido. Utilize dd/MM/yyyy.");
             }
@@ -75,16 +68,7 @@ public class Main {
         return idCrypto * 107.43;
     }
 
-    // simular banco de dados
-    public static List<Crypto> todasCryptosCadastradas = new ArrayList<>();
-    public static List<Cliente> todosClientesCadastrados = new ArrayList<>();
-    public static Map<Integer, TransacaoConta> todasTransacoesConta = new HashMap<>();
-    public static Map<Integer, TransacaoCrypto> todasTransacoesCrypto = new HashMap<>();
-
     public static void main(String[] args) {
-
-        inicializarDados();
-
         String opcao;
         Scanner scanner = new Scanner(System.in);
 
@@ -98,14 +82,13 @@ public class Main {
                     case "2": cadastrarCrypto(scanner); break;
                     case "3": consultarCliente(scanner); break;
                     case "4": consultarCarteira(scanner); break;
-                    case "5": enviarTransferenciaContaExterna(scanner); break;
-                    case "6": enviarTransferenciaContaInterna(scanner); break;
-                    case "7": adicionarSaldo(scanner); break;
-                    case "8": listarCriptoativos(); break;
-                    case "9": comprarCrypto(scanner); break;
-                    case "10": venderCrypto(scanner); break;
-                    case "11": listarTransacoesContas(); break;
-                    case "12": listarTransacoesCryptos(); break;
+                    case "5": enviarTransferenciaContaInterna(scanner); break;
+                    case "6": adicionarSaldo(scanner); break;
+                    case "7": listarCriptoativos(); break;
+                    case "8": comprarCrypto(scanner); break;
+                    case "9": venderCrypto(scanner); break;
+                    case "10": listarTransacoesContas(); break;
+                    case "11": listarTransacoesCryptos(); break;
                     case "0": System.out.println("Saindo do sistema..."); break;
                     default: System.out.println("Opção inválida!");
                 }
@@ -134,53 +117,52 @@ public class Main {
         System.out.print("Escolha a opção desejada: ");
     }
 
-    private static void inicializarDados() {
-        Crypto bitcoin = new Crypto("Bitcoin", "BTC", 1, "01/01/2009");
-        Crypto ethereum = new Crypto("Ethereum", "ETH", 2, "30/07/2014");
-        todasCryptosCadastradas.add(bitcoin);
-        todasCryptosCadastradas.add(ethereum);
-        guardarEmTxt("cryptos_cadastradas.txt", bitcoin.toString());
-        guardarEmTxt("cryptos_cadastradas.txt", ethereum.toString());
-    }
-
     private static void cadastrarCliente(Scanner scanner) {
         System.out.print("Digite o nome do cliente: ");
-        String nome = scanner.nextLine();
+        String nome = scanner.nextLine().trim();
         String cpf = lerCPF(scanner);
         String email = lerEmail(scanner);
-        String dataNascimento = lerData(scanner);
-
-        Cliente cliente = new Cliente(cpf, nome, email, dataNascimento, proximoClienteId);
+        LocalDate dataNascimento = lerData(scanner);
 
         System.out.print("Digite o numero da conta: ");
-        int numeroConta = scanner.nextInt();
+        int numeroConta = Integer.parseInt(scanner.nextLine().trim());
+
         System.out.print("Digite a agencia: ");
-        int agencia = scanner.nextInt();
+        int agencia = Integer.parseInt(scanner.nextLine().trim());
 
-        cliente.criarConta(numeroConta, agencia, proximoClienteId++);
+        try {
+            Cliente cliente = new Cliente(cpf, nome, email, dataNascimento);
 
-        todosClientesCadastrados.add(cliente);
+            ClienteDao clienteDao = new ClienteDao();
+            int idCliente = clienteDao.inserirCliente(cliente);
+            cliente.setId(idCliente);
 
-        guardarEmTxt("clientes_cadastrados.txt", cliente.getContaCliente().toString());
-
-        System.out.println("Cliente cadastrado com sucesso!");
+            ContaClienteDao contaClienteDao = new ContaClienteDao();
+            contaClienteDao.inserirConta(idCliente, numeroConta, agencia);
+            System.out.println("Cliente cadastrado com sucesso!");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     private static void cadastrarCrypto(Scanner scanner) {
         System.out.print("Digite o nome do criptoativo: ");
-        String nome = scanner.nextLine();
+        String nome = scanner.nextLine().trim();
 
         System.out.print("Digite a sigla do criptoativo: ");
-        String sigla = scanner.nextLine();
+        String sigla = scanner.nextLine().trim();
 
-        String dataLancamento = lerData(scanner);
+        LocalDate dataLancamento = lerData(scanner);
 
-        Crypto crypto = new Crypto(nome, sigla, proximoCryptoId++, dataLancamento);
-        todasCryptosCadastradas.add(crypto);
+        Crypto crypto = new Crypto(nome, sigla, dataLancamento);
 
-        guardarEmTxt("cryptos_cadastradas.txt", crypto.toString());
-
-        System.out.println("Criptoativo cadastrado com sucesso!");
+        try {
+            CryptoDao cryptoDao = new CryptoDao();
+            cryptoDao.inserirCrypto(crypto);
+            System.out.println("Criptoativo cadastrado com sucesso!");
+        } catch (RuntimeException | SQLException e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     /**
@@ -211,29 +193,37 @@ public class Main {
 //        return null;
 //    }
 
-    private static void consultarCliente(Scanner scanner) {
-        for(Cliente cliente : todosClientesCadastrados) {
-            System.out.println("ID: " + cliente.getId() + " | Nome: " +
-                    cliente.getNome());
-        }
-
+    private static void consultarCliente(Scanner scanner) throws SQLException {
         System.out.print("Digite o ID do cliente que deseja consultar: ");
-        int id = Integer.parseInt(scanner.nextLine());
+        int id = Integer.parseInt(scanner.nextLine().trim());
 
-        Cliente cliente = buscarCliente(id);
+        try {
+            ClienteDao clienteDao = new ClienteDao();
+            Cliente cliente = clienteDao.consultarClientePorId(id);
 
-        if (cliente == null) {
-            System.out.println("Cliente não encontrado.");
-            return;
+            if (cliente == null) {
+                System.out.println("Cliente não encontrado.");
+                return;
+            }
+
+            ContaClienteDao contaDaoCliente = new ContaClienteDao();
+            ContaCliente conta = contaDaoCliente.buscarContaPorClienteId(id);
+
+            System.out.println("Cliente: " + cliente.getNome());
+            System.out.println("Email: " + cliente.getEmail());
+            System.out.println("CPF: " + cliente.getCpf());
+            System.out.println("Idade: " + cliente.getIdade());
+
+            if (conta != null) {
+                System.out.println("Número da Conta: " + conta.getNumeroConta());
+                System.out.println("Agência: " + conta.getAgencia());
+                System.out.printf("Saldo: R$ %.2f%n", conta.getSaldo());
+            } else {
+                System.out.println("Este cliente ainda não possui conta cadastrada.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao consultar cliente: " + e.getMessage());
         }
-
-        System.out.println("Cliente: " + cliente.getNome());
-        System.out.println("Email: " + cliente.getEmail());
-        System.out.println("CPF: " + cliente.getCpf());
-        System.out.println("Idade: " + cliente.getIdade());
-        System.out.println("Número da Conta: " + cliente.getContaCliente().getNumeroConta());
-        System.out.println("Agência: " + cliente.getContaCliente().getAgencia());
-        System.out.printf("Saldo: R$ %.2f\n", cliente.getContaCliente().getSaldo());
     }
 
     private static void consultarCarteira(Scanner scanner) {
@@ -247,58 +237,6 @@ public class Main {
         }
 
         cliente.getContaCliente().getCarteira().verCarteira();
-    }
-
-    private static void enviarTransferenciaContaExterna(Scanner scanner) throws SQLException {
-        System.out.print("Digite o numero do id do cliente que realizará a transferencia: ");
-        int idCliente = Integer.parseInt(scanner.nextLine());
-
-        Cliente cliente = new ClienteDao().consultarClientePorId(idCliente);
-
-        if (cliente == null) {
-            System.out.println("\nCliente não encontrado no sistema.");
-            return;
-        }
-
-        System.out.print("Digite o numero da conta que deseja enviar a transferencia: ");
-        int numeroContaDestino = scanner.nextInt();
-
-        System.out.print("Digite a agencia que deseja enviar a transferencia: ");
-        int numeroAgenciaDestino = scanner.nextInt();
-
-        System.out.print("Digite o valor da transferencia: ");
-        double valorTransferencia = Double.parseDouble(scanner.nextLine());
-
-        int numeroContaOrigem = cliente.getContaCliente().getNumeroConta();
-        int numeroAgenciaOrigem = cliente.getContaCliente().getAgencia();
-
-        TransacaoContaDao transacaoDao = new TransacaoContaDao();
-
-        int idOrigem = transacaoDao.buscarConta(numeroContaOrigem, numeroAgenciaOrigem);
-        if (idOrigem == -1) {
-            System.out.println("Conta de ORIGEM do cliente não encontrada (número/agência).");
-            return;
-        }
-
-        int idDestino = transacaoDao.buscarConta(numeroContaDestino, numeroAgenciaDestino);
-        if (idDestino == -1) {
-            System.out.println("Conta DESTINO não encontrada (número/agência).");
-            return;
-        }
-
-        if (idOrigem == idDestino) {
-            System.out.println("Operação inválida: origem e destino são a mesma conta.");
-            return;
-        }
-
-        if (valorTransferencia <= 0) {
-            System.out.println("Valor inválido.");
-            return;
-        }
-
-        ContaClienteDao contaDao = new ContaClienteDao();
-        contaDao.transferirParaContaExterna(idOrigem, idDestino, valorTransferencia);
-        System.out.println("Transferência realizada com sucesso.");
     }
 
     private static void enviarTransferenciaContaInterna(Scanner scanner) throws SQLException {
@@ -338,10 +276,11 @@ public class Main {
             return;
         }
 
+        ContaClienteDao contaDao = new ContaClienteDao();
+        contaDao.transferirParaContaInterna();
+
         // registra as transações e manipula ambos os saldos
         clienteOrigem.getContaCliente().transferirMesmoSistema(clienteDestino.getContaCliente(), valorTransferencia);
-
-        guardarEmTxtTransacaoContas();
 
         System.out.println("Transferencia realizada com sucesso!");
     }

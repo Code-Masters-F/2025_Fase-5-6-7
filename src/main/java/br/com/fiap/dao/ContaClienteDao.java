@@ -1,6 +1,8 @@
 package br.com.fiap.dao;
 
 import br.com.fiap.factory.ConnectionFactory;
+import br.com.fiap.model.ContaCliente;
+
 import java.sql.Connection;
 
 import java.sql.PreparedStatement;
@@ -15,8 +17,50 @@ public class ContaClienteDao {
         conexao = ConnectionFactory.getConnection();
     }
 
-    public void transferirParaContaExterna(int idOrigem, int idDestino, double valor) throws SQLException {
+    public void inserirConta(int idCliente, int numeroConta, int agencia) throws SQLException {
+        String sql = """
+                INSERT INTO conta (cliente_id_cliente, numero_conta, saldo)
+                VALUES (?, ?, ?, 0.0)
+                """;
 
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setInt(1, idCliente);
+            stmt.setInt(2, numeroConta);
+            stmt.setInt(3, agencia);
+
+            int linhas = stmt.executeUpdate();
+            if (linhas != 1) {
+                throw new SQLException("Falha ao inserir conta.");
+            }
+        }
+    }
+
+    public ContaCliente buscarContaPorClienteId(int idCliente) throws SQLException {
+        final String sql = """
+                SELECT id_conta, cliente_id_cliente, numero_conta, agencia, saldo
+                FROM conta
+                WHERE cliente_id_cliente = ?
+                """;
+
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setInt(1, idCliente);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    ContaCliente conta = new ContaCliente();
+                    conta.setId(rs.getInt("id_conta"));
+                    conta.getCliente().setId(rs.getInt("cliente_id"));
+                    conta.setNumeroConta(rs.getInt("numero_conta"));
+                    conta.setNumeroAgencia(rs.getInt("agencia"));
+                    conta.setSaldo(rs.getDouble("saldo"));
+                    return conta;
+                }
+            }
+        }
+        return null;
+    }
+
+    public void transferirParaContaInterna(int idOrigem, int idDestino, double valor) throws SQLException {
         if (idOrigem == idDestino) throw new SQLException("Origem e destino são a mesma conta.");
         if (valor <= 0) throw new SQLException("Valor inválido");
 
@@ -62,13 +106,9 @@ public class ContaClienteDao {
             System.err.println(e.getMessage());
             throw e;
         }
-
-
-
-
-
-
     }
+
+
 
 
 

@@ -9,7 +9,7 @@ public class Cliente extends Pessoa{
     private String email;
 
     // Construtor 1
-    public Cliente(String cpf, String nome, String email, String dataNascimento, int id) {
+    public Cliente(String cpf, String nome, String email, LocalDate dataNascimento, int id) {
         super(cpf, nome, dataNascimento); // dd/MM/yyyy
         this.email = email;
         this.id = id;
@@ -20,6 +20,11 @@ public class Cliente extends Pessoa{
         super(pessoa.getCpf(), pessoa.getNome(), pessoa.getDataNascimento());
         this.email = email;
         this.id = id;
+    }
+
+    public Cliente(String cpf, String nome, String email, LocalDate dataNascimento) {
+        super(cpf, nome, dataNascimento);
+        this.email = email;
     }
 
     // Construtor 3
