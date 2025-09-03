@@ -20,13 +20,14 @@ public class ContaClienteDao {
     public void inserirConta(int idCliente, int numeroConta, int agencia) throws SQLException {
         String sql = """
                 INSERT INTO conta (cliente_id_cliente, numero_conta, saldo)
-                VALUES (?, ?, ?, 0.0)
+                VALUES (?, ?, ?)
                 """;
 
         try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
             stmt.setInt(1, idCliente);
             stmt.setInt(2, numeroConta);
             stmt.setInt(3, agencia);
+            stmt.setDate();
 
             int linhas = stmt.executeUpdate();
             if (linhas != 1) {

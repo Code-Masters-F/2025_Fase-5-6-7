@@ -22,14 +22,11 @@ public class MainView {
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$");
 
     private static String lerCPF(Scanner scanner) {
-        String cpf;
         while (true) {
             System.out.print("Digite o CPF (11 dígitos): ");
-            cpf = scanner.nextLine().replaceAll("\\D", "");
-            if (cpf.matches("\\d{11}")) {
-                return cpf;
-            }
-            System.out.println("CPF inválido. Deve conter 11 dígitos numéricos.");
+            String cpf = scanner.nextLine().replaceAll("\\D", "");
+            if (cpf.length() == 11) return cpf;
+            System.out.println("CPF inválido. Deve conter 11 dígitos numéricos, tente novamente.");
         }
     }
 
@@ -130,6 +127,12 @@ public class MainView {
             Cliente cliente = new Cliente(cpf, nome, email, dataNascimento);
 
             ClienteDao clienteDao = new ClienteDao();
+
+            if (clienteDao.existeClientePorCpfOuEmail(cpf, email)) {
+                System.err.println("Já existe cliente com esse CPF ou e-mail");
+                return;
+            }
+
             int idCliente = clienteDao.inserirCliente(cliente);
             cliente.setId(idCliente);
 

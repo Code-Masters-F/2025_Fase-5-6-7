@@ -3,6 +3,8 @@ package br.com.fiap.dao;
 import br.com.fiap.factory.ConnectionFactory;
 import br.com.fiap.model.Cliente;
 
+import javax.xml.transform.Result;
+import java.math.BigDecimal;
 import java.sql.*;
 
 public class ClienteDao {
@@ -15,7 +17,7 @@ public class ClienteDao {
     public int inserirCliente(Cliente cliente) throws SQLException {
         String sql = "INSERT INTO cliente (nome, email, cpf, data_nascimento) VALUES (?, ?, ?, ?)";
 
-        try (PreparedStatement stmt = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stmt = conexao.prepareStatement(sql, new String[] {"id_cliente"})) {
             stmt.setString(1, cliente.getNome());
             stmt.setString(2, cliente.getEmail());
             stmt.setString(3, cliente.getCpf());
@@ -26,6 +28,11 @@ public class ClienteDao {
 
             try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) {
+
+                    Object key = rs.getObject(1);
+                    if (key instanceof BigDecimal bd) {
+                        return bd.intValue();
+                    }
                     return rs.getInt(1);
                 } else {
                     throw new SQLException("Não foi possível obter o id gerado do cliente.");
@@ -58,9 +65,16 @@ public class ClienteDao {
         return null;
     }
 
-
-    private void fecharConexao() throws SQLException {
-        conexao.close();
+    public boolean existeClientePorCpfOuEmail(String cpf, String email) throws SQLException {
+        String sql = "SELECT 1 FROM CLIENTE WHERE cpf = ? OR LOWER(email) = LOWER(?)";
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setString(1, cpf);
+            stmt.setString(2, email);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
+            }
+        }
     }
+
 
 }
