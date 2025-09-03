@@ -2,6 +2,7 @@ package br.com.fiap.view;
 
 
 import br.com.fiap.dao.ClienteDao;
+import br.com.fiap.dao.ContaClienteDao;
 import br.com.fiap.dao.TransacaoContaDao;
 import br.com.fiap.model.Cliente;
 import br.com.fiap.model.Crypto;
@@ -265,9 +266,6 @@ public class Main {
         System.out.print("Digite a agencia que deseja enviar a transferencia: ");
         int numeroAgenciaDestino = scanner.nextInt();
 
-        //Vou ter que buscar uma conta no banco de dados cujo numero da conta e numero da agencia corresponde a uma conta válida no banco
-        //Caso eu encontre passo id da conta na transação para registrar-la
-
         System.out.print("Digite o valor da transferencia: ");
         double valorTransferencia = Double.parseDouble(scanner.nextLine());
 
@@ -298,30 +296,19 @@ public class Main {
             return;
         }
 
-        TransacaoConta transacao = new TransacaoConta(
-                valorTransferencia,
-                numeroContaOrigem,
-                numeroAgenciaOrigem,
-                numeroContaDestino,
-                numeroAgenciaDestino
-        );
-
-        transacaoDao.inserirTransacaoConta(transacao);
-
-        cliente.getContaCliente().transferirParaContaExterna(
-
-        )
-
+        ContaClienteDao contaDao = new ContaClienteDao();
+        contaDao.transferirParaContaExterna(idOrigem, idDestino, valorTransferencia);
+        System.out.println("Transferência realizada com sucesso.");
     }
 
-    private static void enviarTransferenciaContaInterna(Scanner scanner) {
-        System.out.print("Digite o numero do id do cliente que realizará a transferencia: ");
-        int idClienteOrigem = Integer.parseInt(scanner.nextLine());
-        Cliente clienteOrigem = buscarCliente(idClienteOrigem);
+    private static void enviarTransferenciaContaInterna(Scanner scanner) throws SQLException {
+        System.out.print("Digite o número do id do cliente que realizará a transferência: ");
+        int idClienteOrigem = Integer.parseInt(scanner.nextLine().trim());
+        Cliente clienteOrigem = new ClienteDao().consultarClientePorId(idClienteOrigem);
 
-        System.out.print("Digite o numero do id do cliente que receberá a transferencia: ");
-        int idClienteDestino = Integer.parseInt(scanner.nextLine());
-        Cliente clienteDestino = buscarCliente(idClienteDestino);
+        System.out.print("Digite o número do id do cliente que receberá a transferência: ");
+        int idClienteDestino = Integer.parseInt(scanner.nextLine().trim());
+        Cliente clienteDestino = new ClienteDao().consultarClientePorId(idClienteDestino);
 
         if(clienteOrigem == null || clienteDestino == null) {
             System.out.println("Cliente destino e/ou cliente origem não encontrado no sistema.");
@@ -329,7 +316,27 @@ public class Main {
         }
 
         System.out.print("Digite o valor da transferencia: ");
-        double valorTransferencia = Double.parseDouble(scanner.nextLine());
+        double valorTransferencia = Double.parseDouble(scanner.nextLine().trim());
+
+        if (valorTransferencia <= 0) {
+            System.out.println("Valor inválido.");
+            return;
+        }
+
+        int numeroContaOrigem = clienteOrigem.getContaCliente().getNumeroConta();
+        int numeroAgenciaOrigem = clienteOrigem.getContaCliente().getAgencia();
+
+        int numeroContaDestino = clienteDestino.getContaCliente().getNumeroConta();
+        int numeroAgenciaDestino = clienteDestino.getContaCliente().getAgencia();
+
+        TransacaoContaDao transacaoDao = new TransacaoContaDao();
+        int idOrigem = transacaoDao.buscarConta(numeroContaOrigem, numeroAgenciaOrigem);
+        int idDestino = transacaoDao.buscarConta(numeroContaDestino, numeroAgenciaDestino);
+
+        if (idOrigem == -1 || idDestino == -1) {
+            System.out.println("Conta origem e/ou conta destino não encontrada(s).");
+            return;
+        }
 
         // registra as transações e manipula ambos os saldos
         clienteOrigem.getContaCliente().transferirMesmoSistema(clienteDestino.getContaCliente(), valorTransferencia);
@@ -360,8 +367,6 @@ public class Main {
         double valorTransferencia = Double.parseDouble(scanner.nextLine());
 
         cliente.getContaCliente().receberTransacaoConta(valorTransferencia, numeroConta, agencia);
-
-        guardarEmTxtTransacaoContas();
 
         System.out.println("Saldo adicionado com sucesso!");
     }
@@ -459,14 +464,14 @@ public class Main {
         }
     }
 
-    public static void guardarEmTxtTransacaoContas() {
-        TransacaoConta ultimaTransacao = null;
-        for (Map.Entry<Integer, TransacaoConta> entry : todasTransacoesConta.entrySet()) {
-            ultimaTransacao = entry.getValue();
-        }
-        if (ultimaTransacao != null)
-            guardarEmTxt("transacoes_entre_contas.txt", ultimaTransacao.toString());
-    }
+//    public static void guardarEmTxtTransacaoContas() {
+//        TransacaoConta ultimaTransacao = null;
+//        for (Map.Entry<Integer, TransacaoConta> entry : todasTransacoesConta.entrySet()) {
+//            ultimaTransacao = entry.getValue();
+//        }
+//        if (ultimaTransacao != null)
+//            guardarEmTxt("transacoes_entre_contas.txt", ultimaTransacao.toString());
+//    }
 
     public static void guardarEmTxtTransacaoCryptos() {
         TransacaoCrypto ultimaTransacao = null;
