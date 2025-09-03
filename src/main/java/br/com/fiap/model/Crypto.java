@@ -31,6 +31,10 @@ public class Crypto {
         this.dataLancamento = dataLancamento;
     }
 
+    public Crypto() {
+
+    }
+
     public String getNome() {
         return nome;
     }
@@ -45,6 +49,10 @@ public class Crypto {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int novoId) {
+        this.id = novoId;
     }
 
     @Override

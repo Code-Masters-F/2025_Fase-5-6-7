@@ -1,10 +1,7 @@
 package br.com.fiap.view;
 
 
-import br.com.fiap.dao.ClienteDao;
-import br.com.fiap.dao.ContaClienteDao;
-import br.com.fiap.dao.CryptoDao;
-import br.com.fiap.dao.TransacaoContaDao;
+import br.com.fiap.dao.*;
 import br.com.fiap.model.*;
 
 import java.io.BufferedWriter;
@@ -165,34 +162,6 @@ public class Main {
         }
     }
 
-    /**
-     * Percorre a lista de Cryptos da Main procurando pelo id
-     * @param id o id da Crypto que se quer procurar
-     * @return retorna a Crypto caso o encontre e null caso contrário
-     */
-    private static Crypto buscarCrypto(int id) {
-        for(Crypto crypto : todasCryptosCadastradas) {
-            if (crypto.getId() == id) {
-                return crypto;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Percorre a lista de clientes da Main procurando pelo id
-     * @param id o id do cliente que se quer procurar
-     * @return retorna o cliente caso o encontre e null caso contrário
-     */
-//    private static Cliente buscarCliente(int id) {
-//        for(Cliente cliente : todosClientesCadastrados) {
-//            if (cliente.getId() == id) {
-//                return cliente;
-//            }
-//        }
-//        return null;
-//    }
-
     private static void consultarCliente(Scanner scanner) throws SQLException {
         System.out.print("Digite o ID do cliente que deseja consultar: ");
         int id = Integer.parseInt(scanner.nextLine().trim());
@@ -228,15 +197,27 @@ public class Main {
 
     private static void consultarCarteira(Scanner scanner) {
         System.out.print("Digite o ID da conta que deseja consultar a carteira: ");
-        int idConta = Integer.parseInt(scanner.nextLine());
-        Cliente cliente = buscarCliente(idConta);
+        int carteiraId = Integer.parseInt(scanner.nextLine().trim());
 
-        if(cliente == null) {
-            System.out.println("Cliente não encontrado.");
-            return;
+        try {
+            PosseDao posseDao = new PosseDao();
+            List<PosseClienteCrypto> posses = posseDao.listarPossesPorCarteira(carteiraId);
+
+            if (posses.isEmpty()) {
+                System.out.println("Nenhuma posse encontrada para esta carteira.");
+                return;
+            }
+
+            System.out.println("\n--- Carteira ---");
+            for (PosseClienteCrypto p : posses) {
+                System.out.printf("\"- %s (%s) | ID Crypto: %d | Quantidade: %.8f%n\", " +
+                        p.getCrypto().getNome(), p.getCrypto().getSigla(),
+                        p.getCrypto().getId(), p.getQuantidade());
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro ao consultar carteira: " + e.getMessage());
         }
 
-        cliente.getContaCliente().getCarteira().verCarteira();
     }
 
     private static void enviarTransferenciaContaInterna(Scanner scanner) throws SQLException {
@@ -277,43 +258,63 @@ public class Main {
         }
 
         ContaClienteDao contaDao = new ContaClienteDao();
-        contaDao.transferirParaContaInterna();
-
-        // registra as transações e manipula ambos os saldos
-        clienteOrigem.getContaCliente().transferirMesmoSistema(clienteDestino.getContaCliente(), valorTransferencia);
-
+        contaDao.transferirParaContaInterna(idOrigem, idDestino, valorTransferencia);
         System.out.println("Transferencia realizada com sucesso!");
     }
 
     // supondo que não temos caixa eletrônico só é possível adicionar saldo via transferencia externa
     private static void adicionarSaldo(Scanner scanner) {
         System.out.print("Digite o numero do id do cliente que deseja adicionar saldo: ");
-        int idCliente = Integer.parseInt(scanner.nextLine());
-        Cliente cliente = buscarCliente(idCliente);
+        int idCliente = Integer.parseInt(scanner.nextLine().trim());
 
-        if(cliente == null) {
-            System.out.println("\nCliente não encontrado no sistema.");
-            return;
+        try {
+            Cliente cliente = new ClienteDao().consultarClientePorId(idCliente);
+
+            if (cliente == null) {
+                System.out.println("\nCliente não encontrado no sistema.");
+                return;
+            }
+        } catch (SQLException e) {
+            System.err.println("Não foi possível consultar o Cliente: " + e.getMessage());
         }
 
-        System.out.print("Digite o numero da conta que enviou a transferencia: ");
-        int numeroConta = scanner.nextInt();
+        System.out.print("Digite o número da conta que enviou a transferência: ");
+        int numeroConta = Integer.parseInt(scanner.nextLine().trim());
 
-        System.out.print("Digite a agencia da conta que enviou a transferencia: ");
-        int agencia = scanner.nextInt();
+        System.out.print("Digite a agência da conta que enviou a transferência: ");
+        int agencia = Integer.parseInt(scanner.nextLine().trim());
 
-        System.out.print("Digite o valor da transferencia: ");
-        double valorTransferencia = Double.parseDouble(scanner.nextLine());
+        System.out.print("Digite o valor da transferência: ");
+        double valorTransferencia = Double.parseDouble(scanner.nextLine().trim());
 
-        cliente.getContaCliente().receberTransacaoConta(valorTransferencia, numeroConta, agencia);
+        try {
+            ContaClienteDao contaDao = new ContaClienteDao();
+            contaDao.atualizarSaldo(numeroConta, agencia, valorTransferencia);
 
-        System.out.println("Saldo adicionado com sucesso!");
+            System.out.println("Saldo adicionado com sucesso!");
+
+        } catch (SQLException e) {
+            System.err.println("Erro ao atualizar saldo: " + e.getMessage());
+        }
     }
 
-    private static void listarCriptoativos() {
+    private static void listarCriptoativos() throws SQLException {
         System.out.println("\n--- Cryptos cadastradas ---");
-        for(Crypto crypto : todasCryptosCadastradas) {
-            System.out.println("- " + crypto.getNome() + " - ID: " + crypto.getId());
+        try {
+            CryptoDao cryptoDao = new CryptoDao();
+            List<Crypto> cryptos = cryptoDao.listarCryptos();
+
+            if (cryptos.isEmpty()) {
+                System.out.println("Nenhuma Crypto encontrada.");
+            } else {
+                for (Crypto crypto : cryptos) {
+                    System.out.println("- " + crypto.getNome() +
+                            " (" + crypto.getSigla() + ") - ID: " + crypto.getId() +
+                            " - Lançamento: " + crypto.getDataLancamento());
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao consultar cryptos: " + e.getMessage());
         }
     }
 

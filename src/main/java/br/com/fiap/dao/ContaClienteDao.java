@@ -35,6 +35,23 @@ public class ContaClienteDao {
         }
     }
 
+    public void atualizarSaldo(int numeroConta, int agencia, double valor) throws SQLException {
+        String sql = "UPDATE conta SET saldo = saldo + ? WHERE numero_conta = ? AND agencia = ?";
+
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setDouble(1, valor);
+            stmt.setInt(2, numeroConta);
+            stmt.setInt(3, agencia);
+
+            int linhas = stmt.executeUpdate();
+
+            if (linhas == 0) {
+                throw new SQLException("Conta não encontrada para atualização de saldo.");
+            }
+        }
+
+    }
+
     public ContaCliente buscarContaPorClienteId(int idCliente) throws SQLException {
         final String sql = """
                 SELECT id_conta, cliente_id_cliente, numero_conta, agencia, saldo

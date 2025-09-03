@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CryptoDao {
     private Connection conexao;
@@ -28,31 +30,27 @@ public class CryptoDao {
         }
     }
 
-    public void exibirCryptos() throws SQLException {
-        String sql = "SELECT * FROM crypto";
+    public List<Crypto> listarCryptos() throws SQLException {
+        List<Crypto> cryptos = new ArrayList<>();
 
-        PreparedStatement stmt = conexao.prepareStatement(sql);
+        String sql = "SELECT id_crypto, nome, sigla, data_lancamento FROM crypto";
 
-        ResultSet rs = stmt.executeQuery();
+        try (PreparedStatement stmt = conexao.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery()) {
 
-        if (rs.next()) {
             while (rs.next()) {
-
                 int id = rs.getInt("id_crypto");
                 String nome = rs.getString("nome");
                 String sigla = rs.getString("sigla");
-                LocalDate data_lancamento = rs.getDate("data_lancamento").toLocalDate();
+                LocalDate dataLancamento = rs.getDate("data_lancamento").toLocalDate();
 
-                System.out.println(
-                        "ID: " + id +
-                                ", Nome: " + nome +
-                                ", Sigla: " + sigla +
-                                ", Data de Lançamento: " + data_lancamento
-                );
+                Crypto crypto = new Crypto(nome, sigla, dataLancamento);
+                crypto.setId(id);
+
+                cryptos.add(crypto);
             }
-        } else {
-            System.out.println("Nenhuma Crypto foi encontrada!");
         }
+        return cryptos;
     }
 
     public Crypto pesquisar(int id) throws SQLException{

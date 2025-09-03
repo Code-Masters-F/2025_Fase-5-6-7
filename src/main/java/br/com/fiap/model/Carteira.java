@@ -33,6 +33,10 @@ public class Carteira {
         return id;
     }
 
+    public void setId(int novoId) {
+        this.id = novoId;
+    }
+
     /**
      * Busca na lista de cryptos uma moeda pelo seu id
      * @param idCrypto id da Crypto cadastrada na main
