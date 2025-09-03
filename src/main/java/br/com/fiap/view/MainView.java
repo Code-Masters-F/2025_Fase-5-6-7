@@ -54,13 +54,7 @@ public class MainView {
             }
         }
     }
-
-    // Para simular uma API que pega o valor unitário de uma criptomoeda em reais
-    // (o sistema precisa dessa informação e ainda não estudamos meios para pegar dados reais)
-    public static double getValorUnitarioCrypto(int idCrypto) {
-        return idCrypto * 107.43;
-    }
-
+    
     public static void main(String[] args) {
         String opcao;
         Scanner scanner = new Scanner(System.in);
@@ -98,14 +92,13 @@ public class MainView {
         System.out.println("2 - Cadastrar novo criptoativo");
         System.out.println("3 - Consultar cliente");
         System.out.println("4 - Consultar carteira");
-        System.out.println("5 - Fazer tansferencia para uma conta externa");
-        System.out.println("6 - Fazer tansferencia para uma conta interna");
-        System.out.println("7 - Adicionar saldo (somente via transferencia, de sua conta externa para esta corretora)");
-        System.out.println("8 - Listar criptoativos");
-        System.out.println("9 - Comprar criptoativo");
-        System.out.println("10 - Vender criptoativo");
-        System.out.println("11 - Consultar transações de contas no sistema");
-        System.out.println("12 - Consultar transações de criptoativos no sistema");
+        System.out.println("5 - Fazer tansferencia para uma conta interna");
+        System.out.println("6 - Adicionar saldo (somente via transferencia, de sua conta externa para esta corretora)");
+        System.out.println("7 - Listar criptoativos");
+        System.out.println("8 - Comprar criptoativo");
+        System.out.println("9 - Vender criptoativo");
+        System.out.println("10 - Consultar transações de contas no sistema");
+        System.out.println("11 - Consultar transações de criptoativos no sistema");
         System.out.println("0 - Sair");
         System.out.print("Escolha a opção desejada: ");
     }
