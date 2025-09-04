@@ -8,6 +8,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class ContaClienteDao {
     Connection conexao;
@@ -123,6 +126,31 @@ public class ContaClienteDao {
             throw e;
         }
     }
+
+    public List<ContaCliente> listarContasPorCliente(int idCliente) throws SQLException {
+        String sql = "SELECT id_conta, numero_conta, agencia, saldo " +
+                "FROM CONTA WHERE CLIENTE_ID_cliente = ? ORDER BY id_conta";
+
+        List<ContaCliente> contas = new ArrayList<>();
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setInt(1, idCliente);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    ContaCliente conta = new ContaCliente();
+                    conta.setId(rs.getInt("id_conta"));
+                    conta.setNumeroAgencia(rs.getInt("numero_conta"));
+                    conta.setNumeroAgencia(rs.getInt("agencia"));
+                    conta.setSaldo(rs.getDouble("saldo"));
+
+                    contas.add(conta);
+                }
+            }
+        }
+        return contas;
+    }
+
+    //----HELPERS----
+
 
 
 
