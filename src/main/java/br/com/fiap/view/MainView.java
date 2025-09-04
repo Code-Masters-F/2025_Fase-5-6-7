@@ -313,8 +313,9 @@ public class MainView {
         System.out.print("Digite o numero do id do cliente que deseja adicionar saldo: ");
         int idCliente = Integer.parseInt(scanner.nextLine().trim());
 
+        Cliente cliente;
         try {
-            Cliente cliente = new ClienteDao().consultarClientePorId(idCliente);
+            cliente = new ClienteDao().consultarClientePorId(idCliente);
 
             if (cliente == null) {
                 System.out.println("\nCliente não encontrado no sistema.");
@@ -323,6 +324,24 @@ public class MainView {
         } catch (SQLException e) {
             System.err.println("Não foi possível consultar o Cliente: " + e.getMessage());
             e.printStackTrace();
+            return;
+        } catch (SQLException e) {
+            System.err.println("Não foi possível consultar o cliente: " + e.getMessage());
+            e.printStackTrace();
+            return;
+        }
+
+        List<ContaCliente> contasDoCliente;
+        try {
+            contasDoCliente = new ContaClienteDao().buscarContaPorClienteId(idCliente);
+        } catch (SQLException e) {
+            System.err.println("Erro ao buscar contas do cliente: " + e.getMessage());
+            return;
+        }
+
+        if (contasDoCliente == null || contasDoCliente.isEmpty()) {
+            System.out.println("Este clienten ão possui contas cadastradas.");
+            return;
         }
 
         System.out.print("Digite o número da conta que enviou a transferência: ");

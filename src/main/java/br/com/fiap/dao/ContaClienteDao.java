@@ -3,11 +3,9 @@ package br.com.fiap.dao;
 import br.com.fiap.factory.ConnectionFactory;
 import br.com.fiap.model.ContaCliente;
 
-import java.sql.Connection;
+import java.sql.*;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -29,7 +27,7 @@ public class ContaClienteDao {
             stmt.setInt(1, idCliente);
             stmt.setInt(2, numeroConta);
             stmt.setInt(3, agencia);
-            stmt.setDate(4, java.sql.Date.valueOf(java.time.LocalDate.now()));
+            stmt.setDate(4, Date.valueOf(LocalDate.now()));
 
             int linhas = stmt.executeUpdate();
             if (linhas != 1) {
@@ -69,7 +67,7 @@ public class ContaClienteDao {
                 if (rs.next()) {
                     ContaCliente conta = new ContaCliente();
                     conta.setId(rs.getInt("id_conta"));
-                    conta.getCliente().setId(rs.getInt("cliente_id"));
+                    conta.getCliente().setId(rs.getInt("cliente_id_cliente"));
                     conta.setNumeroConta(rs.getInt("numero_conta"));
                     conta.setNumeroAgencia(rs.getInt("agencia"));
                     conta.setSaldo(rs.getDouble("saldo"));
@@ -78,6 +76,35 @@ public class ContaClienteDao {
             }
         }
         return null;
+    }
+
+    public List<ContaCliente> buscarContasPorClienteId(int idCliente) throws SQLException {
+
+        List<ContaCliente> contas = new ArrayList<>();
+
+        final String sql = """
+                SELECT id_conta, cliente_id_cliente, numero_conta, agencia, saldo
+                FROM conta
+                WHERE cliente_id_cliente = ?
+                """;
+
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setInt(1, idCliente);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    ContaCliente conta = new ContaCliente();
+                    conta.setId(rs.getInt("id_conta"));
+                    conta.getCliente().setId(rs.getInt("cliente_id_cliente"));
+                    conta.setNumeroConta(rs.getInt("numero_conta"));
+                    conta.setNumeroAgencia(rs.getInt("agencia"));
+                    conta.setSaldo(rs.getDouble("saldo"));
+
+                    contas.add(conta);
+                }
+            }
+        }
+        return contas;
     }
 
     public void transferirParaContaInterna(int idOrigem, int idDestino, double valor) throws SQLException {
@@ -149,7 +176,6 @@ public class ContaClienteDao {
         return contas;
     }
 
-    //----HELPERS----
 
 
 
