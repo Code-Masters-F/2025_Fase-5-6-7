@@ -1,6 +1,8 @@
 package br.com.fiap.dao;
 
 import br.com.fiap.factory.ConnectionFactory;
+import br.com.fiap.model.Carteira;
+import br.com.fiap.model.Cliente;
 import br.com.fiap.model.ContaCliente;
 
 import java.sql.Connection;
@@ -52,9 +54,9 @@ public class ContaClienteDao {
 
     }
 
-    public ContaCliente buscarContaPorClienteId(int idCliente) throws SQLException {
+    public ContaCliente buscarContaPorClienteId(int idCliente, Cliente cliente) throws SQLException {
         final String sql = """
-                SELECT id_conta, cliente_id_cliente, numero_conta, agencia, saldo
+                SELECT *
                 FROM conta
                 WHERE cliente_id_cliente = ?
                 """;
@@ -64,13 +66,15 @@ public class ContaClienteDao {
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    ContaCliente conta = new ContaCliente();
-                    conta.setId(rs.getInt("id_conta"));
-                    conta.getCliente().setId(rs.getInt("cliente_id"));
-                    conta.setNumeroConta(rs.getInt("numero_conta"));
-                    conta.setNumeroAgencia(rs.getInt("agencia"));
-                    conta.setSaldo(rs.getDouble("saldo"));
-                    return conta;
+                    int id_conta = rs.getInt("id_conta");
+                    int numero_conta = rs.getInt("numero_conta");
+                    int agencia = rs.getInt("agencia");
+                    double saldo = rs.getDouble("saldo");
+
+                    CarteiraDao daoCarteira = new CarteiraDao();
+                    int id_carteira = daoCarteira.buscarCarteiraPorContaId(id_conta);
+
+                    return new ContaCliente(id_conta, numero_conta, agencia, saldo, id_carteira, cliente);
                 }
             }
         }

@@ -21,20 +21,20 @@ public class CarteiraDao {
         conexao = ConnectionFactory.getConnection();
     }
 
-//    public Integer buscarCarteiraPorContaId(int idConta) throws SQLException {
-//        final String sql = """
-//                SELECT carteira_id_carteira
-//                FROM conta
-//                WHERE id_conta = ?
-//                """;
-//
-//        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
-//            stmt.setInt(1, idConta);
-//            try (ResultSet rs = stmt.executeQuery()) {
-//                return rs.next() ? rs.getInt("carteira_id_carteira") : null;
-//            }
-//        }
-//    }
+    public Integer buscarCarteiraPorContaId(int idConta) throws SQLException {
+        final String sql = """
+                SELECT id_carteira
+                FROM carteira
+                WHERE conta_id_conta = ?
+                """;
+
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setInt(1, idConta);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next() ? rs.getInt("id_carteira") : null;
+            }
+        }
+    }
 
     public record CompraResult(int contaId, double precoUnitario, double total) {}
 

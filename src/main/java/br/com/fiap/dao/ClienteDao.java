@@ -5,6 +5,7 @@ import br.com.fiap.model.Cliente;
 
 import java.math.BigDecimal;
 import java.sql.*;
+import java.time.LocalDate;
 
 public class ClienteDao {
     private Connection conexao;
@@ -52,12 +53,12 @@ public class ClienteDao {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                cliente = new Cliente();
-                cliente.setId(rs.getInt("id_cliente"));
-                cliente.setNome(rs.getString("nome"));
-                cliente.setEmail(rs.getString("email"));
-                cliente.setCPF(rs.getString("cpf"));
-                cliente.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
+                String nome = rs.getString("NOME");
+                String email = rs.getString("EMAIL");
+                String cpf = rs.getString("CPF");
+                LocalDate dataNascimento = rs.getDate("DATA_NASCIMENTO").toLocalDate();
+
+                cliente = new Cliente(cpf, nome, email, dataNascimento, idCliente);
                 return cliente;
             }
         }

@@ -210,7 +210,7 @@ public class MainView {
             }
 
             ContaClienteDao contaDaoCliente = new ContaClienteDao();
-            ContaCliente conta = contaDaoCliente.buscarContaPorClienteId(id);
+            ContaCliente conta = contaDaoCliente.buscarContaPorClienteId(id, cliente);
 
             System.out.println("Cliente: " + cliente.getNome());
             System.out.println("Email: " + cliente.getEmail());

@@ -20,6 +20,14 @@ public class ContaCliente extends Conta {
         this.carteira = new Carteira();
     }
 
+    public ContaCliente(int idConta, int numeroConta, int agencia, double saldo, int id_carteira, Cliente cliente) {
+        super(numeroConta, agencia, idConta);
+        this.cliente = cliente;
+        this.saldo = saldo;
+        this.carteira = new Carteira(this, id_carteira);
+    }
+
+
     public ContaCliente() {
         super();
 
