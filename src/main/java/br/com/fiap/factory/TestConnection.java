@@ -2,6 +2,8 @@ package br.com.fiap.factory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 
 // EXEMPLO de como se usar o ConnectionFactory
@@ -15,7 +17,7 @@ public class TestConnection {
 
             conexao = ConnectionFactory.getConnection();
             System.out.println("Conexão estabelecida com sucesso!");
-
+            
             // Precisa fechar quando a classe que está usando a conexão não for usar mais
             // Na fiap o professor coloca um médoto para fechar
             conexao.close();

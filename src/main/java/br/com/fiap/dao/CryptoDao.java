@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.sql.Date;
 import java.util.List;
 
 public class CryptoDao {
@@ -42,7 +43,9 @@ public class CryptoDao {
                 int id = rs.getInt("id_crypto");
                 String nome = rs.getString("nome");
                 String sigla = rs.getString("sigla");
-                LocalDate dataLancamento = rs.getDate("data_lancamento").toLocalDate();
+
+                Date data = rs.getDate("data_lancamento");
+                LocalDate dataLancamento = (data != null) ? data.toLocalDate() : null;
 
                 Crypto crypto = new Crypto(nome, sigla, dataLancamento);
                 crypto.setId(id);
@@ -53,21 +56,43 @@ public class CryptoDao {
         return cryptos;
     }
 
-    public Crypto pesquisar(int id) throws SQLException {
-        String sql = "SELECT * FROM crypto WHERE cd_produto = ?";
+
+    public int contarCryptos() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM crypto";
+        try (PreparedStatement ps = conexao.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            rs.next();
+            return rs.getInt(1);
+        }
+    }
+
+    public String usuarioAtual() throws SQLException {
+        try (PreparedStatement ps = conexao.prepareStatement("SELECT USER FROM dual");
+             ResultSet rs = ps.executeQuery()) {
+            rs.next();
+            return rs.getString(1);
+        }
+    }
+
+
+    public Crypto consultarCrypto(int id) throws SQLException {
+        String sql = "SELECT id_crypto, nome, sigla, data_lancamento FROM crypto WHERE id_crypto = ?";
 
         try (PreparedStatement stm = conexao.prepareStatement(sql)) {
 
             stm.setInt(1, id);
 
             try (ResultSet result = stm.executeQuery()) {
-                String nome = result.getString("nome");
-                String sigla = result.getString("sigla");
-                LocalDate dataLancamento = result.getDate("data_lancamento").toLocalDate();
-                return new Crypto(nome, sigla, id, dataLancamento);
+                if (result.next())  {
+                    String nome = result.getString("nome");
+                    String sigla = result.getString("sigla");
+                    LocalDate dataLancamento = result.getDate("data_lancamento").toLocalDate();
+                    return new Crypto(nome, sigla, id, dataLancamento);
+                }
             }
-
+            return null;
         }
+
     }
 
 

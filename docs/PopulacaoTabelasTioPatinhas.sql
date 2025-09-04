@@ -1,351 +1,378 @@
 -- ========================================
--- SCRIPT DML - POPULAÇÃO E MANIPULAÇÃO DE DADOS (AJUSTADO p/ saldo)
--- Oracle 19c (com IDENTITY no DDL)
+-- SCRIPT DML - POPULAÇÃO E MANIPULAÇÃO DE DADOS (COM COMMIT)
 -- ========================================
 
--- ========================================
--- INSERT - POPULAÇÃO DAS TABELAS
--- ========================================
+-- =========================
+-- 1. INSERÇÃO DE CLIENTES
+-- =========================
+INSERT INTO CLIENTE (nome, email, cpf, data_nascimento) VALUES ('João Silva Santos', 'joao.silva@email.com', '12345678901', DATE '1985-03-15');
+INSERT INTO CLIENTE (nome, email, cpf, data_nascimento) VALUES ('Maria Oliveira Costa', 'maria.oliveira@email.com', '23456789012', DATE '1990-07-22');
+INSERT INTO CLIENTE (nome, email, cpf, data_nascimento) VALUES ('Pedro Ferreira Lima', 'pedro.ferreira@email.com', '34567890123', DATE '1988-11-08');
+INSERT INTO CLIENTE (nome, email, cpf, data_nascimento) VALUES ('Ana Carolina Souza', 'ana.souza@email.com', '45678901234', DATE '1992-02-14');
+INSERT INTO CLIENTE (nome, email, cpf, data_nascimento) VALUES ('Carlos Eduardo Pereira', 'carlos.pereira@email.com', '56789012345', DATE '1987-09-30');
+INSERT INTO CLIENTE (nome, email, cpf, data_nascimento) VALUES ('Fernanda Almeida', 'fernanda.almeida@email.com', '67890123456', DATE '1991-12-05');
+INSERT INTO CLIENTE (nome, email, cpf, data_nascimento) VALUES ('Ricardo Barbosa', 'ricardo.barbosa@email.com', '78901234567', DATE '1984-06-18');
+INSERT INTO CLIENTE (nome, email, cpf, data_nascimento) VALUES ('Juliana Rodrigues', 'juliana.rodrigues@email.com', '89012345678', DATE '1993-04-25');
 
--- Inserção de Clientes
-INSERT INTO CLIENTE (nome, email, cpf, data_nascimento) VALUES ('João Silva Santos', 'joao.silva@email.com', '12345678901', TO_DATE('1985-03-15', 'YYYY-MM-DD'));
-INSERT INTO CLIENTE (nome, email, cpf, data_nascimento) VALUES ('Maria Oliveira Costa', 'maria.oliveira@email.com', '23456789012', TO_DATE('1990-07-22', 'YYYY-MM-DD'));
-INSERT INTO CLIENTE (nome, email, cpf, data_nascimento) VALUES ('Pedro Ferreira Lima', 'pedro.ferreira@email.com', '34567890123', TO_DATE('1988-11-08', 'YYYY-MM-DD'));
-INSERT INTO CLIENTE (nome, email, cpf, data_nascimento) VALUES ('Ana Carolina Souza', 'ana.souza@email.com', '45678901234', TO_DATE('1992-02-14', 'YYYY-MM-DD'));
-INSERT INTO CLIENTE (nome, email, cpf, data_nascimento) VALUES ('Carlos Eduardo Pereira', 'carlos.pereira@email.com', '56789012345', TO_DATE('1987-09-30', 'YYYY-MM-DD'));
-INSERT INTO CLIENTE (nome, email, cpf, data_nascimento) VALUES ('Fernanda Almeida', 'fernanda.almeida@email.com', '67890123456', TO_DATE('1991-12-05', 'YYYY-MM-DD'));
-INSERT INTO CLIENTE (nome, email, cpf, data_nascimento) VALUES ('Ricardo Barbosa', 'ricardo.barbosa@email.com', '78901234567', TO_DATE('1984-06-18', 'YYYY-MM-DD'));
-INSERT INTO CLIENTE (nome, email, cpf, data_nascimento) VALUES ('Juliana Rodrigues', 'juliana.rodrigues@email.com', '89012345678', TO_DATE('1993-04-25', 'YYYY-MM-DD'));
+COMMIT;
 
--- Inserção de Criptomoedas
-INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Bitcoin',   'BTC',  TO_DATE('2009-01-03', 'YYYY-MM-DD'));
-INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Ethereum',  'ETH',  TO_DATE('2015-07-30', 'YYYY-MM-DD'));
-INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Cardano',   'ADA',  TO_DATE('2017-09-29', 'YYYY-MM-DD'));
-INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Polygon',   'MATIC',TO_DATE('2017-10-01', 'YYYY-MM-DD'));
-INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Chainlink', 'LINK', TO_DATE('2017-09-20', 'YYYY-MM-DD'));
-INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Litecoin',  'LTC',  TO_DATE('2011-10-07', 'YYYY-MM-DD'));
-INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Polkadot',  'DOT',  TO_DATE('2020-08-19', 'YYYY-MM-DD'));
-INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Solana',    'SOL',  TO_DATE('2020-03-16', 'YYYY-MM-DD'));
-INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Avalanche', 'AVAX', TO_DATE('2020-09-21', 'YYYY-MM-DD'));
-INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Uniswap',   'UNI',  TO_DATE('2020-09-16', 'YYYY-MM-DD'));
+-- =========================
+-- 2. INSERÇÃO DE CRYPTOS
+-- =========================
+INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Bitcoin',   'BTC',  DATE '2009-01-03');
+INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Ethereum',  'ETH',  DATE '2015-07-30');
+INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Cardano',   'ADA',  DATE '2017-09-29');
+INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Polygon',   'MATIC',DATE '2017-10-01');
+INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Chainlink', 'LINK', DATE '2017-09-20');
+INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Litecoin',  'LTC',  DATE '2011-10-07');
+INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Polkadot',  'DOT',  DATE '2020-08-19');
+INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Solana',    'SOL',  DATE '2020-03-16');
+INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Avalanche', 'AVAX', DATE '2020-09-21');
+INSERT INTO CRYPTO (nome, sigla, data_lancamento) VALUES ('Uniswap',   'UNI',  DATE '2020-09-16');
 
--- Inserção de Contas (AGORA COM SALDO INICIAL)
--- Dica: escolhi 50.000 para cobrir confortavelmente compras/transferências do seu exemplo.
-INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo) VALUES (1, '0001234567', '1001', TO_DATE('2023-01-15', 'YYYY-MM-DD'), 50000);
-INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo) VALUES (2, '0002345678', '1001', TO_DATE('2023-02-20', 'YYYY-MM-DD'), 50000);
-INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo) VALUES (3, '0003456789', '1002', TO_DATE('2023-03-10', 'YYYY-MM-DD'), 50000);
-INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo) VALUES (4, '0004567890', '1002', TO_DATE('2023-04-05', 'YYYY-MM-DD'), 50000);
-INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo) VALUES (5, '0005678901', '1003', TO_DATE('2023-05-12', 'YYYY-MM-DD'), 50000);
-INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo) VALUES (6, '0006789012', '1003', TO_DATE('2023-06-18', 'YYYY-MM-DD'), 50000);
-INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo) VALUES (7, '0007890123', '1004', TO_DATE('2023-07-22', 'YYYY-MM-DD'), 50000);
-INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo) VALUES (8, '0008901234', '1004', TO_DATE('2023-08-30', 'YYYY-MM-DD'), 50000);
-INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo) VALUES (1, '0009012345', '1001', TO_DATE('2023-09-15', 'YYYY-MM-DD'), 50000); -- João tem segunda conta
-INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo) VALUES (2, '0010123456', '1002', TO_DATE('2023-10-20', 'YYYY-MM-DD'), 50000); -- Maria tem segunda conta
+COMMIT;
 
--- Inserção de Carteiras (IDs assumem ordem de inserção por IDENTITY)
-INSERT INTO CARTEIRA (CONTA_id_conta) VALUES (1);
-INSERT INTO CARTEIRA (CONTA_id_conta) VALUES (2);
-INSERT INTO CARTEIRA (CONTA_id_conta) VALUES (3);
-INSERT INTO CARTEIRA (CONTA_id_conta) VALUES (4);
-INSERT INTO CARTEIRA (CONTA_id_conta) VALUES (5);
-INSERT INTO CARTEIRA (CONTA_id_conta) VALUES (6);
-INSERT INTO CARTEIRA (CONTA_id_conta) VALUES (7);
-INSERT INTO CARTEIRA (CONTA_id_conta) VALUES (8);
-INSERT INTO CARTEIRA (CONTA_id_conta) VALUES (9);
-INSERT INTO CARTEIRA (CONTA_id_conta) VALUES (10);
+-- =========================
+-- 3. INSERÇÃO DE CONTAS
+-- =========================
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo)
+SELECT id_cliente, '0001234567', '1001', DATE '2023-01-15', 50000 FROM CLIENTE WHERE nome = 'João Silva Santos';
 
--- Inserção de Posses (Criptomoedas nas Carteiras)
--- Carteira 1 (João)
-INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto) VALUES (1, 1, 0.50000000); -- 0.5 BTC
-INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto) VALUES (1, 2, 2.45000000); -- 2.45 ETH
-INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto) VALUES (1, 3, 1000.00000000); -- 1000 ADA
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo)
+SELECT id_cliente, '0002345678', '1001', DATE '2023-02-20', 50000 FROM CLIENTE WHERE nome = 'Maria Oliveira Costa';
 
--- Carteira 2 (Maria)
-INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto) VALUES (2, 1, 0.25000000);
-INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto) VALUES (2, 4, 500.00000000);
-INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto) VALUES (2, 5, 25.00000000);
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo)
+SELECT id_cliente, '0003456789', '1002', DATE '2023-03-10', 50000 FROM CLIENTE WHERE nome = 'Pedro Ferreira Lima';
 
--- Carteira 3 (Pedro)
-INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto) VALUES (3, 2, 1.80000000);
-INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto) VALUES (3, 6, 5.00000000);
-INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto) VALUES (3, 7, 15.00000000);
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo)
+SELECT id_cliente, '0004567890', '1002', DATE '2023-04-05', 50000 FROM CLIENTE WHERE nome = 'Ana Carolina Souza';
 
--- Carteira 4 (Ana)
-INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto) VALUES (4, 8, 10.00000000);
-INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto) VALUES (4, 9, 8.50000000);
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo)
+SELECT id_cliente, '0005678901', '1003', DATE '2023-05-12', 50000 FROM CLIENTE WHERE nome = 'Carlos Eduardo Pereira';
 
--- Carteira 5 (Carlos)
-INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto) VALUES (5, 1, 0.75000000);
-INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto) VALUES (5, 10, 50.00000000);
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo)
+SELECT id_cliente, '0006789012', '1003', DATE '2023-06-18', 50000 FROM CLIENTE WHERE nome = 'Fernanda Almeida';
 
--- Carteira 6 (Fernanda)
-INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto) VALUES (6, 2, 3.20000000);
-INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto) VALUES (6, 3, 2000.00000000);
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo)
+SELECT id_cliente, '0007890123', '1004', DATE '2023-07-22', 50000 FROM CLIENTE WHERE nome = 'Ricardo Barbosa';
 
--- Carteira 7 (Ricardo)
-INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto) VALUES (7, 4, 800.00000000);
-INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto) VALUES (7, 5, 40.00000000);
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo)
+SELECT id_cliente, '0008901234', '1004', DATE '2023-08-30', 50000 FROM CLIENTE WHERE nome = 'Juliana Rodrigues';
 
--- Carteira 8 (Juliana)
-INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto) VALUES (8, 6, 12.00000000);
-INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto) VALUES (8, 7, 25.00000000);
+-- João segunda conta
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo)
+SELECT id_cliente, '0009012345', '1001', DATE '2023-09-15', 50000 FROM CLIENTE WHERE nome = 'João Silva Santos';
 
--- Inserção de Transações Fiat
-INSERT INTO TRANSACAO_FIAT (CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (1, 2, 1500.00, TO_TIMESTAMP('2024-01-15 10:30:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO TRANSACAO_FIAT (CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (3, 4, 2500.00, TO_TIMESTAMP('2024-01-16 14:22:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO TRANSACAO_FIAT (CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (5, 6, 800.00,  TO_TIMESTAMP('2024-01-17 09:15:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO TRANSACAO_FIAT (CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (7, 8, 1200.00, TO_TIMESTAMP('2024-01-18 16:45:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO TRANSACAO_FIAT (CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (2, 1, 500.00,  TO_TIMESTAMP('2024-01-19 11:20:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO TRANSACAO_FIAT (CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (4, 3, 1800.00, TO_TIMESTAMP('2024-01-20 13:30:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO TRANSACAO_FIAT (CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (6, 5, 900.00,  TO_TIMESTAMP('2024-01-21 15:10:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO TRANSACAO_FIAT (CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (8, 7, 1100.00, TO_TIMESTAMP('2024-01-22 08:25:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO TRANSACAO_FIAT (CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (1, 3, 2200.00, TO_TIMESTAMP('2024-01-23 12:40:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO TRANSACAO_FIAT (CONTA_id_conta_origem, CONTA_id_conta_destino, valor, data_hora) VALUES (9, 10, 3000.00, TO_TIMESTAMP('2024-01-24 17:55:00', 'YYYY-MM-DD HH24:MI:SS'));
+-- Maria segunda conta
+INSERT INTO CONTA (CLIENTE_id_cliente, numero_conta, agencia, data_abertura, saldo)
+SELECT id_cliente, '0010123456', '1002', DATE '2023-10-20', 50000 FROM CLIENTE WHERE nome = 'Maria Oliveira Costa';
 
--- Inserção de Transações Crypto
--- Compras (debitam saldo)
+COMMIT;
+
+-- =========================
+-- 4. INSERÇÃO DE CARTEIRAS
+-- =========================
+INSERT INTO CARTEIRA (CONTA_id_conta)
+SELECT id_conta FROM CONTA;
+
+COMMIT;
+
+-- =========================
+-- 5. INSERÇÃO DE POSSES (EXEMPLOS)
+-- =========================
+
+-- Carteira João Silva Santos (BTC, ETH, ADA)
+INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto)
+SELECT ca.id_carteira, cr.id_crypto, 0.5
+FROM CARTEIRA ca
+JOIN CONTA ct ON ca.CONTA_id_conta = ct.id_conta
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO cr ON cr.sigla = 'BTC'
+WHERE cl.nome = 'João Silva Santos' AND ROWNUM=1;
+
+COMMIT;
+
 INSERT INTO TRANSACAO_CRYPTO (CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status)
-VALUES (1, 1, 'COMPRA', 0.25000000000, 45000.00000000, TO_TIMESTAMP('2024-01-15 09:30:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
+SELECT ct.id_conta, cr.id_crypto, 'COMPRA', 0.25, 45000, TIMESTAMP '2024-01-15 09:30:00', 'CONCLUIDA'
+FROM CONTA ct
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO cr ON cr.sigla = 'BTC'
+WHERE cl.nome = 'João Silva Santos' AND ROWNUM=1;
+
+COMMIT;
+
+INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto)
+SELECT ca.id_carteira, cr.id_crypto, 2.45
+FROM CARTEIRA ca
+JOIN CONTA ct   ON ca.CONTA_id_conta = ct.id_conta
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'ETH'
+WHERE cl.nome = 'João Silva Santos' AND ROWNUM = 1;
+
+INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto)
+SELECT ca.id_carteira, cr.id_crypto, 1000
+FROM CARTEIRA ca
+JOIN CONTA ct   ON ca.CONTA_id_conta = ct.id_conta
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'ADA'
+WHERE cl.nome = 'João Silva Santos' AND ROWNUM = 1;
+
+-- -------------------------
+-- Maria Oliveira Costa: BTC, MATIC, LINK
+-- -------------------------
+INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto)
+SELECT ca.id_carteira, cr.id_crypto, 0.25
+FROM CARTEIRA ca
+JOIN CONTA ct   ON ca.CONTA_id_conta = ct.id_conta
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'BTC'
+WHERE cl.nome = 'Maria Oliveira Costa' AND ROWNUM = 1;
+
+INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto)
+SELECT ca.id_carteira, cr.id_crypto, 500
+FROM CARTEIRA ca
+JOIN CONTA ct   ON ca.CONTA_id_conta = ct.id_conta
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'MATIC'
+WHERE cl.nome = 'Maria Oliveira Costa' AND ROWNUM = 1;
+
+INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto)
+SELECT ca.id_carteira, cr.id_crypto, 25
+FROM CARTEIRA ca
+JOIN CONTA ct   ON ca.CONTA_id_conta = ct.id_conta
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'LINK'
+WHERE cl.nome = 'Maria Oliveira Costa' AND ROWNUM = 1;
+
+-- -------------------------
+-- Pedro Ferreira Lima: ETH, LTC, DOT
+-- -------------------------
+INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto)
+SELECT ca.id_carteira, cr.id_crypto, 1.8
+FROM CARTEIRA ca
+JOIN CONTA ct   ON ca.CONTA_id_conta = ct.id_conta
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'ETH'
+WHERE cl.nome = 'Pedro Ferreira Lima' AND ROWNUM = 1;
+
+INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto)
+SELECT ca.id_carteira, cr.id_crypto, 5
+FROM CARTEIRA ca
+JOIN CONTA ct   ON ca.CONTA_id_conta = ct.id_conta
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'LTC'
+WHERE cl.nome = 'Pedro Ferreira Lima' AND ROWNUM = 1;
+
+INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto)
+SELECT ca.id_carteira, cr.id_crypto, 15
+FROM CARTEIRA ca
+JOIN CONTA ct   ON ca.CONTA_id_conta = ct.id_conta
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'DOT'
+WHERE cl.nome = 'Pedro Ferreira Lima' AND ROWNUM = 1;
+
+-- -------------------------
+-- Ana Carolina Souza: SOL, AVAX
+-- -------------------------
+INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto)
+SELECT ca.id_carteira, cr.id_crypto, 10
+FROM CARTEIRA ca
+JOIN CONTA ct   ON ca.CONTA_id_conta = ct.id_conta
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'SOL'
+WHERE cl.nome = 'Ana Carolina Souza' AND ROWNUM = 1;
+
+INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto)
+SELECT ca.id_carteira, cr.id_crypto, 8.5
+FROM CARTEIRA ca
+JOIN CONTA ct   ON ca.CONTA_id_conta = ct.id_conta
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'AVAX'
+WHERE cl.nome = 'Ana Carolina Souza' AND ROWNUM = 1;
+
+-- -------------------------
+-- Carlos Eduardo Pereira: BTC, UNI
+-- -------------------------
+INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto)
+SELECT ca.id_carteira, cr.id_crypto, 0.75
+FROM CARTEIRA ca
+JOIN CONTA ct   ON ca.CONTA_id_conta = ct.id_conta
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'BTC'
+WHERE cl.nome = 'Carlos Eduardo Pereira' AND ROWNUM = 1;
+
+INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto)
+SELECT ca.id_carteira, cr.id_crypto, 50
+FROM CARTEIRA ca
+JOIN CONTA ct   ON ca.CONTA_id_conta = ct.id_conta
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'UNI'
+WHERE cl.nome = 'Carlos Eduardo Pereira' AND ROWNUM = 1;
+
+-- -------------------------
+-- Fernanda Almeida: ETH, ADA
+-- -------------------------
+INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto)
+SELECT ca.id_carteira, cr.id_crypto, 3.2
+FROM CARTEIRA ca
+JOIN CONTA ct   ON ca.CONTA_id_conta = ct.id_conta
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'ETH'
+WHERE cl.nome = 'Fernanda Almeida' AND ROWNUM = 1;
+
+INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto)
+SELECT ca.id_carteira, cr.id_crypto, 2000
+FROM CARTEIRA ca
+JOIN CONTA ct   ON ca.CONTA_id_conta = ct.id_conta
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'ADA'
+WHERE cl.nome = 'Fernanda Almeida' AND ROWNUM = 1;
+
+-- -------------------------
+-- Ricardo Barbosa: MATIC, LINK
+-- -------------------------
+INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto)
+SELECT ca.id_carteira, cr.id_crypto, 800
+FROM CARTEIRA ca
+JOIN CONTA ct   ON ca.CONTA_id_conta = ct.id_conta
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'MATIC'
+WHERE cl.nome = 'Ricardo Barbosa' AND ROWNUM = 1;
+
+INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto)
+SELECT ca.id_carteira, cr.id_crypto, 40
+FROM CARTEIRA ca
+JOIN CONTA ct   ON ca.CONTA_id_conta = ct.id_conta
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'LINK'
+WHERE cl.nome = 'Ricardo Barbosa' AND ROWNUM = 1;
+
+-- -------------------------
+-- Juliana Rodrigues: LTC, DOT
+-- -------------------------
+INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto)
+SELECT ca.id_carteira, cr.id_crypto, 12
+FROM CARTEIRA ca
+JOIN CONTA ct   ON ca.CONTA_id_conta = ct.id_conta
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'LTC'
+WHERE cl.nome = 'Juliana Rodrigues' AND ROWNUM = 1;
+
+INSERT INTO POSSE (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto)
+SELECT ca.id_carteira, cr.id_crypto, 25
+FROM CARTEIRA ca
+JOIN CONTA ct   ON ca.CONTA_id_conta = ct.id_conta
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'DOT'
+WHERE cl.nome = 'Juliana Rodrigues' AND ROWNUM = 1;
+
+COMMIT;
+
+-- =========================
+-- 6. INSERÇÃO DE TRANSACOES CRYPTO (EXEMPLO)
+-- =========================
+
+-- =========================
+-- 6. INSERÇÃO DE TRANSACOES CRYPTO
+-- =========================
+
+-- COMPRAS (debitam saldo)
 INSERT INTO TRANSACAO_CRYPTO (CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status)
-VALUES (2, 2, 'COMPRA', 1.50000000000, 2800.00000000,  TO_TIMESTAMP('2024-01-15 10:45:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
+SELECT ct.id_conta, cr.id_crypto, 'COMPRA', 0.25, 45000, TIMESTAMP '2024-01-15 09:30:00', 'CONCLUIDA'
+FROM CONTA ct
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'BTC'
+WHERE cl.nome = 'João Silva Santos' AND ROWNUM = 1;
+
 INSERT INTO TRANSACAO_CRYPTO (CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status)
-VALUES (3, 3, 'COMPRA', 500.000000000000, 0.45000000,   TO_TIMESTAMP('2024-01-16 11:20:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
+SELECT ct.id_conta, cr.id_crypto, 'COMPRA', 1.5, 2800, TIMESTAMP '2024-01-15 10:45:00', 'CONCLUIDA'
+FROM CONTA ct
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'ETH'
+WHERE cl.nome = 'Maria Oliveira Costa' AND ROWNUM = 1;
+
 INSERT INTO TRANSACAO_CRYPTO (CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status)
-VALUES (4, 8, 'COMPRA', 5.000000000000, 95.50000000,   TO_TIMESTAMP('2024-01-16 14:30:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
+SELECT ct.id_conta, cr.id_crypto, 'COMPRA', 500, 0.45, TIMESTAMP '2024-01-16 11:20:00', 'CONCLUIDA'
+FROM CONTA ct
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'ADA'
+WHERE cl.nome = 'Pedro Ferreira Lima' AND ROWNUM = 1;
+
 INSERT INTO TRANSACAO_CRYPTO (CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status)
-VALUES (5, 1, 'COMPRA', 0.50000000000, 44500.00000000, TO_TIMESTAMP('2024-01-17 08:15:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
+SELECT ct.id_conta, cr.id_crypto, 'COMPRA', 5, 95.5, TIMESTAMP '2024-01-16 14:30:00', 'CONCLUIDA'
+FROM CONTA ct
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'SOL'
+WHERE cl.nome = 'Ana Carolina Souza' AND ROWNUM = 1;
 
--- Vendas (creditam saldo)
 INSERT INTO TRANSACAO_CRYPTO (CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status)
-VALUES (1, 1, 'VENDA', 0.10000000000, 46000.00000000, TO_TIMESTAMP('2024-01-18 16:20:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
+SELECT ct.id_conta, cr.id_crypto, 'COMPRA', 0.5, 44500, TIMESTAMP '2024-01-17 08:15:00', 'CONCLUIDA'
+FROM CONTA ct
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'BTC'
+WHERE cl.nome = 'Carlos Eduardo Pereira' AND ROWNUM = 1;
+
+-- VENDAS (creditam saldo)
 INSERT INTO TRANSACAO_CRYPTO (CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status)
-VALUES (2, 2, 'VENDA', 0.50000000000, 2850.00000000, TO_TIMESTAMP('2024-01-19 13:45:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
+SELECT ct.id_conta, cr.id_crypto, 'VENDA', 0.1, 46000, TIMESTAMP '2024-01-18 16:20:00', 'CONCLUIDA'
+FROM CONTA ct
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'BTC'
+WHERE cl.nome = 'João Silva Santos' AND ROWNUM = 1;
+
 INSERT INTO TRANSACAO_CRYPTO (CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status)
-VALUES (3, 3, 'VENDA', 200.000000000000, 0.47000000, TO_TIMESTAMP('2024-01-20 10:30:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
+SELECT ct.id_conta, cr.id_crypto, 'VENDA', 0.5, 2850, TIMESTAMP '2024-01-19 13:45:00', 'CONCLUIDA'
+FROM CONTA ct
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'ETH'
+WHERE cl.nome = 'Maria Oliveira Costa' AND ROWNUM = 1;
 
--- Transações pendentes e outras
 INSERT INTO TRANSACAO_CRYPTO (CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status)
-VALUES (6, 4, 'COMPRA', 300.000000000000, 0.85000000, TO_TIMESTAMP('2024-01-21 15:10:00', 'YYYY-MM-DD HH24:MI:SS'), 'PENDENTE');
+SELECT ct.id_conta, cr.id_crypto, 'VENDA', 200, 0.47, TIMESTAMP '2024-01-20 10:30:00', 'CONCLUIDA'
+FROM CONTA ct
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'ADA'
+WHERE cl.nome = 'Pedro Ferreira Lima' AND ROWNUM = 1;
+
+-- OUTRAS: pendente / falhou / cancelada
 INSERT INTO TRANSACAO_CRYPTO (CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status)
-VALUES (7, 5, 'COMPRA', 20.000000000000, 12.50000000, TO_TIMESTAMP('2024-01-22 12:25:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
+SELECT ct.id_conta, cr.id_crypto, 'COMPRA', 300, 0.85, TIMESTAMP '2024-01-21 15:10:00', 'PENDENTE'
+FROM CONTA ct
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'MATIC'
+WHERE cl.nome = 'Fernanda Almeida' AND ROWNUM = 1;
+
 INSERT INTO TRANSACAO_CRYPTO (CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status)
-VALUES (8, 6, 'COMPRA', 8.000000000000, 85.00000000,  TO_TIMESTAMP('2024-01-23 09:40:00', 'YYYY-MM-DD HH24:MI:SS'), 'FALHOU');
+SELECT ct.id_conta, cr.id_crypto, 'COMPRA', 20, 12.5, TIMESTAMP '2024-01-22 12:25:00', 'CONCLUIDA'
+FROM CONTA ct
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'LINK'
+WHERE cl.nome = 'Ricardo Barbosa' AND ROWNUM = 1;
+
 INSERT INTO TRANSACAO_CRYPTO (CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status)
-VALUES (9, 7, 'COMPRA', 12.000000000000, 6.25000000,  TO_TIMESTAMP('2024-01-24 14:55:00', 'YYYY-MM-DD HH24:MI:SS'), 'CONCLUIDA');
+SELECT ct.id_conta, cr.id_crypto, 'COMPRA', 8, 85, TIMESTAMP '2024-01-23 09:40:00', 'FALHOU'
+FROM CONTA ct
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'LTC'
+WHERE cl.nome = 'Juliana Rodrigues' AND ROWNUM = 1;
+
 INSERT INTO TRANSACAO_CRYPTO (CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status)
-VALUES (10, 10, 'COMPRA', 25.000000000000, 8.40000000, TO_TIMESTAMP('2024-01-25 11:30:00', 'YYYY-MM-DD HH24:MI:SS'), 'CANCELADA');
+SELECT ct.id_conta, cr.id_crypto, 'COMPRA', 12, 6.25, TIMESTAMP '2024-01-24 14:55:00', 'CONCLUIDA'
+FROM CONTA ct
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'DOT'
+WHERE cl.nome = 'Juliana Rodrigues' AND ROWNUM = 1;
 
--- ========================================
--- UPDATE / MERGE - AJUSTES
--- ========================================
+INSERT INTO TRANSACAO_CRYPTO (CONTA_id_conta, CRYPTO_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, data_hora, status)
+SELECT ct.id_conta, cr.id_crypto, 'COMPRA', 25, 8.4, TIMESTAMP '2024-01-25 11:30:00', 'CANCELADA'
+FROM CONTA ct
+JOIN CLIENTE cl ON ct.CLIENTE_id_cliente = cl.id_cliente
+JOIN CRYPTO  cr ON cr.sigla = 'UNI'
+WHERE cl.nome = 'Carlos Eduardo Pereira' AND ROWNUM = 1;
 
--- Atualizar email de um cliente
-UPDATE CLIENTE
-SET email = 'joao.silva.novo@email.com'
-WHERE nome = 'João Silva Santos';
+COMMIT;
 
--- Marcar a transação pendente (conta 6) como concluída
-UPDATE TRANSACAO_CRYPTO
-SET status = 'CONCLUIDA'
-WHERE status = 'PENDENTE' AND CONTA_id_conta = 6;
 
--- Ajustar a POSSE após a compra (upsert correto):
--- carteira 6 ganha +300 da crypto 4 (MATIC)
-MERGE INTO POSSE p
-USING (SELECT 6 AS CARTEIRA_id_carteira, 4 AS CRYPTO_id_crypto, 300.00000000 AS qtd FROM dual) x
-ON (p.CARTEIRA_id_carteira = x.CARTEIRA_id_carteira AND p.CRYPTO_id_crypto = x.CRYPTO_id_crypto)
-WHEN MATCHED THEN
-  UPDATE SET p.quantidade_crypto = p.quantidade_crypto + x.qtd
-WHEN NOT MATCHED THEN
-  INSERT (CARTEIRA_id_carteira, CRYPTO_id_crypto, quantidade_crypto)
-  VALUES (x.CARTEIRA_id_carteira, x.CRYPTO_id_crypto, x.qtd);
-
--- Atualizar data de nascimento de um cliente
-UPDATE CLIENTE
-SET data_nascimento = TO_DATE('1985-03-20', 'YYYY-MM-DD')
-WHERE nome = 'João Silva Santos';
-
--- ========================================
--- DELETE - EXEMPLOS DE EXCLUSÕES
--- ========================================
-
--- Remover uma posse com quantidade zero
-DELETE FROM POSSE
-WHERE quantidade_crypto = 0;
-
--- Cancelar (remover) uma transação que falhou
-DELETE FROM TRANSACAO_CRYPTO
-WHERE status = 'FALHOU';
-
--- Remover transações canceladas antigas (mais de 30 dias)
-DELETE FROM TRANSACAO_CRYPTO
-WHERE status = 'CANCELADA'
-AND data_hora < SYSDATE - 30;
-
--- ========================================
--- AJUSTE DE SALDOS (após inserir/atualizar as transações)
--- ========================================
-
--- 1) Aplicar efeito das transferências FIAT
-UPDATE CONTA c
-SET c.saldo = c.saldo
-  - NVL((SELECT SUM(valor) FROM TRANSACAO_FIAT tf WHERE tf.CONTA_id_conta_origem  = c.id_conta), 0)
-  + NVL((SELECT SUM(valor) FROM TRANSACAO_FIAT tf WHERE tf.CONTA_id_conta_destino = c.id_conta), 0);
-
--- 2) Aplicar efeito das transações CRYPTO CONCLUÍDAS
---    COMPRA debita (qtd * preço), VENDA credita
-UPDATE CONTA c
-SET c.saldo = c.saldo
-  - NVL((SELECT SUM(tc.quantidade_crypto * tc.valor_unitario)
-         FROM TRANSACAO_CRYPTO tc
-         WHERE tc.CONTA_id_conta = c.id_conta
-           AND tc.tipo_operacao = 'COMPRA'
-           AND tc.status = 'CONCLUIDA'), 0)
-  + NVL((SELECT SUM(tc.quantidade_crypto * tc.valor_unitario)
-         FROM TRANSACAO_CRYPTO tc
-         WHERE tc.CONTA_id_conta = c.id_conta
-           AND tc.tipo_operacao = 'VENDA'
-           AND tc.status = 'CONCLUIDA'), 0);
-
--- ========================================
--- SELECT - CONSULTAS DIVERSAS (inalteradas)
--- ========================================
-
--- 1. Listar todos os clientes com suas respectivas contas
-SELECT
-    c.nome,
-    c.email,
-    ct.numero_conta,
-    ct.agencia,
-    ct.data_abertura
-FROM CLIENTE c
-INNER JOIN CONTA ct ON c.id_cliente = ct.CLIENTE_id_cliente
-ORDER BY c.nome;
-
--- 2. Mostrar o portfolio de criptomoedas por cliente
-SELECT
-    c.nome AS cliente,
-    cr.nome AS criptomoeda,
-    cr.sigla,
-    p.quantidade_crypto,
-    ct.numero_conta
-FROM CLIENTE c
-INNER JOIN CONTA ct ON c.id_cliente = ct.CLIENTE_id_cliente
-INNER JOIN CARTEIRA car ON ct.id_conta = car.CONTA_id_conta
-INNER JOIN POSSE p ON car.id_carteira = p.CARTEIRA_id_carteira
-INNER JOIN CRYPTO cr ON p.CRYPTO_id_crypto = cr.id_crypto
-ORDER BY c.nome, cr.nome;
-
--- 3. Relatório de transações fiat por período
-SELECT
-    tf.id_transacao_fiat,
-    co.nome AS cliente_origem,
-    cto.numero_conta AS conta_origem,
-    cd.nome AS cliente_destino,
-    ctd.numero_conta AS conta_destino,
-    tf.valor,
-    tf.data_hora
-FROM TRANSACAO_FIAT tf
-INNER JOIN CONTA cto ON tf.CONTA_id_conta_origem = cto.id_conta
-INNER JOIN CLIENTE co ON cto.CLIENTE_id_cliente = co.id_cliente
-INNER JOIN CONTA ctd ON tf.CONTA_id_conta_destino = ctd.id_conta
-INNER JOIN CLIENTE cd ON ctd.CLIENTE_id_cliente = cd.id_cliente
-WHERE tf.data_hora >= TO_TIMESTAMP('2024-01-15 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
-ORDER BY tf.data_hora DESC;
-
--- 4. Transações de crypto por tipo e status
-SELECT
-    c.nome AS cliente,
-    cr.nome AS criptomoeda,
-    tc.tipo_operacao,
-    tc.quantidade_crypto,
-    tc.valor_unitario,
-    tc.quantidade_crypto * tc.valor_unitario AS valor_total,
-    tc.data_hora,
-    tc.status
-FROM TRANSACAO_CRYPTO tc
-INNER JOIN CONTA ct ON tc.CONTA_id_conta = ct.id_conta
-INNER JOIN CLIENTE c ON ct.CLIENTE_id_cliente = c.id_cliente
-INNER JOIN CRYPTO cr ON tc.CRYPTO_id_crypto = cr.id_crypto
-ORDER BY tc.data_hora DESC;
-
--- 5. Total de criptomoedas por tipo
-SELECT
-    cr.nome AS criptomoeda,
-    cr.sigla,
-    COUNT(p.CARTEIRA_id_carteira) AS total_carteiras,
-    SUM(p.quantidade_crypto) AS quantidade_total
-FROM CRYPTO cr
-LEFT JOIN POSSE p ON cr.id_crypto = p.CRYPTO_id_crypto
-GROUP BY cr.id_crypto, cr.nome, cr.sigla
-ORDER BY quantidade_total DESC NULLS LAST;
-
--- 6. Clientes com mais de uma conta
-SELECT
-    c.nome,
-    c.email,
-    COUNT(ct.id_conta) AS total_contas
-FROM CLIENTE c
-INNER JOIN CONTA ct ON c.id_cliente = ct.CLIENTE_id_cliente
-GROUP BY c.id_cliente, c.nome, c.email
-HAVING COUNT(ct.id_conta) > 1;
-
--- 7. Volume de transações por cliente (fiat)
-SELECT
-    c.nome,
-    COUNT(tf.id_transacao_fiat) AS total_transacoes,
-    SUM(CASE WHEN tf.CONTA_id_conta_origem = ct.id_conta  THEN tf.valor ELSE 0 END) AS total_enviado,
-    SUM(CASE WHEN tf.CONTA_id_conta_destino = ct.id_conta THEN tf.valor ELSE 0 END) AS total_recebido
-FROM CLIENTE c
-INNER JOIN CONTA ct ON c.id_cliente = ct.CLIENTE_id_cliente
-LEFT JOIN TRANSACAO_FIAT tf ON ct.id_conta IN (tf.CONTA_id_conta_origem, tf.CONTA_id_conta_destino)
-GROUP BY c.id_cliente, c.nome
-ORDER BY total_transacoes DESC;
-
--- 8. Status das transações de crypto
-SELECT
-    status,
-    COUNT(*) AS quantidade,
-    SUM(quantidade_crypto * valor_unitario) AS valor_total
-FROM TRANSACAO_CRYPTO
-GROUP BY status
-ORDER BY quantidade DESC;
-
--- 9. Criptomoedas mais negociadas
-SELECT
-    cr.nome,
-    cr.sigla,
-    COUNT(tc.id_transacao_crypto) AS total_transacoes,
-    SUM(tc.quantidade_crypto) AS quantidade_total_negociada,
-    AVG(tc.valor_unitario) AS valor_medio
-FROM CRYPTO cr
-INNER JOIN TRANSACAO_CRYPTO tc ON cr.id_crypto = tc.CRYPTO_id_crypto
-WHERE tc.status = 'CONCLUIDA'
-GROUP BY cr.id_crypto, cr.nome, cr.sigla
-ORDER BY total_transacoes DESC;
-
--- 10. Relatório consolidado por cliente
-SELECT
-    c.nome AS cliente,
-    c.email,
-    COUNT(DISTINCT ct.id_conta) AS total_contas,
-    COUNT(DISTINCT car.id_carteira) AS total_carteiras,
-    COUNT(DISTINCT p.CRYPTO_id_crypto) AS tipos_crypto_possuidos,
-    COALESCE(trans_stats.total_transacoes_crypto, 0) AS total_transacoes_crypto
-FROM CLIENTE c
-LEFT JOIN CONTA ct ON c.id_cliente = ct.CLIENTE_id_cliente
-LEFT JOIN CARTEIRA car ON ct.id_conta = car.CONTA_id_conta
-LEFT JOIN POSSE p ON car.id_carteira = p.CARTEIRA_id_carteira
-LEFT JOIN (
-    SELECT
-        ct.CLIENTE_id_cliente,
-        COUNT(tc.id_transacao_crypto) as total_transacoes_crypto
-    FROM CONTA ct
-    INNER JOIN TRANSACAO_CRYPTO tc ON ct.id_conta = tc.CONTA_id_conta
-    GROUP BY ct.CLIENTE_id_cliente
-) trans_stats ON c.id_cliente = trans_stats.CLIENTE_id_cliente
-GROUP BY c.id_cliente, c.nome, c.email, trans_stats.total_transacoes_crypto
-ORDER BY c.nome;
 
 -- ========================================
 -- FIM DO SCRIPT DML

@@ -4,9 +4,6 @@ package br.com.fiap.view;
 import br.com.fiap.dao.*;
 import br.com.fiap.model.*;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -54,7 +51,7 @@ public class MainView {
             }
         }
     }
-    
+
     public static void main(String[] args) {
         String opcao;
         Scanner scanner = new Scanner(System.in);
@@ -110,27 +107,40 @@ public class MainView {
         String email = lerEmail(scanner);
         LocalDate dataNascimento = lerData(scanner);
 
-        System.out.print("Digite o numero da conta (até 9 dígitos): ");
-        String contaInput = scanner.nextLine().trim();
-        if (!contaInput.matches("\\d{5,9}-[0-9X]")) {
-            System.err.println("Número da conta inválido. Deve conter até 9 dígitos númericos.");
-            return;
-        }
-        int numeroConta = Integer.parseInt(contaInput);
+        int numeroConta;
+        while (true) {
+            System.out.print("Digite o numero da conta (5 até 9 dígitos): ");
+            String contaInput = scanner.nextLine().trim();
 
-        System.out.print("Digite a agencia (até 5 dígitos): ");
-        String agenciaInput = scanner.nextLine().trim();
-        if (!agenciaInput.matches("\\d{4,5}")) {
-            System.err.println("Número da agência inválido. Deve conter até 5 dígitos numéricos.");
-            return;
+            String numeroContaStr;
+            if (contaInput.matches("\\d{5,9}-[0-9X]")) {
+                numeroContaStr = contaInput.substring(0, contaInput.indexOf('-'));
+            } else if (contaInput.matches("\\d{5,9}")) {
+                numeroContaStr = contaInput;
+            } else {
+                System.err.println("Número da conta inválido. Use 5 a 9 dígitos (ex: 123456) ou 5 a 9 dígitos + hífen + DV (ex: 123456-7).");
+                continue;
+            }
+            numeroConta = Integer.parseInt(numeroContaStr);
+            break;
         }
-        int agencia = Integer.parseInt(agenciaInput);
+
+        int agencia;
+        while (true) {
+            System.out.print("Digite a agencia (até 5 dígitos): ");
+            String agenciaInput = scanner.nextLine().trim();
+            if (!agenciaInput.matches("\\d{4,5}")) {
+                System.err.println("Número da agência inválido. Deve conter 4 ou 5 dígitos.");
+                continue;
+            }
+             agencia = Integer.parseInt(agenciaInput);
+            break;
+        }
 
         try {
             Cliente cliente = new Cliente(cpf, nome, email, dataNascimento);
 
             ClienteDao clienteDao = new ClienteDao();
-
             if (clienteDao.existeClientePorCpfOuEmail(cpf, email)) {
                 System.err.println("Já existe cliente com esse CPF ou e-mail");
                 return;
@@ -167,7 +177,7 @@ public class MainView {
         }
     }
 
-    private static void consultarCliente(Scanner scanner) throws SQLException {
+    private static void consultarCliente(Scanner scanner) {
         System.out.print("Digite o ID do cliente que deseja consultar: ");
         int id = Integer.parseInt(scanner.nextLine().trim());
 
@@ -215,9 +225,12 @@ public class MainView {
 
             System.out.println("\n--- Carteira ---");
             for (PosseClienteCrypto p : posses) {
-                System.out.printf("\"- %s (%s) | ID Crypto: %d | Quantidade: %.8f%n\", " +
-                        p.getCrypto().getNome(), p.getCrypto().getSigla(),
-                        p.getCrypto().getId(), p.getQuantidade());
+                System.out.printf("- %s (%s) | ID Crypto: %d | Quantidade: %.8f%n",
+                        p.getCrypto().getNome(),
+                        p.getCrypto().getSigla(),
+                        p.getCrypto().getId(),
+                        p.getQuantidade());
+
             }
         } catch (SQLException e) {
             System.err.println("Erro ao consultar carteira: " + e.getMessage());
@@ -303,10 +316,12 @@ public class MainView {
         }
     }
 
-    private static void listarCriptoativos() throws SQLException {
+    private static void listarCriptoativos() {
         System.out.println("\n--- Cryptos cadastradas ---");
         try {
             CryptoDao cryptoDao = new CryptoDao();
+            System.out.println("DB user: " + cryptoDao.usuarioAtual());
+            System.out.println("Qtde em CRYPTO: " + cryptoDao.contarCryptos());
             List<Crypto> cryptos = cryptoDao.listarCryptos();
 
             if (cryptos.isEmpty()) {
@@ -381,34 +396,5 @@ public class MainView {
             System.err.println("Erro na venda: " + e.getMessage());
         }
     }
-
-//    private static void listarTransacoesContas(){
-//        for (Map.Entry<Integer, TransacaoConta> transacao : todasTransacoesConta.entrySet()) {
-//            System.out.println("----- ID da transação: " + transacao.getKey());
-//
-//            System.out.println("Conta origem: " + transacao.getValue().getNumeroContaOrigem() +
-//                    " | Agência origem: " + transacao.getValue().getAgenciaOrigem());
-//
-//            System.out.println("Conta destino: " + transacao.getValue().getNumeroContaDestino() +
-//                    " | Agência destino: " + transacao.getValue().getAgenciaDestino());
-//
-//            System.out.println(System.lineSeparator());
-//        }
-//    }
-
-//    private static void listarTransacoesCryptos() {
-//        for (Map.Entry<Integer, TransacaoCrypto> transacao : todasTransacoesCrypto.entrySet()) {
-//            System.out.println("----- ID da transação: " + transacao.getKey());
-//
-//            System.out.println("Numero da conta: " + transacao.getValue().getContaCliente().getNumeroConta() +
-//                    " | Agência: " + transacao.getValue().getContaCliente().getAgencia());
-//
-//            System.out.print("Tipo de operação: " + transacao.getValue().getTipoOperacao() +
-//                    " | Quantidade: " + transacao.getValue().getQuantidadeCrypto());
-//            System.out.printf(" | Valor total: R$ %.2f", transacao.getValue().getValorTotal());
-//
-//            System.out.println(System.lineSeparator());
-//        }
-//    }
 
 }
