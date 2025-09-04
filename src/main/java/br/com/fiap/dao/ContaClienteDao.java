@@ -1,7 +1,6 @@
 package br.com.fiap.dao;
 
 import br.com.fiap.factory.ConnectionFactory;
-import br.com.fiap.model.Carteira;
 import br.com.fiap.model.Cliente;
 import br.com.fiap.model.ContaCliente;
 
@@ -10,7 +9,6 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class ContaClienteDao {
     Connection conexao;
@@ -55,7 +53,9 @@ public class ContaClienteDao {
 
     }
 
-    public ContaCliente buscarContaPorClienteId(int idCliente, Cliente cliente) throws SQLException {
+    // sujestão, se precisar buscar a conta pelo id do cliente, pode-se se usar o consultarClientePorId e jogar
+    // o cliente que esse metodo nesse
+    public ContaCliente buscarContaPorCliente(Cliente cliente) throws SQLException {
         final String sql = """
                 SELECT *
                 FROM conta
@@ -63,7 +63,7 @@ public class ContaClienteDao {
                 """;
 
         try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
-            stmt.setInt(1, idCliente);
+            stmt.setInt(1, cliente.getId());
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {

@@ -210,7 +210,7 @@ public class MainView {
             }
 
             ContaClienteDao contaDaoCliente = new ContaClienteDao();
-            ContaCliente conta = contaDaoCliente.buscarContaPorClienteId(id, cliente);
+            ContaCliente conta = contaDaoCliente.buscarContaPorCliente(cliente);
 
             System.out.println("Cliente: " + cliente.getNome());
             System.out.println("Email: " + cliente.getEmail());
@@ -325,15 +325,11 @@ public class MainView {
             System.err.println("Não foi possível consultar o Cliente: " + e.getMessage());
             e.printStackTrace();
             return;
-        } catch (SQLException e) {
-            System.err.println("Não foi possível consultar o cliente: " + e.getMessage());
-            e.printStackTrace();
-            return;
         }
 
-        List<ContaCliente> contasDoCliente;
+        List<ContaCliente> contasDoCliente = new ArrayList<>();
         try {
-            contasDoCliente = new ContaClienteDao().buscarContaPorClienteId(idCliente);
+            contasDoCliente.add(new ContaClienteDao().buscarContaPorCliente(cliente));
         } catch (SQLException e) {
             System.err.println("Erro ao buscar contas do cliente: " + e.getMessage());
             return;
