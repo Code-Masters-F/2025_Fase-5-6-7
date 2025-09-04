@@ -172,8 +172,24 @@ public class MainView {
             CryptoDao cryptoDao = new CryptoDao();
             cryptoDao.inserirCrypto(crypto);
             System.out.println("Criptoativo cadastrado com sucesso!");
-        } catch (RuntimeException | SQLException e) {
-            System.err.println("Erro ao cadastrar Criptoativo: " + e.getMessage());
+        } catch (SQLException e) {
+            System.err.println("[SQLException] ao cadastrar Criptoativo");
+            System.err.println("Class   : " + e.getClass().getName());
+            System.err.println("SQLState: " + e.getSQLState());
+            System.err.println("Code    : " + e.getErrorCode());
+            System.err.println("Message : " + e.getMessage());
+            Throwable t = e.getCause();
+            while (t != null) {
+                System.err.println("Cause  : " + t.getClass().getName() + " - " + t.getMessage());
+                t = t.getCause();
+            }
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("[Exception] ao cadastrar Criptoativo: " + e.getClass().getName() + " - " + e.getMessage());
+            if (e.getCause() != null) {
+                System.err.println("Cause   : " + e.getCause().getClass().getName() + " - " + e.getCause().getMessage());
+            }
+            e.printStackTrace();
         }
     }
 
@@ -320,17 +336,19 @@ public class MainView {
         System.out.println("\n--- Cryptos cadastradas ---");
         try {
             CryptoDao cryptoDao = new CryptoDao();
-            System.out.println("DB user: " + cryptoDao.usuarioAtual());
-            System.out.println("Qtde em CRYPTO: " + cryptoDao.contarCryptos());
             List<Crypto> cryptos = cryptoDao.listarCryptos();
 
             if (cryptos.isEmpty()) {
                 System.out.println("Nenhuma Crypto encontrada.");
             } else {
                 for (Crypto crypto : cryptos) {
-                    System.out.println("- " + crypto.getNome() +
-                            " (" + crypto.getSigla() + ") - ID: " + crypto.getId() +
-                            " - Lançamento: " + crypto.getDataLancamento());
+                    System.out.printf(
+                            "- %-15s %-5s - ID: %3d - Lançamento: %s%n",
+                            crypto.getNome(),
+                            crypto.getSigla(),
+                            crypto.getId(),
+                            crypto.getDataLancamento()
+                    );
                 }
             }
         } catch (SQLException e) {

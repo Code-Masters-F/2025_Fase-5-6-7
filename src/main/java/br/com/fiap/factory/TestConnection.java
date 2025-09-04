@@ -17,7 +17,7 @@ public class TestConnection {
 
             conexao = ConnectionFactory.getConnection();
             System.out.println("Conexão estabelecida com sucesso!");
-            
+
             // Precisa fechar quando a classe que está usando a conexão não for usar mais
             // Na fiap o professor coloca um médoto para fechar
             conexao.close();

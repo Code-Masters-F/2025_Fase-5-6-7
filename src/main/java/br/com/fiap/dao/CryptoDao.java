@@ -23,11 +23,13 @@ public class CryptoDao {
         String sql = "INSERT INTO crypto (nome, sigla, data_lancamento) VALUES (?, ?, ?)";
 
         try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
-            stmt.setString(1, crypto.getNome());
-            stmt.setString(2, crypto.getSigla());
+            stmt.setString(1, crypto.getNome().trim());
+            stmt.setString(2, crypto.getSigla().trim().toUpperCase());
             stmt.setDate(3, java.sql.Date.valueOf(crypto.getDataLancamento()));
 
             stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLException ("Falha ao inserir CRYPTO (nome=" + crypto.getNome() + ", sigla=" + crypto.getSigla() + ")", e);
         }
     }
 
@@ -41,8 +43,8 @@ public class CryptoDao {
 
             while (rs.next()) {
                 int id = rs.getInt("id_crypto");
-                String nome = rs.getString("nome");
-                String sigla = rs.getString("sigla");
+                String nome = rs.getString("nome").trim();
+                String sigla = rs.getString("sigla").trim();
 
                 Date data = rs.getDate("data_lancamento");
                 LocalDate dataLancamento = (data != null) ? data.toLocalDate() : null;
@@ -55,25 +57,6 @@ public class CryptoDao {
         }
         return cryptos;
     }
-
-
-    public int contarCryptos() throws SQLException {
-        String sql = "SELECT COUNT(*) FROM crypto";
-        try (PreparedStatement ps = conexao.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            rs.next();
-            return rs.getInt(1);
-        }
-    }
-
-    public String usuarioAtual() throws SQLException {
-        try (PreparedStatement ps = conexao.prepareStatement("SELECT USER FROM dual");
-             ResultSet rs = ps.executeQuery()) {
-            rs.next();
-            return rs.getString(1);
-        }
-    }
-
 
     public Crypto consultarCrypto(int id) throws SQLException {
         String sql = "SELECT id_crypto, nome, sigla, data_lancamento FROM crypto WHERE id_crypto = ?";
