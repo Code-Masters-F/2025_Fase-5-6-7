@@ -77,7 +77,6 @@ public class Main {
 
     public static void main(String[] args) {
 
-        inicializarDados();
 
         String opcao;
         Scanner scanner = new Scanner(System.in);
@@ -128,14 +127,7 @@ public class Main {
         System.out.print("Escolha a opção desejada: ");
     }
 
-    private static void inicializarDados() {
-        Crypto bitcoin = new Crypto("Bitcoin", "BTC", 1, "01/01/2009");
-        Crypto ethereum = new Crypto("Ethereum", "ETH", 2, "30/07/2014");
-        todasCryptosCadastradas.add(bitcoin);
-        todasCryptosCadastradas.add(ethereum);
-        guardarEmTxt("cryptos_cadastradas.txt", bitcoin.toString());
-        guardarEmTxt("cryptos_cadastradas.txt", ethereum.toString());
-    }
+
 
     private static void cadastrarCliente(Scanner scanner) {
         System.out.print("Digite o nome do cliente: ");
@@ -168,11 +160,6 @@ public class Main {
         String sigla = scanner.nextLine();
 
         String dataLancamento = lerData(scanner);
-
-        Crypto crypto = new Crypto(nome, sigla, proximoCryptoId++, dataLancamento);
-        todasCryptosCadastradas.add(crypto);
-
-        guardarEmTxt("cryptos_cadastradas.txt", crypto.toString());
 
         System.out.println("Criptoativo cadastrado com sucesso!");
     }

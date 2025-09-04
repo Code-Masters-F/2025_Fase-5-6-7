@@ -2,6 +2,11 @@
 -- SCRIPT DDL - CRIAÇÃO DAS TABELAS (ORACLE 19c+ com IDENTITY)
 -- ========================================
 
+-- Deixar a data com formato correto antes de criação das tabelas.
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MM/YYYY';
+-- (opcional, se usar TIMESTAMP)
+ALTER SESSION SET NLS_TIMESTAMP_FORMAT = 'DD/MM/YYYY HH24:MI:SS';
+
 -- Drop seguro das tabelas (ignora ORA-00942 se não existirem)
 DECLARE e EXCEPTION; PRAGMA EXCEPTION_INIT(e, -00942);
 BEGIN EXECUTE IMMEDIATE 'DROP TABLE TRANSACAO_FIAT'; EXCEPTION WHEN e THEN NULL; END;
