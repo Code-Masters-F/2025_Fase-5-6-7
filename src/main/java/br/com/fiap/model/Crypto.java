@@ -33,6 +33,10 @@ public class Crypto {
         return nome;
     }
 
+    public void setNome(String novoNome) {
+        this.nome = novoNome;
+    }
+
     public double getPrecoUnitario() {
         return this.precoUnitario;
     }
@@ -43,6 +47,10 @@ public class Crypto {
 
     public String getSigla() {
         return sigla;
+    }
+
+    public void setSigla(String novaSigla) {
+        this.sigla = novaSigla;
     }
 
     public LocalDate getDataLancamento() {

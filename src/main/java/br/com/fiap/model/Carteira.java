@@ -20,12 +20,11 @@ public class Carteira {
         
     }
 
-    public ContaCliente getDono() {
+    public ContaCliente getContaCliente() {
         return dono;
     }
 
-  
-    public void setDono(ContaCliente novoDono) {
+    public void setContaCliente(ContaCliente novoDono) {
         this.dono = novoDono; 
     }
 

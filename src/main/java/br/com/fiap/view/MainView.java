@@ -48,6 +48,7 @@ public class MainView {
                 return LocalDate.parse(entrada, formatter);
             } catch (DateTimeParseException e) {
                 System.out.println("Formato de data inválido. Utilize dd/MM/yyyy.");
+                e.printStackTrace();
             }
         }
     }
@@ -78,6 +79,7 @@ public class MainView {
                 }
             }catch (Exception e) {
                 System.out.println("Algo deu errado! Tente novamente.");
+                e.printStackTrace();
             }
 
         }while (!opcao.equals("0"));
@@ -154,6 +156,7 @@ public class MainView {
             System.out.println("Cliente cadastrado com sucesso!");
         } catch (SQLException e) {
             System.err.println("Erro ao cadastrar o usuário: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -223,19 +226,20 @@ public class MainView {
             }
         } catch (SQLException e) {
             System.out.println("Erro ao consultar cliente: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
     private static void consultarCarteira(Scanner scanner) {
         System.out.print("Digite o ID da conta que deseja consultar a carteira: ");
-        int carteiraId = Integer.parseInt(scanner.nextLine().trim());
+        int contaId = Integer.parseInt(scanner.nextLine().trim());
 
         try {
             PosseDao posseDao = new PosseDao();
-            List<PosseClienteCrypto> posses = posseDao.listarPossesPorCarteira(carteiraId);
+            List<PosseClienteCrypto> posses = posseDao.listarPossesPorCarteira(contaId);
 
             if (posses.isEmpty()) {
-                System.out.println("Nenhuma posse encontrada para esta carteira.");
+                System.out.println("Nenhuma posse encontrada para esta conta.");
                 return;
             }
 
@@ -250,6 +254,7 @@ public class MainView {
             }
         } catch (SQLException e) {
             System.err.println("Erro ao consultar carteira: " + e.getMessage());
+            e.printStackTrace();
         }
 
     }
@@ -310,6 +315,7 @@ public class MainView {
             }
         } catch (SQLException e) {
             System.err.println("Não foi possível consultar o Cliente: " + e.getMessage());
+            e.printStackTrace();
         }
 
         System.out.print("Digite o número da conta que enviou a transferência: ");
@@ -329,6 +335,7 @@ public class MainView {
 
         } catch (SQLException e) {
             System.err.println("Erro ao atualizar saldo: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -353,6 +360,7 @@ public class MainView {
             }
         } catch (SQLException e) {
             System.out.println("Erro ao consultar cryptos: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -386,6 +394,7 @@ public class MainView {
             );
         } catch (SQLException e) {
             System.err.println("Erro na compra: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -412,6 +421,7 @@ public class MainView {
             );
         } catch (SQLException e) {
             System.err.println("Erro na venda: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
