@@ -77,7 +77,7 @@ public class MainView {
                     case "0": System.out.println("Saindo do sistema..."); break;
                     default: System.out.println("Opção inválida!");
                 }
-            }catch (Exception e) {
+            } catch (Exception e) {
                 System.out.println("Algo deu errado! Tente novamente.");
                 e.printStackTrace();
             }
@@ -92,7 +92,7 @@ public class MainView {
         System.out.println("3 - Consultar cliente");
         System.out.println("4 - Consultar carteira");
         System.out.println("5 - Fazer tansferencia para uma conta interna");
-        System.out.println("6 - Adicionar saldo (somente via transferencia, de sua conta externa para esta corretora)");
+        System.out.println("6 - Adicionar saldo");
         System.out.println("7 - Listar criptoativos");
         System.out.println("8 - Comprar criptoativo");
         System.out.println("9 - Vender criptoativo");
@@ -260,54 +260,62 @@ public class MainView {
     }
 
     private static void enviarTransferenciaContaInterna(Scanner scanner) throws SQLException {
-        System.out.print("Digite o número do id do cliente que realizará a transferência: ");
-        int idClienteOrigem = Integer.parseInt(scanner.nextLine().trim());
-        Cliente clienteOrigem = new ClienteDao().consultarClientePorId(idClienteOrigem);
+        try {
+            System.out.print("Digite o número do id do cliente que realizará a transferência: ");
+            int idClienteOrigem = Integer.parseInt(scanner.nextLine().trim());
 
-        System.out.print("Digite o número do id do cliente que receberá a transferência: ");
-        int idClienteDestino = Integer.parseInt(scanner.nextLine().trim());
-        Cliente clienteDestino = new ClienteDao().consultarClientePorId(idClienteDestino);
+            System.out.print("Digite o número do id do cliente que receberá a transferência: ");
+            int idClienteDestino = Integer.parseInt(scanner.nextLine().trim());
 
-        if(clienteOrigem == null || clienteDestino == null) {
-            System.out.println("Cliente destino e/ou cliente origem não encontrado no sistema.");
-            return;
+            ClienteDao clienteDao = new ClienteDao();
+            Cliente clienteOrigem = clienteDao.consultarClientePorId(idClienteOrigem);
+            Cliente clienteDestino = clienteDao.consultarClientePorId(idClienteDestino);
+
+            if (clienteOrigem == null || clienteDestino == null) {
+                System.out.println("Cliente destino e/ou cliente origem não encontrado no sistema.");
+                return;
+            }
+
+            ContaClienteDao contaDao = new ContaClienteDao();
+
+            ContaCliente contaOrigem = escolherContaDoCliente(scanner, contaDao, idClienteOrigem, "ORIGEM");
+            if (contaOrigem == null) return;
+
+            ContaCliente contaDestino = escolherContaDoCliente(scanner, contaDao, idClienteDestino, "DESTINO");
+            if (contaDestino == null) return;
+
+            System.out.print("Digite o valor da transferencia: ");
+            double valorTransferencia = Double.parseDouble(scanner.nextLine().trim());
+
+            if (valorTransferencia <= 0) {
+                System.out.println("Valor inválido.");
+                return;
+            }
+
+            if (contaOrigem.getSaldo() < valorTransferencia) {
+                System.out.printf("Saldo insuficiente. Saldo atual: R$ %.2f%n", contaOrigem.getSaldo());
+                return;
+            }
+
+            contaDao.transferirParaContaInterna(contaOrigem.getId(), contaDestino.getId(), valorTransferencia);
+            System.out.println("Transferencia realizada com sucesso!");
+        } catch (NumberFormatException e) {
+            System.err.println("Entrada númerica inválida.");
+            e.printStackTrace();
+        } catch (SQLException e) {
+            System.err.println("Erro na transferência: " + e.getMessage());
+            e.printStackTrace();
         }
-
-        System.out.print("Digite o valor da transferencia: ");
-        double valorTransferencia = Double.parseDouble(scanner.nextLine().trim());
-
-        if (valorTransferencia <= 0) {
-            System.out.println("Valor inválido.");
-            return;
-        }
-
-        int numeroContaOrigem = clienteOrigem.getContaCliente().getNumeroConta();
-        int numeroAgenciaOrigem = clienteOrigem.getContaCliente().getAgencia();
-
-        int numeroContaDestino = clienteDestino.getContaCliente().getNumeroConta();
-        int numeroAgenciaDestino = clienteDestino.getContaCliente().getAgencia();
-
-        TransacaoContaDao transacaoDao = new TransacaoContaDao();
-        int idOrigem = transacaoDao.buscarConta(numeroContaOrigem, numeroAgenciaOrigem);
-        int idDestino = transacaoDao.buscarConta(numeroContaDestino, numeroAgenciaDestino);
-
-        if (idOrigem == -1 || idDestino == -1) {
-            System.out.println("Conta origem e/ou conta destino não encontrada(s).");
-            return;
-        }
-
-        ContaClienteDao contaDao = new ContaClienteDao();
-        contaDao.transferirParaContaInterna(idOrigem, idDestino, valorTransferencia);
-        System.out.println("Transferencia realizada com sucesso!");
     }
 
-    // supondo que não temos caixa eletrônico só é possível adicionar saldo via transferencia externa
+
     private static void adicionarSaldo(Scanner scanner) {
         System.out.print("Digite o numero do id do cliente que deseja adicionar saldo: ");
         int idCliente = Integer.parseInt(scanner.nextLine().trim());
 
+        Cliente cliente;
         try {
-            Cliente cliente = new ClienteDao().consultarClientePorId(idCliente);
+            cliente = new ClienteDao().consultarClientePorId(idCliente);
 
             if (cliente == null) {
                 System.out.println("\nCliente não encontrado no sistema.");
@@ -316,6 +324,24 @@ public class MainView {
         } catch (SQLException e) {
             System.err.println("Não foi possível consultar o Cliente: " + e.getMessage());
             e.printStackTrace();
+            return;
+        } catch (SQLException e) {
+            System.err.println("Não foi possível consultar o cliente: " + e.getMessage());
+            e.printStackTrace();
+            return;
+        }
+
+        List<ContaCliente> contasDoCliente;
+        try {
+            contasDoCliente = new ContaClienteDao().buscarContaPorClienteId(idCliente);
+        } catch (SQLException e) {
+            System.err.println("Erro ao buscar contas do cliente: " + e.getMessage());
+            return;
+        }
+
+        if (contasDoCliente == null || contasDoCliente.isEmpty()) {
+            System.out.println("Este clienten ão possui contas cadastradas.");
+            return;
         }
 
         System.out.print("Digite o número da conta que enviou a transferência: ");
@@ -423,6 +449,37 @@ public class MainView {
             System.err.println("Erro na venda: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    private static ContaCliente escolherContaDoCliente(Scanner scanner, ContaClienteDao contaDao, int idCliente, String rotulo) throws SQLException {
+        List<ContaCliente> contas = contaDao.listarContasPorCliente(idCliente);
+
+        if (contas == null || contas.isEmpty()) {
+            System.out.println("O cliente não possui contas cadastradas (" + rotulo + ").");
+            return null;
+        }
+
+        if (contas.size() == 1) {
+            return contas.getFirst();
+        }
+
+        System.out.println("Selecione a conta " + rotulo + ":");
+        for (int i = 0; i < contas.size(); i++) {
+            ContaCliente conta = contas.get(i);
+            System.out.printf("%d) id_conta=%d | nº=%d | ag=%d | saldo=R$ %.2f%n",
+                    i + 1, conta.getId(), conta.getNumeroConta(), conta.getAgencia(), conta.getSaldo());;
+        }
+
+        int opcao = -1;
+        while (opcao < 1 || opcao > contas.size()) {
+            System.out.print("Escolha [1-" + contas.size() + "]: ");
+            try {
+                opcao = Integer.parseInt(scanner.nextLine().trim());
+            } catch (NumberFormatException e) {
+                opcao = -1;
+            }
+        }
+        return contas.get(opcao - 1);
     }
 
 }
