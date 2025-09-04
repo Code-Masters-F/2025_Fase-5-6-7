@@ -9,17 +9,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class TransacaoContaDao {
-    Connection conexao;
 
-    public TransacaoContaDao() throws SQLException {
-        conexao = ConnectionFactory.getConnection();
+    public TransacaoContaDao() {
     }
 
     public void inserirTransacaoConta(TransacaoConta transacao) throws SQLException {
         String sqlLookupConta = "SELECT id_conta FROM conta WHERE numero_conta = ? AND agencia = ?";
         String sqlInsertTransacao = "INSERT INTO transacao_fiat (conta_id_conta_origem, conta_id_conta_destino, valor) VALUES (?, ?, ?)";
 
-        try (PreparedStatement psOrigem = conexao.prepareStatement(sqlLookupConta);
+        try (Connection conexao = ConnectionFactory.getConnection();
+             PreparedStatement psOrigem = conexao.prepareStatement(sqlLookupConta);
              PreparedStatement psDestino = conexao.prepareStatement(sqlLookupConta);
              PreparedStatement psInsert = conexao.prepareStatement(sqlInsertTransacao)) {
 
@@ -68,7 +67,8 @@ public class TransacaoContaDao {
                     AND agencia = ?;
                 """;
 
-        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+        try (Connection conexao = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
 
             stmt.setInt(1, numeroConta);
             stmt.setInt(2, numeroAgencia);

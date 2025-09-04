@@ -13,16 +13,16 @@ import java.sql.Date;
 import java.util.List;
 
 public class CryptoDao {
-    private Connection conexao;
 
-    public CryptoDao() throws SQLException {
-        conexao = ConnectionFactory.getConnection();
+    public CryptoDao() {
     }
 
     public void inserirCrypto(Crypto crypto) throws SQLException {
         String sql = "INSERT INTO crypto (nome, sigla, data_lancamento) VALUES (?, ?, ?)";
 
-        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+        try (Connection conexao = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+
             stmt.setString(1, crypto.getNome().trim());
             stmt.setString(2, crypto.getSigla().trim().toUpperCase());
             stmt.setDate(3, java.sql.Date.valueOf(crypto.getDataLancamento()));
@@ -38,8 +38,9 @@ public class CryptoDao {
 
         String sql = "SELECT id_crypto, nome, sigla, data_lancamento FROM crypto";
 
-        try (PreparedStatement stmt = conexao.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery()) {
+        try (Connection conexao = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conexao.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 int id = rs.getInt("id_crypto");
@@ -61,7 +62,8 @@ public class CryptoDao {
     public Crypto consultarCrypto(int id) throws SQLException {
         String sql = "SELECT id_crypto, nome, sigla, data_lancamento FROM crypto WHERE id_crypto = ?";
 
-        try (PreparedStatement stm = conexao.prepareStatement(sql)) {
+        try (Connection conexao = ConnectionFactory.getConnection();
+             PreparedStatement stm = conexao.prepareStatement(sql)) {
 
             stm.setInt(1, id);
 
@@ -75,8 +77,5 @@ public class CryptoDao {
             }
             return null;
         }
-
     }
-
-
 }

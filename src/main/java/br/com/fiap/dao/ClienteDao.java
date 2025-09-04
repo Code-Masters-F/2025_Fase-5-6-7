@@ -8,16 +8,16 @@ import java.sql.*;
 import java.time.LocalDate;
 
 public class ClienteDao {
-    private Connection conexao;
 
-    public ClienteDao() throws SQLException {
-        conexao = ConnectionFactory.getConnection();
+    public ClienteDao() {
     }
 
     public int inserirCliente(Cliente cliente) throws SQLException {
         String sql = "INSERT INTO cliente (nome, email, cpf, data_nascimento) VALUES (?, ?, ?, ?)";
 
-        try (PreparedStatement stmt = conexao.prepareStatement(sql, new String[] {"id_cliente"})) {
+        try (Connection conexao = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conexao.prepareStatement(sql, new String[] {"id_cliente"})) {
+
             stmt.setString(1, cliente.getNome());
             stmt.setString(2, cliente.getEmail());
             stmt.setString(3, cliente.getCpf());
@@ -47,7 +47,8 @@ public class ClienteDao {
         Cliente cliente = null;
         String sql = "SELECT * FROM cliente WHERE id_cliente = ?";
 
-        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+        try (Connection conexao = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
 
             stmt.setInt(1, idCliente);
             ResultSet rs = stmt.executeQuery();
@@ -67,7 +68,9 @@ public class ClienteDao {
 
     public boolean existeClientePorCpfOuEmail(String cpf, String email) throws SQLException {
         String sql = "SELECT 1 FROM CLIENTE WHERE cpf = ? OR LOWER(email) = LOWER(?)";
-        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+        try (Connection conexao = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+
             stmt.setString(1, cpf);
             stmt.setString(2, email);
             try (ResultSet rs = stmt.executeQuery()) {

@@ -15,10 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CarteiraDao {
-    Connection conexao;
 
-    public CarteiraDao() throws SQLException  {
-        conexao = ConnectionFactory.getConnection();
+    public CarteiraDao() {
     }
 
     public Integer buscarCarteiraPorContaId(int idConta) throws SQLException {
@@ -28,7 +26,9 @@ public class CarteiraDao {
                 WHERE conta_id_conta = ?
                 """;
 
-        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+        try (Connection conexao = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+
             stmt.setInt(1, idConta);
             try (ResultSet rs = stmt.executeQuery()) {
                 return rs.next() ? rs.getInt("id_carteira") : null;
@@ -71,7 +71,7 @@ public class CarteiraDao {
                     VALUES (src.carteira_id_carteira, src.crypto_id_crypto, ?)
                 """;
 
-        try {
+        try (Connection conexao = ConnectionFactory.getConnection()) {
             int idConta;
             double saldoAtual;
 
@@ -115,7 +115,6 @@ public class CarteiraDao {
             return new CompraResult(idConta, precoUnitario, total);
 
         } catch (SQLException e) {
-            conexao.rollback();
             throw e;
         }
     }
@@ -162,7 +161,7 @@ public class CarteiraDao {
             WHERE id_conta = ?
             """;
 
-        try {
+        try (Connection conexao = ConnectionFactory.getConnection()) {
             int idConta;
             try (PreparedStatement stmt = conexao.prepareStatement(sqlContaPorCliente)) {
                 stmt.setInt(1, idCliente);
@@ -221,7 +220,6 @@ public class CarteiraDao {
             }
             return new VendaResult(idConta, precoUnitario, totalCreditado);
         } catch (SQLException e) {
-            conexao.rollback();
             throw e;
         }
     }

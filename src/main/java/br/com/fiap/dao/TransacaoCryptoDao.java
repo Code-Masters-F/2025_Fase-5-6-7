@@ -8,10 +8,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class TransacaoCryptoDao {
-    Connection conexao;
 
-    public TransacaoCryptoDao() throws SQLException {
-        conexao = ConnectionFactory.getConnection();
+
+    public TransacaoCryptoDao() {
     }
 
     public void inserirTransacaoCrypto(int contaId, int cryptoId,
@@ -24,7 +23,9 @@ public class TransacaoCryptoDao {
         VALUES (?, ?, ?, ?, ?, ?)
        """;
 
-        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+        try (Connection conexao = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+
             stmt.setInt(1, contaId);
             stmt.setInt(2, cryptoId);
             stmt.setString(3, tipoOperacao);
@@ -34,8 +35,4 @@ public class TransacaoCryptoDao {
             stmt.executeUpdate();
         }
     }
-
-
-
-
 }

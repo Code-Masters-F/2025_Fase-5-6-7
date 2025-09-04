@@ -11,10 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ContaClienteDao {
-    Connection conexao;
 
-    public ContaClienteDao() throws SQLException {
-        conexao = ConnectionFactory.getConnection();
+    public ContaClienteDao(){
     }
 
     public void inserirConta(int idCliente, int numeroConta, int agencia) throws SQLException {
@@ -23,7 +21,9 @@ public class ContaClienteDao {
                 VALUES (?, ?, ?, ?, 0)
                 """;
 
-        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+        try (Connection conexao = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+
             stmt.setInt(1, idCliente);
             stmt.setInt(2, numeroConta);
             stmt.setInt(3, agencia);
@@ -39,7 +39,9 @@ public class ContaClienteDao {
     public void atualizarSaldo(int numeroConta, int agencia, double valor) throws SQLException {
         String sql = "UPDATE conta SET saldo = saldo + ? WHERE numero_conta = ? AND agencia = ?";
 
-        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+        try (Connection conexao = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+
             stmt.setDouble(1, valor);
             stmt.setInt(2, numeroConta);
             stmt.setInt(3, agencia);
@@ -53,8 +55,6 @@ public class ContaClienteDao {
 
     }
 
-    // sujestão, se precisar buscar a conta pelo id do cliente, pode-se se usar o consultarClientePorId e jogar
-    // o cliente que esse metodo nesse
     public ContaCliente buscarContaPorCliente(Cliente cliente) throws SQLException {
         final String sql = """
                 SELECT *
@@ -62,7 +62,9 @@ public class ContaClienteDao {
                 WHERE cliente_id_cliente = ?
                 """;
 
-        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+        try (Connection conexao = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+
             stmt.setInt(1, cliente.getId());
 
             try (ResultSet rs = stmt.executeQuery()) {
@@ -92,7 +94,9 @@ public class ContaClienteDao {
                 WHERE cliente_id_cliente = ?
                 """;
 
-        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+        try (Connection conexao = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+
             stmt.setInt(1, idCliente);
 
             try (ResultSet rs = stmt.executeQuery()) {
@@ -119,7 +123,7 @@ public class ContaClienteDao {
         final String sqlDebito = "UPDATE conta SET saldo = saldo - ? WHERE id_conta = ?";
         final String sqlCredito = "UPDATE conta SET saldo = saldo + ? WHERE id_conta = ?";
 
-        try {
+        try (Connection conexao = ConnectionFactory.getConnection();) {
             double saldoOrigem;
 
             try (PreparedStatement stmt = conexao.prepareStatement(sqlLockSaldo)) {
@@ -163,7 +167,9 @@ public class ContaClienteDao {
                 "FROM CONTA WHERE CLIENTE_ID_cliente = ? ORDER BY id_conta";
 
         List<ContaCliente> contas = new ArrayList<>();
-        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+        try (Connection conexao = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+
             stmt.setInt(1, idCliente);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -179,13 +185,4 @@ public class ContaClienteDao {
         }
         return contas;
     }
-
-
-
-
-
-
-
-
-
 }

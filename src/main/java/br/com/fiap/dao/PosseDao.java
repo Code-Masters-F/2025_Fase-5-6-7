@@ -11,10 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PosseDao {
-    Connection conexao;
 
-    public PosseDao() throws SQLException {
-        conexao = ConnectionFactory.getConnection();
+    public PosseDao() {
     }
 
     public List<PosseClienteCrypto> listarPossesPorCarteira(int contaId) throws SQLException {
@@ -36,7 +34,9 @@ public class PosseDao {
 
         List<PosseClienteCrypto> posses = new ArrayList<>();
 
-        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+        try (Connection conexao = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+
             stmt.setInt(1, contaId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
