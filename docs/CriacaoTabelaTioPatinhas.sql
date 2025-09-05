@@ -62,7 +62,7 @@ CREATE TABLE CONTA (
     CONSTRAINT CONTA_PK PRIMARY KEY (id_conta),
     CONSTRAINT CONTA_numero_conta_agencia_UN UNIQUE (numero_conta, agencia),
     CONSTRAINT CONTA_CLIENTE_FK FOREIGN KEY (CLIENTE_id_cliente)
-        REFERENCES CLIENTE(id_cliente)
+        REFERENCES CLIENTE(id_cliente) ON DELETE CASCADE
 );
 
 -- Índice para otimizar consultas por cliente
