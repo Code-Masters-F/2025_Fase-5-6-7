@@ -17,7 +17,6 @@ public class Carteira {
     }
 
     public Carteira() {
-        
     }
 
     public ContaCliente getContaCliente() {

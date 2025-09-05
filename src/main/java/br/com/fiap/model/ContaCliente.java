@@ -11,13 +11,14 @@ public class ContaCliente extends Conta {
     private List<TransacaoConta> transacoesContas;
     private Carteira carteira;
 
-    public ContaCliente(int numeroConta, int agencia, Cliente cliente, int id) {
-        super(numeroConta, agencia, id);
+    // Construtor usado para trazer informações do banco. Use o ClienteDao primeiro para conseguir o cliente
+    public ContaCliente(int numeroConta, int agencia, Cliente cliente, int idConta, int idCarteira) {
+        super(numeroConta, agencia, idConta);
         this.cliente = cliente;
         this.saldo = 0.0;
         this.transacoesCryptos = new ArrayList<>();
         this.transacoesContas = new ArrayList<>();
-        this.carteira = new Carteira();
+        this.carteira = new Carteira(this, idCarteira);
     }
 
     public ContaCliente(int idConta, int numeroConta, int agencia, double saldo, int id_carteira, Cliente cliente) {

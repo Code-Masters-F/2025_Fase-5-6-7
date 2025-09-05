@@ -33,10 +33,6 @@ public class Cliente extends Pessoa{
 
     }
 
-    public void criarConta(int numeroConta, int agencia, int id) {
-        this.contaCliente = new ContaCliente(numeroConta, agencia, this, id);
-    }
-
     public String getEmail() {
         return email;
     }

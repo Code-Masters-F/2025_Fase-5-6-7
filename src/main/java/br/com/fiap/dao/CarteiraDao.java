@@ -19,6 +19,23 @@ public class CarteiraDao {
     public CarteiraDao() {
     }
 
+    public void inserirCarteira(int idConta) throws SQLException {
+        String sql = """
+                INSERT INTO carteira (conta_id_conta)
+                VALUES (?)
+                """;
+
+        try (Connection conexao = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+
+            stmt.setInt(1, idConta);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Falha ao inserir a carteira do cliente: " + e.getMessage());
+        }
+
+    }
+
     public Integer buscarCarteiraPorContaId(int idConta) throws SQLException {
         final String sql = """
                 SELECT id_carteira

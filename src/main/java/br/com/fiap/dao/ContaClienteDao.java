@@ -4,6 +4,7 @@ import br.com.fiap.factory.ConnectionFactory;
 import br.com.fiap.model.Cliente;
 import br.com.fiap.model.ContaCliente;
 
+import java.math.BigDecimal;
 import java.sql.*;
 
 import java.time.LocalDate;
@@ -15,14 +16,14 @@ public class ContaClienteDao {
     public ContaClienteDao(){
     }
 
-    public void inserirConta(int idCliente, int numeroConta, int agencia) throws SQLException {
+    public int inserirConta(int idCliente, int numeroConta, int agencia) throws SQLException {
         String sql = """
                 INSERT INTO conta (cliente_id_cliente, numero_conta, agencia, data_abertura, saldo)
                 VALUES (?, ?, ?, ?, 0)
                 """;
 
         try (Connection conexao = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+             PreparedStatement stmt = conexao.prepareStatement(sql, new String[] {"id_conta"})) {
 
             stmt.setInt(1, idCliente);
             stmt.setInt(2, numeroConta);
@@ -30,9 +31,21 @@ public class ContaClienteDao {
             stmt.setDate(4, Date.valueOf(LocalDate.now()));
 
             int linhas = stmt.executeUpdate();
-            if (linhas != 1) {
+            if (linhas != 1)
                 throw new SQLException("Falha ao inserir conta.");
+
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    Object key = rs.getObject(1);
+                    if (key instanceof BigDecimal bd) {
+                        return bd.intValue();
+                    }
+                    return rs.getInt(1);
+                } else {
+                    throw new SQLException("Não foi possível obter o id gerado da conta.");
+                }
             }
+
         }
     }
 

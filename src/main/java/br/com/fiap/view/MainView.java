@@ -152,7 +152,11 @@ public class MainView {
             cliente.setId(idCliente);
 
             ContaClienteDao contaClienteDao = new ContaClienteDao();
-            contaClienteDao.inserirConta(idCliente, numeroConta, agencia);
+            int idConta = contaClienteDao.inserirConta(idCliente, numeroConta, agencia);
+
+            CarteiraDao daoCarteira = new CarteiraDao();
+            daoCarteira.inserirCarteira(idConta);
+
             System.out.println("Cliente cadastrado com sucesso!");
         } catch (SQLException e) {
             System.err.println("Erro ao cadastrar o usuário: " + e.getMessage());

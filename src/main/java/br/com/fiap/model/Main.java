@@ -143,7 +143,7 @@ public class Main {
         System.out.print("Digite a agencia: ");
         int agencia = scanner.nextInt();
 
-        cliente.criarConta(numeroConta, agencia, proximoClienteId++);
+        //cliente.criarConta(numeroConta, agencia, proximoClienteId++);
 
         todosClientesCadastrados.add(cliente);
 
