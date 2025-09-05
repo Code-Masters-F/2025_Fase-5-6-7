@@ -11,10 +11,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.regex.Pattern;
 
-// ================ ATENÇÃO =============
-// Essa main está só para teste de funcionamento da lógica de sistema. A main de verdade
-// ficará em view e utilizará a logica do CRUD que ainda será implementado pelo Victor
-
 public class MainView {
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$");
 
@@ -222,6 +218,7 @@ public class MainView {
             System.out.println("Idade: " + cliente.getIdade());
 
             if (conta != null) {
+                System.out.println("ID da conta: " + conta.getId());
                 System.out.println("Número da Conta: " + conta.getNumeroConta());
                 System.out.println("Agência: " + conta.getAgencia());
                 System.out.printf("Saldo: R$ %.2f%n", conta.getSaldo());
