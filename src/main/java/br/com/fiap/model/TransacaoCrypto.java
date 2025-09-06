@@ -33,7 +33,7 @@ public class TransacaoCrypto {
         this.status = StatusOperacao.PENDENTE;
 
         // Registra na main a transação
-        Main.todasTransacoesCrypto.put(this.id, this);
+        //Main.todasTransacoesCrypto.put(this.id, this);
     }
 
     public TransacaoCrypto() {

@@ -55,12 +55,6 @@ public class PosseClienteCrypto {
         this.carteira = novaCarteira;
     }
 
-    /**
-     * @return retorna quanto vale a quantidade que o cliente possui no momento, em R$
-     */
-    public double precificar() {
-        return quantidade * Main.getValorUnitarioCrypto(crypto.getId());
-    }
 
     @Override
     public String toString() {

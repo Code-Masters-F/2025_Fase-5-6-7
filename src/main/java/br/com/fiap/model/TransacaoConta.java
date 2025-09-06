@@ -34,7 +34,7 @@ public class TransacaoConta {
         this.id = proximoId++;
 
         // registra na main a transação
-        Main.todasTransacoesConta.put(this.id, this);
+        //Main.todasTransacoesConta.put(this.id, this);
     }
     
     public int getId() {

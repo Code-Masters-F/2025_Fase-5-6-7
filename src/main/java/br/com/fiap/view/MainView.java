@@ -89,8 +89,8 @@ public class MainView {
         System.out.println("1 - Cadastrar novo cliente");
         System.out.println("2 - Exibir clientes cadastrados");
         System.out.println("3 - Consultar cliente");
-       // System.out.println("4 - Atualizar cliente");
-       // System.out.println("5 - Deletar cliente");
+        System.out.println("4 - Atualizar cliente");
+        System.out.println("5 - Deletar cliente");
         System.out.println("6 - Consultar carteira");
         System.out.println("7 - Fazer tansferencia para uma conta interna");
         System.out.println("8 - Adicionar saldo");

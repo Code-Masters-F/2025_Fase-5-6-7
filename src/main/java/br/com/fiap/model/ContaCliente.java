@@ -131,19 +131,19 @@ public class ContaCliente extends Conta {
 //        return true;
 //    }
 
-    public void comprarCrypto(double quantidadeCrypto, int idCrypto) {
-        if (this.saldo >= Main.getValorUnitarioCrypto(idCrypto) * quantidadeCrypto) {
-            carteira.comprarCrypto(idCrypto, quantidadeCrypto);
-            this.saldo -= Main.getValorUnitarioCrypto(idCrypto) * quantidadeCrypto;
-        } else {
-            System.out.println("Saldo insuficiente para compra desta quantidade de criptomoeda!");
-        }
-    }
+//    public void comprarCrypto(double quantidadeCrypto, int idCrypto) {
+//        if (this.saldo >= Main.getValorUnitarioCrypto(idCrypto) * quantidadeCrypto) {
+//            carteira.comprarCrypto(idCrypto, quantidadeCrypto);
+//            this.saldo -= Main.getValorUnitarioCrypto(idCrypto) * quantidadeCrypto;
+//        } else {
+//            System.out.println("Saldo insuficiente para compra desta quantidade de criptomoeda!");
+//        }
+//    }
 
-    public void venderCrypto(double quantidadeCrypto, int idCrypto) {
-        carteira.venderCrypto(idCrypto, quantidadeCrypto);
-        this.saldo += Main.getValorUnitarioCrypto(idCrypto) * quantidadeCrypto;
-    }
+//    public void venderCrypto(double quantidadeCrypto, int idCrypto) {
+//        carteira.venderCrypto(idCrypto, quantidadeCrypto);
+//        this.saldo += Main.getValorUnitarioCrypto(idCrypto) * quantidadeCrypto;
+//    }
 
 //    public void exibirTransacoesContas() {
 //        for (TransacaoConta transacao : transacoesContas) {
