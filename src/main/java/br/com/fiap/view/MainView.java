@@ -62,8 +62,8 @@ public class MainView {
                     case "1": cadastrarCliente(scanner); break;
                     case "2": exibirClientesCadastrados(scanner); break;
                     case "3": consultarCliente(scanner); break;
-                    case "4" : atualizarCliente(scanner); break;
-                    case "5" : deletarCliente(scanner); break;
+                   // case "4" : atualizarCliente(scanner); break;
+                    // case "5" : deletarCliente(scanner); break;
                     case "6": consultarCarteira(scanner); break;
                     case "7": enviarTransferenciaContaInterna(scanner); break;
                     case "8": adicionarSaldo(scanner); break;
@@ -81,7 +81,7 @@ public class MainView {
                 e.printStackTrace();
             }
 
-        }while (!opcao.equals("0"));
+        } while (!opcao.equals("0"));
     }
 
     private static void exibirMenu() {
@@ -89,8 +89,8 @@ public class MainView {
         System.out.println("1 - Cadastrar novo cliente");
         System.out.println("2 - Exibir clientes cadastrados");
         System.out.println("3 - Consultar cliente");
-        System.out.println("4 - Atualizar cliente");
-        System.out.println("5 - Deletar cliente");
+       // System.out.println("4 - Atualizar cliente");
+       // System.out.println("5 - Deletar cliente");
         System.out.println("6 - Consultar carteira");
         System.out.println("7 - Fazer tansferencia para uma conta interna");
         System.out.println("8 - Adicionar saldo");
@@ -386,9 +386,9 @@ public class MainView {
             return;
         }
 
-        List<ContaCliente> contasDoCliente = new ArrayList<>();
+        List<ContaCliente> contasDoCliente;
         try {
-            contasDoCliente.add(new ContaClienteDao().buscarContaPorCliente(cliente));
+            contasDoCliente = new ContaClienteDao().buscarContasPorClienteId(idCliente);
         } catch (SQLException e) {
             System.err.println("Erro ao buscar contas do cliente: " + e.getMessage());
             return;

@@ -116,7 +116,11 @@ public class ContaClienteDao {
                 while (rs.next()) {
                     ContaCliente conta = new ContaCliente();
                     conta.setId(rs.getInt("id_conta"));
-                    conta.getCliente().setId(rs.getInt("cliente_id_cliente"));
+
+                    Cliente cli = new Cliente();
+                    cli.setId(rs.getInt("cliente_id_cliente"));
+
+                    conta.setCliente(cli);
                     conta.setNumeroConta(rs.getInt("numero_conta"));
                     conta.setNumeroAgencia(rs.getInt("agencia"));
                     conta.setSaldo(rs.getDouble("saldo"));
@@ -136,42 +140,53 @@ public class ContaClienteDao {
         final String sqlDebito = "UPDATE conta SET saldo = saldo - ? WHERE id_conta = ?";
         final String sqlCredito = "UPDATE conta SET saldo = saldo + ? WHERE id_conta = ?";
 
-        try (Connection conexao = ConnectionFactory.getConnection();) {
-            double saldoOrigem;
+        Connection conexao = null;
+        try {
+            conexao = ConnectionFactory.getConnection();
+            conexao.setAutoCommit(false);
 
-            try (PreparedStatement stmt = conexao.prepareStatement(sqlLockSaldo)) {
-                stmt.setInt(1, idOrigem);
+            try (PreparedStatement psLock = conexao.prepareStatement(sqlLockSaldo)) {
+                psLock.setInt(1, idOrigem);
 
-                try (ResultSet rs = stmt.executeQuery()) {
+                try (ResultSet rs = psLock.executeQuery()) {
                     if (!rs.next()) throw new SQLException("Conta de origem não encontrada.");
-                    saldoOrigem = rs.getDouble(1);
+                    double saldoOrigem = rs.getDouble(1);
+
+                    if (saldoOrigem < valor) throw new SQLException("Saldo insuficiente na conta de origem.");
                 }
-            }
 
-            if (saldoOrigem < valor) throw new SQLException("Saldo insuficiente na conta de origem.");
-
-            try (PreparedStatement stmt = conexao.prepareStatement(sqlLockSaldo)) {
-                stmt.setInt(1, idDestino);
-
-                try (ResultSet rs = stmt.executeQuery()) {
+                psLock.setInt(1, idDestino);
+                try (ResultSet rs = psLock.executeQuery()) {
                     if (!rs.next()) throw new SQLException("Conta de destino não encontrada.");
                 }
             }
 
-            try (PreparedStatement stmt = conexao.prepareStatement(sqlDebito)) {
-                stmt.setDouble(1, valor);
-                stmt.setInt(2, idOrigem);
-                if (stmt.executeUpdate() != 1) throw new SQLException("Falha ao debitar origem.");
-            }
 
-            try (PreparedStatement stmt = conexao.prepareStatement(sqlCredito)) {
-                stmt.setDouble(1, valor);
-                stmt.setInt(2, idDestino);
-                if (stmt.executeUpdate() != 1) throw new SQLException("Falha ao creditar destino.");
+            try (PreparedStatement deb = conexao.prepareStatement(sqlDebito);
+                 PreparedStatement cre = conexao.prepareStatement(sqlCredito)) {
+                deb.setDouble(1, valor);
+                deb.setInt(2, idOrigem);
+                if (deb.executeUpdate() != 1) throw new SQLException("Falha ao debitar origem.");
+
+                cre.setDouble(1, valor);
+                cre.setInt(2, idDestino);
+                if (cre.executeUpdate() != 1) throw new SQLException("Falha ao creditar destino.");
             }
+            conexao.commit();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
-            throw e;
+            if (conexao != null) {
+                try { conexao.rollback(); } catch (SQLException ex) {
+                    System.err.println("Erro no rollback: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        } finally {
+            if (conexao != null) {
+                try { conexao.close(); } catch (SQLException ex) {
+                    System.err.println("Erro ao fechar conexão: " + ex.getMessage());
+                    ex.printStackTrace();
+                }
+            }
         }
     }
 
@@ -188,7 +203,7 @@ public class ContaClienteDao {
                 while (rs.next()) {
                     ContaCliente conta = new ContaCliente();
                     conta.setId(rs.getInt("id_conta"));
-                    conta.setNumeroAgencia(rs.getInt("numero_conta"));
+                    conta.setNumeroConta(rs.getInt("numero_conta"));
                     conta.setNumeroAgencia(rs.getInt("agencia"));
                     conta.setSaldo(rs.getDouble("saldo"));
 
