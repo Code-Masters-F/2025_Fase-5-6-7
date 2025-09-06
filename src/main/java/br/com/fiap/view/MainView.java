@@ -183,6 +183,17 @@ public class MainView {
 
     private static void deletarCliente (Scanner scanner) {
         System.out.print("Digite o ID do cliente que deseja DELETAR: ");
+        int idCliente = Integer.parseInt(scanner.nextLine().trim());
+
+        try {
+            ClienteDao daoCliente = new ClienteDao();
+            daoCliente.deletarClientePorId(idCliente);
+            System.out.println("Cliente deletado!");
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 
     private static void cadastrarCrypto(Scanner scanner) {

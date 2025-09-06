@@ -95,5 +95,17 @@ public class ClienteDao {
         }
     }
 
+    public void deletarClientePorId (int idCliente) throws SQLException {
+        String sql = "DELETE FROM cliente WHERE id_cliente = ?";
+
+        try (Connection conexao = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+
+            stmt.setInt(1, idCliente);
+            int rows = stmt.executeUpdate();
+            if (rows != 1) throw new SQLException("Falha ao deletar cliente");
+        }
+    }
+
 
 }
