@@ -169,14 +169,16 @@ public class MainView {
     private static void exibirClientesCadastrados(Scanner scanner) {
         try {
             ClienteDao daoCliente = new ClienteDao();
-            List<Cliente> todosClientesCadastrados = daoCliente.listarClienteCadastrados();
-            for(Cliente c : todosClientesCadastrados) {
-                System.out.print("ID do cliente: " + c.getId());
-                System.out.print(" | Nome: " + c.getNome());
-                System.out.print(" | Email: " + c.getEmail());
-                System.out.print(" | CPF: " + c.getCpf());
-                System.out.print(" | Data de Nascimento: " + c.getDataNascimento().format(FORMATTER));
-                System.out.print(" | Idade: " + c.getIdade() + System.lineSeparator());
+            // Integer é o id da conta que não está na tabela cliente
+            Map<Cliente, Integer> todosClientesCadastrados = daoCliente.listarClienteCadastrados();
+            for(Map.Entry<Cliente, Integer> c : todosClientesCadastrados.entrySet()) {
+                System.out.print("ID do cliente: " + c.getKey().getId());
+                System.out.print(" | ID da conta: " + c.getValue());
+                System.out.print(" | Nome: " + c.getKey().getNome());
+                System.out.print(" | Email: " + c.getKey().getEmail());
+                System.out.print(" | CPF: " + c.getKey().getCpf());
+                System.out.print(" | Data de Nascimento: " + c.getKey().getDataNascimento().format(FORMATTER));
+                System.out.print(" | Idade: " + c.getKey().getIdade() + System.lineSeparator());
             }
 
         } catch (SQLException e) {

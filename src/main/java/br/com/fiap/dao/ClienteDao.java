@@ -2,12 +2,15 @@ package br.com.fiap.dao;
 
 import br.com.fiap.factory.ConnectionFactory;
 import br.com.fiap.model.Cliente;
+import oracle.jdbc.proxy.annotation.Pre;
 
 import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ClienteDao {
 
@@ -109,22 +112,28 @@ public class ClienteDao {
         }
     }
 
-    public List<Cliente> listarClienteCadastrados() throws SQLException {
-        String sql = "SELECT * FROM cliente";
-        List<Cliente> clientesCadastrados = new ArrayList<>();
+    // O Integer do map é o id da conta, que não está na tabela cliente
+    public Map<Cliente, Integer> listarClienteCadastrados() throws SQLException {
+        String sql = "SELECT c.*, co.id_conta " +
+                "FROM cliente c " +
+                "INNER JOIN conta co ON c.id_cliente = co.cliente_id_cliente";
+
+        Map<Cliente, Integer> clientesCadastrados = new HashMap<>();
 
         try (Connection conexao = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+             PreparedStatement stmt = conexao.prepareStatement(sql);
+             ResultSet result = stmt.executeQuery()) {
 
-            ResultSet result = stmt.executeQuery();
             while (result.next()) {
                 int idCliente = result.getInt("id_cliente");
                 String nome = result.getString("nome");
                 String email = result.getString("email");
                 String cpf = result.getString("cpf");
                 LocalDate dataNascimento = result.getDate("data_nascimento").toLocalDate();
+                int idConta = result.getInt("id_conta");
 
-                clientesCadastrados.add(new Cliente(cpf, nome, email, dataNascimento, idCliente));
+                Cliente cliente = new Cliente(cpf, nome, email, dataNascimento, idCliente);
+                clientesCadastrados.put(cliente, idConta);
             }
         }
         return clientesCadastrados;
