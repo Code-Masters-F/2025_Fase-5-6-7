@@ -1,18 +1,13 @@
 package br.com.fiap.dao;
 
 import br.com.fiap.factory.ConnectionFactory;
-import br.com.fiap.model.Carteira;
-import br.com.fiap.model.PosseClienteCrypto;
 import br.com.fiap.utils.CryptoPriceSimulator;
 
-import javax.naming.directory.InitialDirContext;
-import java.io.InvalidClassException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class CarteiraDao {
 

@@ -4,6 +4,8 @@ package br.com.fiap.view;
 import br.com.fiap.dao.*;
 import br.com.fiap.model.*;
 
+import br.com.fiap.dao.ClienteDao;
+
 import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -44,7 +46,6 @@ public class MainView {
                 return LocalDate.parse(entrada, FORMATTER);
             } catch (DateTimeParseException e) {
                 System.out.println("Formato de data inválido. Utilize dd/MM/yyyy.");
-                e.printStackTrace();
             }
         }
     }
@@ -78,10 +79,9 @@ public class MainView {
                 }
             } catch (Exception e) {
                 System.out.println("Algo deu errado! Tente novamente.");
-                e.printStackTrace();
             }
 
-        }while (!opcao.equals("0"));
+        } while (!opcao.equals("0"));
     }
 
     private static void exibirMenu() {
@@ -89,8 +89,8 @@ public class MainView {
         System.out.println("1 - Cadastrar novo cliente");
         System.out.println("2 - Exibir clientes cadastrados");
         System.out.println("3 - Consultar cliente");
-        System.out.println("4 - Atualizar cliente");
-        System.out.println("5 - Deletar cliente");
+       // System.out.println("4 - Atualizar cliente");
+       // System.out.println("5 - Deletar cliente");
         System.out.println("6 - Consultar carteira");
         System.out.println("7 - Fazer tansferencia para uma conta interna");
         System.out.println("8 - Adicionar saldo");
@@ -162,7 +162,6 @@ public class MainView {
             System.out.println("Cliente cadastrado com sucesso!");
         } catch (SQLException e) {
             System.err.println("Erro ao cadastrar o usuário: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -244,13 +243,11 @@ public class MainView {
                 System.err.println("Cause  : " + t.getClass().getName() + " - " + t.getMessage());
                 t = t.getCause();
             }
-            e.printStackTrace();
         } catch (Exception e) {
             System.err.println("[Exception] ao cadastrar Criptoativo: " + e.getClass().getName() + " - " + e.getMessage());
             if (e.getCause() != null) {
                 System.err.println("Cause   : " + e.getCause().getClass().getName() + " - " + e.getCause().getMessage());
             }
-            e.printStackTrace();
         }
     }
 
@@ -285,7 +282,6 @@ public class MainView {
             }
         } catch (SQLException e) {
             System.out.println("Erro ao consultar cliente: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -313,7 +309,6 @@ public class MainView {
             }
         } catch (SQLException e) {
             System.err.println("Erro ao consultar carteira: " + e.getMessage());
-            e.printStackTrace();
         }
 
     }
@@ -360,10 +355,8 @@ public class MainView {
             System.out.println("Transferencia realizada com sucesso!");
         } catch (NumberFormatException e) {
             System.err.println("Entrada númerica inválida.");
-            e.printStackTrace();
         } catch (SQLException e) {
             System.err.println("Erro na transferência: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -382,13 +375,12 @@ public class MainView {
             }
         } catch (SQLException e) {
             System.err.println("Não foi possível consultar o Cliente: " + e.getMessage());
-            e.printStackTrace();
             return;
         }
 
-        List<ContaCliente> contasDoCliente = new ArrayList<>();
+        List<ContaCliente> contasDoCliente;
         try {
-            contasDoCliente.add(new ContaClienteDao().buscarContaPorCliente(cliente));
+            contasDoCliente = new ContaClienteDao().buscarContasPorClienteId(idCliente);
         } catch (SQLException e) {
             System.err.println("Erro ao buscar contas do cliente: " + e.getMessage());
             return;
@@ -416,7 +408,6 @@ public class MainView {
 
         } catch (SQLException e) {
             System.err.println("Erro ao atualizar saldo: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -441,7 +432,6 @@ public class MainView {
             }
         } catch (SQLException e) {
             System.out.println("Erro ao consultar cryptos: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -475,7 +465,6 @@ public class MainView {
             );
         } catch (SQLException e) {
             System.err.println("Erro na compra: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -502,7 +491,6 @@ public class MainView {
             );
         } catch (SQLException e) {
             System.err.println("Erro na venda: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
