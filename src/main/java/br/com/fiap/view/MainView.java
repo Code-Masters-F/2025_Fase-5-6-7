@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 
 public class MainView {
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$");
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private static String lerCPF(Scanner scanner) {
         while (true) {
@@ -36,12 +37,11 @@ public class MainView {
     }
 
     private static LocalDate lerData(Scanner scanner) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         while (true) {
             System.out.print("Digite a data (dd/MM/yyyy): ");
             String entrada = scanner.nextLine();
             try {
-                return LocalDate.parse(entrada, formatter);
+                return LocalDate.parse(entrada, FORMATTER);
             } catch (DateTimeParseException e) {
                 System.out.println("Formato de data inválido. Utilize dd/MM/yyyy.");
                 e.printStackTrace();
@@ -167,8 +167,21 @@ public class MainView {
     }
 
     private static void exibirClientesCadastrados(Scanner scanner) {
+        try {
+            ClienteDao daoCliente = new ClienteDao();
+            List<Cliente> todosClientesCadastrados = daoCliente.listarClienteCadastrados();
+            for(Cliente c : todosClientesCadastrados) {
+                System.out.print("ID do cliente: " + c.getId());
+                System.out.print(" | Nome: " + c.getNome());
+                System.out.print(" | Email: " + c.getEmail());
+                System.out.print(" | CPF: " + c.getCpf());
+                System.out.print(" | Data de Nascimento: " + c.getDataNascimento().format(FORMATTER));
+                System.out.print(" | Idade: " + c.getIdade() + System.lineSeparator());
+            }
 
-
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     private static void atualizarCliente (Scanner scanner) {

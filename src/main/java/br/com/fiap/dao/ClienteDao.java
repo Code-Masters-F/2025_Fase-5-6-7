@@ -6,6 +6,8 @@ import br.com.fiap.model.Cliente;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClienteDao {
 
@@ -107,5 +109,25 @@ public class ClienteDao {
         }
     }
 
+    public List<Cliente> listarClienteCadastrados() throws SQLException {
+        String sql = "SELECT * FROM cliente";
+        List<Cliente> clientesCadastrados = new ArrayList<>();
+
+        try (Connection conexao = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+
+            ResultSet result = stmt.executeQuery();
+            while (result.next()) {
+                int idCliente = result.getInt("id_cliente");
+                String nome = result.getString("nome");
+                String email = result.getString("email");
+                String cpf = result.getString("cpf");
+                LocalDate dataNascimento = result.getDate("data_nascimento").toLocalDate();
+
+                clientesCadastrados.add(new Cliente(cpf, nome, email, dataNascimento, idCliente));
+            }
+        }
+        return clientesCadastrados;
+    }
 
 }
