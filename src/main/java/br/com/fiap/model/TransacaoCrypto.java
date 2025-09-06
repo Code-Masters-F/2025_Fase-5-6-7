@@ -12,7 +12,7 @@ public class TransacaoCrypto {
     private LocalDateTime dataHora;
     private double valorUnitarioCrypto;
     private ContaCliente contaCliente;
-    private boolean status;
+    private StatusOperacao status;
     private Crypto crypto;
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
@@ -30,11 +30,14 @@ public class TransacaoCrypto {
         this.tipoOperacao = tipoOperacao;
         this.dataHora = LocalDateTime.now(); // Define a data atual
         this.valorTotal = quantidadeCrypto * valorUnitarioCrypto; // Calcula o valor total comprado/vendido
-        this.status = true;
-        this.id = proximoId++;
+        this.status = StatusOperacao.PENDENTE;
 
         // Registra na main a transação
         Main.todasTransacoesCrypto.put(this.id, this);
+    }
+
+    public TransacaoCrypto() {
+
     }
 
     // Getters
@@ -51,6 +54,10 @@ public class TransacaoCrypto {
         return quantidadeCrypto;
     }
 
+    public void setQuantidadeCrypto(double novaQuantidadeCrypto) {
+        this.quantidadeCrypto = novaQuantidadeCrypto;
+    }
+
     public String getDataHora() {
         return dataHora.format(formatter);
     }
@@ -59,11 +66,19 @@ public class TransacaoCrypto {
         return valorUnitarioCrypto;
     }
 
-    public Conta getContaCliente() {
+    public void setValorUnitarioCrypto(double novoValorUnitario) {
+        this.valorUnitarioCrypto = novoValorUnitario;
+    }
+
+    public ContaCliente getContaCliente() {
         return contaCliente;
     }
 
-    public boolean getStatus() {
+    public void setContaCliente(ContaCliente novaContaCliente) {
+        this.contaCliente = novaContaCliente;
+    }
+
+    public StatusOperacao getStatus() {
         return status;
     }
 
@@ -71,15 +86,23 @@ public class TransacaoCrypto {
         return crypto;
     }
 
+    public void setCrypto(Crypto novaCrypto) {
+        this.crypto = novaCrypto;
+    }
+
     public String getTipoOperacao() {
         return tipoOperacao;
+    }
+
+    public void setTipoOperacao(String novoTipoOperacao) {
+        this.tipoOperacao = novoTipoOperacao;
     }
 
 
     /**
      * Altera o status da transação (ativa ou cancelada).
      */
-    public void setStatus(boolean status) {
+    public void setStatus(StatusOperacao status) {
         this.status = status;
     }
 

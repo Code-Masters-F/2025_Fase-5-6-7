@@ -9,29 +9,60 @@ public class Crypto {
     private String nome;
     private String sigla;
     private LocalDate dataLancamento;
+    private double precoUnitario;
 
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    public Crypto(String nome, String sigla, int id, String dataLancamento) {
+    //private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    public Crypto(String nome, String sigla, int id, LocalDate dataLancamento) {
         this.nome = nome;
         this.sigla = sigla;
-        this.dataLancamento = LocalDate.parse(dataLancamento, formatter);
+        this.dataLancamento = dataLancamento;
         this.id = id;
+    }
+
+    public Crypto(String nome, String sigla, LocalDate dataLancamento) {
+        this.nome = nome;
+        this.sigla = sigla;
+        this.dataLancamento = dataLancamento;
+    }
+
+    public Crypto() {
+
     }
 
     public String getNome() {
         return nome;
     }
 
+    public void setNome(String novoNome) {
+        this.nome = novoNome;
+    }
+
+    public double getPrecoUnitario() {
+        return this.precoUnitario;
+    }
+
+    public void setPrecoUnitario(double novoPrecoUnitario) {
+        this.precoUnitario = novoPrecoUnitario;
+    }
+
     public String getSigla() {
         return sigla;
     }
 
-    public String getDataLancamento() {
-        return dataLancamento.format(formatter);
+    public void setSigla(String novaSigla) {
+        this.sigla = novaSigla;
+    }
+
+    public LocalDate getDataLancamento() {
+        return dataLancamento;
     }
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int novoId) {
+        this.id = novoId;
     }
 
     @Override

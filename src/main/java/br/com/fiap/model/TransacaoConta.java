@@ -8,10 +8,10 @@ public class TransacaoConta {
     private int id;
     private double valor;
     private LocalDateTime dataHora;
-    private String numeroContaOrigem;
-    private String numeroContaDestino;
-    private String agenciaOrigem;
-    private String agenciaDestino;
+    private int numeroContaOrigem;
+    private int numeroContaDestino;
+    private int agenciaOrigem;
+    private int agenciaDestino;
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
@@ -23,8 +23,8 @@ public class TransacaoConta {
      * @param agenciaOrigem agencia que está saindo o dinheiro
      * @param agenciaDestino agencia que está chegando o dinheiro
      */
-    public TransacaoConta(double valor, String numeroContaOrigem,
-                          String numeroContaDestino, String agenciaOrigem, String agenciaDestino) {
+    public TransacaoConta(double valor, int numeroContaOrigem,
+                          int numeroContaDestino, int agenciaOrigem, int agenciaDestino) {
         this.valor = valor;
         this.dataHora = LocalDateTime.now();
         this.numeroContaOrigem = numeroContaOrigem;
@@ -49,19 +49,19 @@ public class TransacaoConta {
         return dataHora.format(formatter);
     }
     
-    public String getNumeroContaOrigem() {
+    public int getNumeroContaOrigem() {
         return numeroContaOrigem;
     }
     
-    public String getNumeroContaDestino() {
+    public int getNumeroContaDestino() {
         return numeroContaDestino;
     }
     
-    public String getAgenciaOrigem() {
+    public int getAgenciaOrigem() {
         return agenciaOrigem;
     }
     
-    public String getAgenciaDestino() {
+    public int getAgenciaDestino() {
         return agenciaDestino;
     }
     

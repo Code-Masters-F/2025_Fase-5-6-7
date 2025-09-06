@@ -17,20 +17,22 @@ public class Carteira {
     }
 
     public Carteira() {
-        
     }
 
-    public ContaCliente getDono() {
+    public ContaCliente getContaCliente() {
         return dono;
     }
 
-  
-    public void setDono(ContaCliente novoDono) {
+    public void setContaCliente(ContaCliente novoDono) {
         this.dono = novoDono; 
     }
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int novoId) {
+        this.id = novoId;
     }
 
     /**
@@ -49,7 +51,7 @@ public class Carteira {
         return null;
     }
 
-    void verCarteira() {
+    public void verCarteira() {
         System.out.println("Criptomoedas da carteira:");
         for(PosseClienteCrypto posseCrypto : listaDeCryptos) {
             System.out.print("Criptoativo: " + posseCrypto.getCrypto().getNome() +

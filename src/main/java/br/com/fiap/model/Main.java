@@ -1,9 +1,12 @@
 package br.com.fiap.model;
 
 
+import br.com.fiap.dao.TransacaoContaDao;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.time.LocalDate;
@@ -74,7 +77,6 @@ public class Main {
 
     public static void main(String[] args) {
 
-        inicializarDados();
 
         String opcao;
         Scanner scanner = new Scanner(System.in);
@@ -82,7 +84,7 @@ public class Main {
         do {
             exibirMenu();
             opcao = scanner.nextLine();
-            System.out.println(System.lineSeparator());
+            System.out.println();
             try {
                 switch (opcao) {
                     case "1": cadastrarCliente(scanner); break;
@@ -125,30 +127,23 @@ public class Main {
         System.out.print("Escolha a opção desejada: ");
     }
 
-    private static void inicializarDados() {
-        Crypto bitcoin = new Crypto("Bitcoin", "BTC", 1, "01/01/2009");
-        Crypto ethereum = new Crypto("Ethereum", "ETH", 2, "30/07/2014");
-        todasCryptosCadastradas.add(bitcoin);
-        todasCryptosCadastradas.add(ethereum);
-        guardarEmTxt("cryptos_cadastradas.txt", bitcoin.toString());
-        guardarEmTxt("cryptos_cadastradas.txt", ethereum.toString());
-    }
+
 
     private static void cadastrarCliente(Scanner scanner) {
         System.out.print("Digite o nome do cliente: ");
         String nome = scanner.nextLine();
         String cpf = lerCPF(scanner);
         String email = lerEmail(scanner);
-        String dataNascimento = lerData(scanner);
+        LocalDate dataNascimento;
 
-        Cliente cliente = new Cliente(cpf, nome, email, dataNascimento, proximoClienteId);
+        Cliente cliente = new Cliente();
 
         System.out.print("Digite o numero da conta: ");
-        String numeroConta = scanner.nextLine();
+        int numeroConta = scanner.nextInt();
         System.out.print("Digite a agencia: ");
-        String agencia = scanner.nextLine();
+        int agencia = scanner.nextInt();
 
-        cliente.criarConta(numeroConta, agencia, proximoClienteId++);
+        //cliente.criarConta(numeroConta, agencia, proximoClienteId++);
 
         todosClientesCadastrados.add(cliente);
 
@@ -165,11 +160,6 @@ public class Main {
         String sigla = scanner.nextLine();
 
         String dataLancamento = lerData(scanner);
-
-        Crypto crypto = new Crypto(nome, sigla, proximoCryptoId++, dataLancamento);
-        todasCryptosCadastradas.add(crypto);
-
-        guardarEmTxt("cryptos_cadastradas.txt", crypto.toString());
 
         System.out.println("Criptoativo cadastrado com sucesso!");
     }
@@ -228,9 +218,9 @@ public class Main {
     }
 
     private static void consultarCarteira(Scanner scanner) {
-        System.out.print("Digite o ID do cliente que deseja consultar a carteira: ");
-        int idCliente = Integer.parseInt(scanner.nextLine());
-        Cliente cliente = buscarCliente(idCliente);
+        System.out.print("Digite o ID da conta que deseja consultar a carteira: ");
+        int idConta = Integer.parseInt(scanner.nextLine());
+        Cliente cliente = buscarCliente(idConta);
 
         if(cliente == null) {
             System.out.println("Cliente não encontrado.");
@@ -240,7 +230,7 @@ public class Main {
         cliente.contaCliente.getCarteira().verCarteira();
     }
 
-    private static void enviarTransferenciaContaExterna(Scanner scanner) {
+    private static void enviarTransferenciaContaExterna(Scanner scanner) throws SQLException {
         System.out.print("Digite o numero do id do cliente que realizará a transferencia: ");
         int idCliente = Integer.parseInt(scanner.nextLine());
         Cliente cliente = buscarCliente(idCliente);
@@ -251,15 +241,21 @@ public class Main {
         }
 
         System.out.print("Digite o numero da conta que deseja enviar a transferencia: ");
-        String numeroConta = scanner.nextLine();
+        int numeroConta = scanner.nextInt();
 
         System.out.print("Digite a agencia que deseja enviar a transferencia: ");
-        String agencia = scanner.nextLine();
+        int agencia = scanner.nextInt();
+
+        //Vou ter que buscar uma conta no banco de dados cujo numero da conta e numero da agencia corresponde a uma conta válida no banco
+        //Caso eu encontre passo id da conta na transação para registrar-la
 
         System.out.print("Digite o valor da transferencia: ");
         double valorTransferencia = Double.parseDouble(scanner.nextLine());
 
         cliente.contaCliente.transferirParaContaExterna(valorTransferencia, numeroConta, agencia);
+
+        TransacaoContaDao transacaoConta = new TransacaoContaDao();
+        transacaoConta.buscarConta(numeroConta, agencia);
 
         guardarEmTxtTransacaoContas();
     }
@@ -282,7 +278,7 @@ public class Main {
         double valorTransferencia = Double.parseDouble(scanner.nextLine());
 
         // registra as transações e manipula ambos os saldos
-        clienteOrigem.contaCliente.transferirMesmoSistema(clienteDestino.contaCliente, valorTransferencia);
+//        clienteOrigem.contaCliente.transferirMesmoSistema(clienteDestino.contaCliente, valorTransferencia);
 
         guardarEmTxtTransacaoContas();
 
@@ -301,15 +297,15 @@ public class Main {
         }
 
         System.out.print("Digite o numero da conta que enviou a transferencia: ");
-        String numeroConta = scanner.nextLine();
+        int numeroConta = scanner.nextInt();
 
         System.out.print("Digite a agencia da conta que enviou a transferencia: ");
-        String agencia = scanner.nextLine();
+        int agencia = scanner.nextInt();
 
         System.out.print("Digite o valor da transferencia: ");
         double valorTransferencia = Double.parseDouble(scanner.nextLine());
 
-        cliente.contaCliente.receberTransacaoConta(valorTransferencia, numeroConta, agencia);
+//        cliente.contaCliente.receberTransacaoConta(valorTransferencia, numeroConta, agencia);
 
         guardarEmTxtTransacaoContas();
 

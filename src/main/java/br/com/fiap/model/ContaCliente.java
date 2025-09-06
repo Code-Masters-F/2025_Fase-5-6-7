@@ -11,17 +11,27 @@ public class ContaCliente extends Conta {
     private List<TransacaoConta> transacoesContas;
     private Carteira carteira;
 
-    // para ser apagando quando houver conexao com banco de dados
-    // esse id precisa ser automatizado, pois quem recebe é a carteira
-    private static int proximoId = 1;
-
-    public ContaCliente(String numeroConta, String agencia, Cliente cliente, int id) {
-        super(numeroConta, agencia, id);
+    // Construtor usado para trazer informações do banco. Use o ClienteDao primeiro para conseguir o cliente
+    public ContaCliente(int numeroConta, int agencia, Cliente cliente, int idConta, int idCarteira) {
+        super(numeroConta, agencia, idConta);
         this.cliente = cliente;
         this.saldo = 0.0;
         this.transacoesCryptos = new ArrayList<>();
         this.transacoesContas = new ArrayList<>();
-        this.carteira = new Carteira(this, proximoId++);
+        this.carteira = new Carteira(this, idCarteira);
+    }
+
+    public ContaCliente(int idConta, int numeroConta, int agencia, double saldo, int id_carteira, Cliente cliente) {
+        super(numeroConta, agencia, idConta);
+        this.cliente = cliente;
+        this.saldo = saldo;
+        this.carteira = new Carteira(this, id_carteira);
+    }
+
+
+    public ContaCliente() {
+        super();
+
     }
 
     @Override
@@ -32,6 +42,23 @@ public class ContaCliente extends Conta {
     public void setSaldo(double saldo) {
         this.saldo = saldo;
     }
+
+
+    public void setId(int novoId) {
+        this.id = novoId;
+    }
+
+   public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+   }
+
+   public void setNumeroConta(int novoNumeroConta) {
+        this.numeroConta = novoNumeroConta;
+   }
+
+   public void setNumeroAgencia(int novaAgencia) {
+        this.agencia = novaAgencia;
+   }
 
     @Override
     public boolean depositar(float valor) {
@@ -54,7 +81,7 @@ public class ContaCliente extends Conta {
         return cliente;
     }
 
-    public boolean transferirParaContaExterna(double valor, String contaDestino, String agenciaDestino) {
+    public boolean transferirParaContaExterna(double valor, int contaDestino, int agenciaDestino) {
         if (this.saldo < valor) {
             return false;
         }
@@ -64,18 +91,18 @@ public class ContaCliente extends Conta {
         return true;
     }
 
-    public void receberTransferencia(double valor) {
-        this.saldo += valor;
-        TransacaoConta transacaoRecebida = new TransacaoConta(valor, null, this.getNumeroConta(), null, this.getAgencia());
-        transacoesContas.add(transacaoRecebida);
-    }
+//    public void receberTransferencia(double valor) {
+//        this.saldo += valor;
+//        TransacaoConta transacaoRecebida = new TransacaoConta(valor, 0, this.getNumeroConta(), 0, this.getAgencia());
+//        transacoesContas.add(transacaoRecebida);
+//    }
 
-    public boolean receberTransacaoConta(double valor, String contaOrigem, String agenciaOrigem) {
-        TransacaoConta transacao = new TransacaoConta(valor, contaOrigem, this.getNumeroConta(), agenciaOrigem, this.getAgencia());
-        saldo += valor;
-        transacoesContas.add(transacao);
-        return true;
-    }
+//    public boolean receberTransacaoConta(double valor, int contaOrigem, int agenciaOrigem) {
+//        TransacaoConta transacao = new TransacaoConta(valor, contaOrigem, this.getNumeroConta(), agenciaOrigem, this.getAgencia());
+//        saldo += valor;
+//        transacoesContas.add(transacao);
+//        return true;
+//    }
 
     /**
      * Usada para tranferencias entre os clientes cadastrados no sistema mesmo sistema
@@ -83,29 +110,26 @@ public class ContaCliente extends Conta {
      * @param valor o valor que será transferido
      * @return retorna verdadeiro se a operação for bem-sucedida
      */
-    public boolean transferirMesmoSistema(ContaCliente contaRemetente, double valor) {
-        TransacaoConta transacao = new TransacaoConta(valor, this.getNumeroConta(), contaRemetente.getNumeroConta(),
-                this.getAgencia(), contaRemetente.getAgencia());
-        saldo -= valor;
-        transacoesContas.add(transacao);
-
-        // ajusta o saldo do outro cliente e põe essa mesma tansação na lista do outro cliente
-        contaRemetente.receberTransacaoMesmoSistema(transacao, valor);
-        return true;
-    }
+//    public boolean transferirMesmoSistema(ContaCliente contaRemetente, double valor) {
+//        TransacaoConta transacao = new TransacaoConta(valor, this.getNumeroConta(), contaRemetente.getNumeroConta(),
+//                this.getAgencia(), contaRemetente.getAgencia());
+//        saldo -= valor;
+//        transacoesContas.add(transacao);
+//
+//        // ajusta o saldo do outro cliente e põe essa mesma tansação na lista do outro cliente
+//        contaRemetente.receberTransacaoMesmoSistema(transacao, valor);
+//        return true;
+//    }
 
     /**
      * Só pode ser usado por transferirMesmoSistema e apenas por transferirMesmoSistema.
      * Para passar o valor para outro cliente cadastrado no mesmo sistema
-     * @param transacao transação feita pelo outro cliente
-     * @param valor valor passado
-     * @return retorna verdadeiro caso seja bem sucedido
      */
-    private boolean receberTransacaoMesmoSistema(TransacaoConta transacao, double valor) {
-        saldo += valor;
-        transacoesContas.add(transacao);
-        return true;
-    }
+//    private boolean receberTransacaoMesmoSistema(TransacaoConta transacao, double valor) {
+//        saldo += valor;
+//        transacoesContas.add(transacao);
+//        return true;
+//    }
 
     public void comprarCrypto(double quantidadeCrypto, int idCrypto) {
         if (this.saldo >= Main.getValorUnitarioCrypto(idCrypto) * quantidadeCrypto) {
@@ -121,17 +145,17 @@ public class ContaCliente extends Conta {
         this.saldo += Main.getValorUnitarioCrypto(idCrypto) * quantidadeCrypto;
     }
 
-    public void exibirTransacoesContas() {
-        for (TransacaoConta transacao : transacoesContas) {
-            System.out.println(transacao);
-        }
-    }
+//    public void exibirTransacoesContas() {
+//        for (TransacaoConta transacao : transacoesContas) {
+//            System.out.println(transacao);
+//        }
+//    }
 
-    public void exibirTransacoesCryptos() {
-        for (TransacaoCrypto transacao : transacoesCryptos) {
-            System.out.println(transacao);
-        }
-    }
+//    public void exibirTransacoesCryptos() {
+//        for (TransacaoCrypto transacao : transacoesCryptos) {
+//            System.out.println(transacao);
+//        }
+//    }
 
     public Carteira getCarteira() {
         return carteira;

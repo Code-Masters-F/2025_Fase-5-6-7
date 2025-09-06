@@ -2,11 +2,13 @@ package br.com.fiap.model;
 
 public class PosseClienteCrypto {
 
+    private Carteira carteira;
     private Crypto crypto;
     private double quantidade;
     private int id;
 
-    public PosseClienteCrypto(Crypto crypto, double quantidade, int id) {
+    public PosseClienteCrypto(Carteira carteira, Crypto crypto, double quantidade, int id) {
+        this.carteira = carteira;
         this.crypto = crypto;
         this.quantidade = quantidade;
         this.id = id;
@@ -20,20 +22,37 @@ public class PosseClienteCrypto {
         this.id = proximoId++;
     }
 
+    public PosseClienteCrypto() {
+
+    }
+
     public Crypto getCrypto() {
         return crypto;
+    }
+
+    public void setCrypto(Crypto novaCrypto) {
+        this.crypto = novaCrypto;
     }
 
     public double getQuantidade() {
         return quantidade;
     }
 
+    public void setQuantidade(double quantidade) {
+        this.quantidade = quantidade;
+    }
+
+
     public int getId() {
         return id;
     }
 
-    protected void setQuantidade(double quantidade) {
-        this.quantidade = quantidade;
+    public Carteira getCarteira() {
+        return this.carteira;
+    }
+
+    public void setCarteira(Carteira novaCarteira) {
+        this.carteira = novaCarteira;
     }
 
     /**

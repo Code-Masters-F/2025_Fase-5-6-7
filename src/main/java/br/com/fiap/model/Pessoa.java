@@ -10,15 +10,17 @@ public class Pessoa {
     private String nome;
 
     private LocalDate dataNascimento;
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 
-    public Pessoa(String cpf, String nome, String dataNascimento) {
+    public Pessoa(String cpf, String nome, LocalDate dataNascimento) {
         this.cpf = cpf;
         this.nome = nome;
-        this.dataNascimento = LocalDate.parse(dataNascimento, formatter); // yyyy-MM-dd
+        this.dataNascimento = dataNascimento;
     }
 
+    public Pessoa() {
+
+    }
 
     public int getIdade() {
         LocalDate hoje = LocalDate.now();
@@ -26,11 +28,23 @@ public class Pessoa {
         return idade.getYears();
     }
 
+    public void setNome(String novoNome) {
+        this.nome = novoNome;
+    }
+
+    public void setCpf(String novoCpf) {
+        this.cpf = novoCpf;
+    }
+
+    public void setDataNascimento(LocalDate novaDataNascimento) {
+        this.dataNascimento = novaDataNascimento;
+    }
+
     /**
-    * Retorna a data de nascimento no formato yyyy-MM-dd
-    * */
-    public String getDataNascimento() {
-        return dataNascimento.format(DateTimeFormatter.ISO_LOCAL_DATE);
+     * Retorna a data de nascimento no formato yyyy-MM-dd
+     */
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
     }
 
     public String getCpf() {
@@ -45,7 +59,7 @@ public class Pessoa {
         return "Pessoa{" +
                 "cpf='" + cpf + '\'' +
                 ", nome='" + nome + '\'' +
-                ", dataNascimento='" + dataNascimento.format(formatter) + '\'' +
+                ", dataNascimento='" + dataNascimento + '\'' +
                 ", idade=" + getIdade() +
                 '}';
     }

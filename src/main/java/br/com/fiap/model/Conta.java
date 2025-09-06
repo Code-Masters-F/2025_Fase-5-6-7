@@ -3,23 +3,27 @@ package br.com.fiap.model;
 import java.time.LocalDate;
 
 public abstract class Conta {
-    private final int id;
-    private final String numeroConta;
-    private final String agencia;
-    private final LocalDate dataAbertura;
+    protected int id;
+    protected int numeroConta;
+    protected int agencia;
+    private LocalDate dataAbertura;
 
-    public Conta(String numeroConta, String agencia, int id) {
+    public Conta(int numeroConta, int agencia, int id) {
         this.numeroConta = numeroConta;
         this.agencia = agencia;
         this.dataAbertura = LocalDate.now();
         this.id = id;
     }
 
-    public String getNumeroConta() {
+    public Conta() {
+
+    }
+
+    public int getNumeroConta() {
         return numeroConta;
     }
 
-    public String getAgencia() {
+    public int getAgencia() {
         return agencia;
     }
 
