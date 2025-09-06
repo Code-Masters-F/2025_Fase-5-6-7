@@ -60,7 +60,7 @@ public class MainView {
             try {
                 switch (opcao) {
                     case "1": cadastrarCliente(scanner); break;
-                    case "2": cadastrarCrypto(scanner); break;
+                    case "2": exibirClientesCadastrados(scanner); break;
                     case "3": consultarCliente(scanner); break;
                     case "4" : atualizarCliente(scanner); break;
                     case "5" : deletarCliente(scanner); break;
@@ -70,8 +70,9 @@ public class MainView {
                     case "9": listarCriptoativos(); break;
                     case "10": comprarCrypto(scanner); break;
                     case "11": venderCrypto(scanner); break;
-//                    case "12": listarTransacoesContas(); break;
-//                    case "13": listarTransacoesCryptos(); break;
+                    case "12": cadastrarCrypto(scanner); break;
+//                    case "13": listarTransacoesContas(); break;
+//                    case "14": listarTransacoesCryptos(); break;
                     case "0": System.out.println("Saindo do sistema..."); break;
                     default: System.out.println("Opção inválida!");
                 }
@@ -86,7 +87,7 @@ public class MainView {
     private static void exibirMenu() {
         System.out.println("\n======= MENU =======");
         System.out.println("1 - Cadastrar novo cliente");
-        System.out.println("2 - Cadastrar novo criptoativo");
+        System.out.println("2 - Exibir clientes cadastrados");
         System.out.println("3 - Consultar cliente");
         System.out.println("4 - Atualizar cliente");
         System.out.println("5 - Deletar cliente");
@@ -96,8 +97,9 @@ public class MainView {
         System.out.println("9 - Listar criptoativos");
         System.out.println("10 - Comprar criptoativo");
         System.out.println("11 - Vender criptoativo");
-//        System.out.println("12 - Consultar transações de contas no sistema");
-//        System.out.println("13 - Consultar transações de criptoativos no sistema");
+        System.out.println("12 - Cadastrar novo criptoativo");
+//        System.out.println("13 - Consultar transações de contas no sistema");
+//        System.out.println("14 - Consultar transações de criptoativos no sistema");
         System.out.println("0 - Sair");
         System.out.print("Escolha a opção desejada: ");
     }
@@ -162,6 +164,11 @@ public class MainView {
             System.err.println("Erro ao cadastrar o usuário: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    private static void exibirClientesCadastrados(Scanner scanner) {
+
+
     }
 
     private static void atualizarCliente (Scanner scanner) {
