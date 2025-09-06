@@ -79,5 +79,21 @@ public class ClienteDao {
         }
     }
 
+    public void atualizarClientePorId (int idCliente, String nome, String email) throws SQLException{
+        String sql = "UPDATE cliente SET nome = ?, email = ? WHERE id_cliente = ?";
+
+        try (Connection conexao = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+
+            stmt.setString(1, nome);
+            stmt.setString(2, email);
+            stmt.setInt(3, idCliente);
+
+            int rows = stmt.executeUpdate();
+            if (rows != 1) throw new SQLException("Falha ao atualizar o cliente");
+
+        }
+    }
+
 
 }

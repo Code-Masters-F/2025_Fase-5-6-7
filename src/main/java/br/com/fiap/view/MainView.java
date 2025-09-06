@@ -164,6 +164,27 @@ public class MainView {
         }
     }
 
+    private static void atualizarCliente (Scanner scanner) {
+        System.out.print("Digite o ID do cliente que deseja atualizar: ");
+        int idCliete = Integer.parseInt(scanner.nextLine().trim());
+        System.out.print("Digite o NOVO nome do cliente: ");
+        String novoNome = scanner.nextLine().trim();
+        System.out.println("NOVO e-mail");
+        String novoEmail = lerEmail(scanner);
+
+        try {
+            ClienteDao daoCliente = new ClienteDao();
+            daoCliente.atualizarClientePorId(idCliete, novoNome, novoEmail);
+            System.out.println("Cliente atualizado com sucesso!!");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private static void deletarCliente (Scanner scanner) {
+        System.out.print("Digite o ID do cliente que deseja DELETAR: ");
+    }
+
     private static void cadastrarCrypto(Scanner scanner) {
         System.out.print("Digite o nome do criptoativo: ");
         String nome = scanner.nextLine().trim();
