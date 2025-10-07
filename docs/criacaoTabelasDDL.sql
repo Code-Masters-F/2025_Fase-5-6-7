@@ -89,13 +89,11 @@ CREATE TABLE TRANSACAO_FIAT (
     valor NUMBER(18,2) NOT NULL,
     tipo VARCHAR2(20) NOT NULL,
     data_hora TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
-    cpf VARCHAR2(11) NOT NULL,
-    codigo_banco_externo CHAR(3) NOT NULL,
     CONSTRAINT TRANSACAO_FIAT_PK PRIMARY KEY (id_transacao),
     CONSTRAINT TRANSACAO_FIAT_CONTA_EXTERNA_FK FOREIGN KEY (conta_externa_id)
-        REFERENCES CONTA_EXTERNA(id_conta_externa),
+        REFERENCES CONTA_EXTERNA(id_conta_externa) ON DELETE CASCADE,
     CONSTRAINT TRANSACAO_FIAT_CONTA_INTERNA_FK FOREIGN KEY (conta_interna_id)
-        REFERENCES CONTA_INTERNA(id_conta_interna),
+        REFERENCES CONTA_INTERNA(id_conta_interna) ON DELETE CASCADE,
     CONSTRAINT TRANSACAO_FIAT_valor_CHECK CHECK (valor > 0),
     CONSTRAINT TRANSACAO_FIAT_tipo_CHECK CHECK (tipo IN ('DEPOSITO', 'SAQUE')),
     CONSTRAINT TRANSACAO_FIAT_contas_diferentes_CHECK CHECK (conta_externa_id != conta_interna_id)
@@ -159,10 +157,9 @@ CREATE TABLE TRANSACAO_CRIPTOMOEDA (
     valor_unitario NUMBER(20,8) NOT NULL,
     data_hora TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
     status VARCHAR2(15) DEFAULT 'PENDENTE' NOT NULL,
-    cpf VARCHAR2(11) NOT NULL,
     CONSTRAINT TRANSACAO_CRIPTOMOEDA_PK PRIMARY KEY (id_transacao_criptomoeda),
     CONSTRAINT TRANSACAO_CRIPTOMOEDA_CONTA_INTERNA_FK FOREIGN KEY (conta_interna_id)
-        REFERENCES CONTA_INTERNA(id_conta_interna),
+        REFERENCES CONTA_INTERNA(id_conta_interna) ON DELETE CASCADE,
     CONSTRAINT TRANSACAO_CRIPTOMOEDA_CRIPTOMOEDA_FK FOREIGN KEY (criptomoeda_id_criptomoeda)
         REFERENCES CRIPTOMOEDA(id_criptomoeda),
     CONSTRAINT TRANSACAO_CRIPTOMOEDA_tipo_CHECK CHECK (tipo_operacao IN ('COMPRA', 'VENDA')),
@@ -197,11 +194,9 @@ COMMENT ON COLUMN CONTA_EXTERNA.codigo_banco_externo IS 'Código de 3 dígitos d
 COMMENT ON COLUMN CONTA_INTERNA.codigo_banco_externo IS 'Código de 3 dígitos do banco interno (BC)';
 COMMENT ON COLUMN CONTA_INTERNA.saldo IS 'Saldo em moeda fiat (R$)';
 COMMENT ON COLUMN TRANSACAO_FIAT.tipo IS 'Tipo da transação: DEPOSITO ou SAQUE';
-COMMENT ON COLUMN TRANSACAO_FIAT.cpf IS 'CPF do cliente na transação';
 COMMENT ON COLUMN POSSE.quantidade_criptomoeda IS 'Quantidade de criptomoeda possuída';
 COMMENT ON COLUMN TRANSACAO_CRIPTOMOEDA.tipo_operacao IS 'Tipo da operação: COMPRA ou VENDA';
 COMMENT ON COLUMN TRANSACAO_CRIPTOMOEDA.status IS 'Status da transação';
-COMMENT ON COLUMN TRANSACAO_CRIPTOMOEDA.cpf IS 'CPF do cliente na transação';
 
 -- ========================================
 -- FIM DO SCRIPT DDL
