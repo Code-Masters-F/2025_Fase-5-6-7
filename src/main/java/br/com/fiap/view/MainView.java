@@ -72,8 +72,8 @@ public class MainView {
                     case "10": comprarCrypto(scanner); break;
                     case "11": venderCrypto(scanner); break;
                     case "12": cadastrarCrypto(scanner); break;
-//                    case "13": listarTransacoesContas(); break;
-//                    case "14": listarTransacoesCryptos(); break;
+//                  case "13": listarTransacoesContas(); break;
+//                  case "14": listarTransacoesCryptos(); break;
                     case "0": System.out.println("Saindo do sistema..."); break;
                     default: System.out.println("Opção inválida!");
                 }

@@ -67,7 +67,6 @@ CREATE TABLE CONTA_INTERNA (
     cliente_id_cliente INTEGER NOT NULL,
     numero_conta VARCHAR2(20) NOT NULL,
     agencia VARCHAR2(10) NOT NULL,
-    codigo_banco_externo CHAR(3) NOT NULL,
     data_abertura DATE NOT NULL,
     saldo NUMBER(18,2) DEFAULT 0 NOT NULL,
     CONSTRAINT CONTA_INTERNA_PK PRIMARY KEY (id_conta_interna),
@@ -95,8 +94,7 @@ CREATE TABLE TRANSACAO_FIAT (
     CONSTRAINT TRANSACAO_FIAT_CONTA_INTERNA_FK FOREIGN KEY (conta_interna_id)
         REFERENCES CONTA_INTERNA(id_conta_interna) ON DELETE CASCADE,
     CONSTRAINT TRANSACAO_FIAT_valor_CHECK CHECK (valor > 0),
-    CONSTRAINT TRANSACAO_FIAT_tipo_CHECK CHECK (tipo IN ('DEPOSITO', 'SAQUE')),
-    CONSTRAINT TRANSACAO_FIAT_contas_diferentes_CHECK CHECK (conta_externa_id != conta_interna_id)
+    CONSTRAINT TRANSACAO_FIAT_tipo_CHECK CHECK (tipo IN ('DEPOSITO', 'SAQUE'))
 );
 
 -- Índices para otimizar consultas
