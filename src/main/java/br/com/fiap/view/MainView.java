@@ -267,8 +267,8 @@ public class MainView {
     private static void exibirClientesCadastrados() {
         try {
             ClienteDao daoCliente = new ClienteDao();
-            // Integer é o id da conta que não está na tabela cliente
-            Map<Cliente, Integer> todosClientesCadastrados = daoCliente.listarClienteCadastrados();
+
+            Map<Cliente, Integer> todosClientesCadastrados = daoCliente.listarContaInternaClientesCadastrados();
             for(Map.Entry<Cliente, Integer> c : todosClientesCadastrados.entrySet()) {
                 System.out.print("ID do cliente: " + c.getKey().getId());
                 System.out.print(" | ID da conta: " + c.getValue());
