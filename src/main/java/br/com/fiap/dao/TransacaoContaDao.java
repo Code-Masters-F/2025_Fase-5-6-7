@@ -3,6 +3,7 @@ package br.com.fiap.dao;
 import br.com.fiap.factory.ConnectionFactory;
 import br.com.fiap.model.TransacaoConta;
 
+import javax.xml.transform.Result;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,49 +15,66 @@ public class TransacaoContaDao {
     }
 
     public void inserirTransacaoConta(TransacaoConta transacao) throws SQLException {
-        String sqlLookupConta = "SELECT id_conta FROM conta WHERE numero_conta = ? AND agencia = ?";
-        String sqlInsertTransacao = "INSERT INTO transacao_fiat (conta_id_conta_origem, conta_id_conta_destino, valor) VALUES (?, ?, ?)";
+        final String SQL_LOOKUP_CONTA_INTERNA = "SELECT id_conta_interna FROM conta_interna WHERE numero_conta = ? AND agencia = ?";
+        final String SQL_LOOKUP_CONTA_EXTERNA = "SELECT id_conta_externa FROM conta_externa WHERE numero_conta = ? AND agencia = ?";
+        final String SQL_INSERT = """
+                INSERT INTO transacao_fiat (conta_externa_id, conta_interna_id, valor, tipo, data_hora)
+                VALUES (?, ?, ?, ?, ?)
+                """;
 
-        try (Connection conexao = ConnectionFactory.getConnection();
-             PreparedStatement psOrigem = conexao.prepareStatement(sqlLookupConta);
-             PreparedStatement psDestino = conexao.prepareStatement(sqlLookupConta);
-             PreparedStatement psInsert = conexao.prepareStatement(sqlInsertTransacao)) {
+        if (transacao.getTipo() == null) {
+            throw new SQLException("Tipo da transação não informado (DEPOSITO/SAQUE).");
+        }
+        final String tipoStr = transacao.getTipo().name();
 
-            psOrigem.setInt(1, transacao.getNumeroContaOrigem());
-            psOrigem.setInt(2, transacao.getAgenciaOrigem());
+        final java.sql.Timestamp dataHora = java.sql.Timestamp.valueOf(
+                transacao.getDataHora() != null ? transacao.getDataHora() : java.time.LocalDateTime.now()
+        );
 
-            Integer idOrigem = null;
+        try (Connection cx = ConnectionFactory.getConnection()) {
+            cx.setAutoCommit(false);
 
-            try (ResultSet rs = psOrigem.executeQuery()) {
-                if (rs.next()) {
-                    idOrigem = rs.getInt(1);
+            Integer idContaInterna = null;
+            Integer idContaExterna = null;
+
+            try (PreparedStatement stmt = cx.prepareStatement(SQL_LOOKUP_CONTA_INTERNA)) {
+                stmt.setInt(1, transacao.getNumeroContaInterna());
+                stmt.setInt(2, transacao.getAgenciaContaInterna());
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) idContaInterna = rs.getInt(1);
                 }
             }
 
-            if (idOrigem == null) {
-                throw new SQLException("Conta de origem não encontrada (número/agência).");
+            if (idContaInterna == null) {
+                cx.rollback();
+                throw new SQLException("Conta interna não encontrada (número/agência).");
             }
 
-            psDestino.setInt(1, transacao.getNumeroContaDestino());
-            psDestino.setInt(2, transacao.getAgenciaDestino());
-
-            Integer idDestino = null;
-
-            try (ResultSet rs = psDestino.executeQuery()) {
-                if (rs.next()) {
-                    idDestino = rs.getInt(1);
+            try (PreparedStatement stmt = cx.prepareStatement(SQL_LOOKUP_CONTA_EXTERNA)) {
+                stmt.setInt(1, transacao.getNumeroContaExterna());
+                stmt.setInt(2, transacao.getAgenciaContaExterna());
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) idContaExterna = rs.getInt(1);
                 }
             }
-
-            if (idDestino == null) {
-                throw new SQLException("Conta de destino não encontrada (número/agência).");
+            if (idContaExterna == null) {
+                cx.rollback();
+                throw new SQLException("Conta externa não encontrada (número/agência).");
             }
 
-            psInsert.setInt(1, idOrigem);
-            psInsert.setInt(2, idDestino);
-            psInsert.setDouble(3, transacao.getValor());
-            psInsert.executeUpdate();
-
+            try (PreparedStatement stmt = cx.prepareStatement(SQL_INSERT)) {
+                stmt.setInt(1, idContaExterna);
+                stmt.setInt(2, idContaInterna);
+                stmt.setDouble(3, transacao.getValor());
+                stmt.setString(4, tipoStr);
+                stmt.setTimestamp(5, dataHora);
+                int rows = stmt.executeUpdate();
+                if (rows != 1) {
+                    cx.rollback();
+                    throw new SQLException("Falha ao inserir transação FIAT.");
+                }
+            }
+            cx.commit();
         }
     }
 

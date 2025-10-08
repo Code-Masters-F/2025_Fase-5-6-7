@@ -45,7 +45,7 @@ public class PosseDao {
                     cliente.setId(rs.getInt("id_cliente"));
                     cliente.setNome(rs.getString("nome_cliente"));
 
-                    ContaCliente conta = new ContaCliente();
+                    ContaInterna conta = new ContaInterna();
                     conta.setId(rs.getInt("id_conta"));
                     conta.setNumeroConta(rs.getInt("numero_conta"));
                     conta.setNumeroAgencia(rs.getInt("agencia"));
@@ -55,14 +55,14 @@ public class PosseDao {
                     carteira.setId(rs.getInt("id_carteira"));
                     carteira.setContaCliente(conta);
 
-                    Crypto crypto = new Crypto();
-                    crypto.setId(rs.getInt("id_crypto"));
-                    crypto.setNome(rs.getString("nome_crypto").trim());
-                    crypto.setSigla(rs.getString("sigla").trim());
+                    Criptomoeda criptomoeda = new Criptomoeda();
+                    criptomoeda.setId(rs.getInt("id_crypto"));
+                    criptomoeda.setNome(rs.getString("nome_crypto").trim());
+                    criptomoeda.setSigla(rs.getString("sigla").trim());
 
                     PosseClienteCrypto posse = new PosseClienteCrypto();
                     posse.setCarteira(carteira);
-                    posse.setCrypto(crypto);
+                    posse.setCrypto(criptomoeda);
                     posse.setQuantidade(rs.getDouble("quantidade_crypto"));
 
                     posses.add(posse);

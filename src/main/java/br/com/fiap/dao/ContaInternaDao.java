@@ -2,7 +2,7 @@ package br.com.fiap.dao;
 
 import br.com.fiap.factory.ConnectionFactory;
 import br.com.fiap.model.Cliente;
-import br.com.fiap.model.ContaCliente;
+import br.com.fiap.model.ContaInterna;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -11,14 +11,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContaClienteDao {
+public class ContaInternaDao {
 
-    public ContaClienteDao(){
+    public ContaInternaDao(){
     }
 
-    public int inserirConta(int idCliente, int numeroConta, int agencia) throws SQLException {
+    public int inserirContaInterna(int idCliente, int numeroConta, int agencia) throws SQLException {
         String sql = """
-                INSERT INTO conta (cliente_id_cliente, numero_conta, agencia, data_abertura, saldo)
+                INSERT INTO conta_interna (cliente_id_cliente, numero_conta, agencia, data_abertura, saldo)
                 VALUES (?, ?, ?, ?, 0)
                 """;
 
@@ -50,7 +50,7 @@ public class ContaClienteDao {
     }
 
     public void atualizarSaldo(int numeroConta, int agencia, double valor) throws SQLException {
-        String sql = "UPDATE conta SET saldo = saldo + ? WHERE numero_conta = ? AND agencia = ?";
+        String sql = "UPDATE conta_interna SET saldo = saldo + ? WHERE numero_conta = ? AND agencia = ?";
 
         try (Connection conexao = ConnectionFactory.getConnection();
              PreparedStatement stmt = conexao.prepareStatement(sql)) {
@@ -68,7 +68,7 @@ public class ContaClienteDao {
 
     }
 
-    public ContaCliente buscarContaPorCliente(Cliente cliente) throws SQLException {
+    public ContaInterna buscarContaPorCliente(Cliente cliente) throws SQLException {
         final String sql = """
                 SELECT *
                 FROM conta
@@ -90,16 +90,16 @@ public class ContaClienteDao {
                     CarteiraDao daoCarteira = new CarteiraDao();
                     int id_carteira = daoCarteira.buscarCarteiraPorContaId(id_conta);
 
-                    return new ContaCliente(id_conta, numero_conta, agencia, saldo, id_carteira, cliente);
+                    return new ContaInterna(id_conta, numero_conta, agencia, saldo, id_carteira, cliente);
                 }
             }
         }
         return null;
     }
 
-    public List<ContaCliente> buscarContasPorClienteId(int idCliente) throws SQLException {
+    public List<ContaInterna> buscarContasPorClienteId(int idCliente) throws SQLException {
 
-        List<ContaCliente> contas = new ArrayList<>();
+        List<ContaInterna> contas = new ArrayList<>();
 
         final String sql = """
                 SELECT id_conta, cliente_id_cliente, numero_conta, agencia, saldo
@@ -114,7 +114,7 @@ public class ContaClienteDao {
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    ContaCliente conta = new ContaCliente();
+                    ContaInterna conta = new ContaInterna();
                     conta.setId(rs.getInt("id_conta"));
 
                     Cliente cli = new Cliente();
@@ -190,18 +190,18 @@ public class ContaClienteDao {
         }
     }
 
-    public List<ContaCliente> listarContasPorCliente(int idCliente) throws SQLException {
+    public List<ContaInterna> listarContasPorCliente(int idCliente) throws SQLException {
         String sql = "SELECT id_conta, numero_conta, agencia, saldo " +
                 "FROM CONTA WHERE CLIENTE_ID_cliente = ? ORDER BY id_conta";
 
-        List<ContaCliente> contas = new ArrayList<>();
+        List<ContaInterna> contas = new ArrayList<>();
         try (Connection conexao = ConnectionFactory.getConnection();
              PreparedStatement stmt = conexao.prepareStatement(sql)) {
 
             stmt.setInt(1, idCliente);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    ContaCliente conta = new ContaCliente();
+                    ContaInterna conta = new ContaInterna();
                     conta.setId(rs.getInt("id_conta"));
                     conta.setNumeroConta(rs.getInt("numero_conta"));
                     conta.setNumeroAgencia(rs.getInt("agencia"));

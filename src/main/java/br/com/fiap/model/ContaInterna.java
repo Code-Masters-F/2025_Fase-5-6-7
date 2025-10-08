@@ -3,7 +3,7 @@ package br.com.fiap.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContaCliente extends Conta {
+public class ContaInterna extends Conta {
 
     private Cliente cliente;
     private double saldo; // saldo em R$
@@ -12,7 +12,7 @@ public class ContaCliente extends Conta {
     private Carteira carteira;
 
     // Construtor usado para trazer informações do banco. Use o ClienteDao primeiro para conseguir o cliente
-    public ContaCliente(int numeroConta, int agencia, Cliente cliente, int idConta, int idCarteira) {
+    public ContaInterna(int numeroConta, int agencia, Cliente cliente, int idConta, int idCarteira) {
         super(numeroConta, agencia, idConta);
         this.cliente = cliente;
         this.saldo = 0.0;
@@ -21,7 +21,7 @@ public class ContaCliente extends Conta {
         this.carteira = new Carteira(this, idCarteira);
     }
 
-    public ContaCliente(int idConta, int numeroConta, int agencia, double saldo, int id_carteira, Cliente cliente) {
+    public ContaInterna(int idConta, int numeroConta, int agencia, double saldo, int id_carteira, Cliente cliente) {
         super(numeroConta, agencia, idConta);
         this.cliente = cliente;
         this.saldo = saldo;
@@ -29,7 +29,7 @@ public class ContaCliente extends Conta {
     }
 
 
-    public ContaCliente() {
+    public ContaInterna() {
         super();
 
     }
@@ -81,15 +81,15 @@ public class ContaCliente extends Conta {
         return cliente;
     }
 
-    public boolean transferirParaContaExterna(double valor, int contaDestino, int agenciaDestino) {
-        if (this.saldo < valor) {
-            return false;
-        }
-        TransacaoConta transacao = new TransacaoConta(valor, this.getNumeroConta(), contaDestino, this.getAgencia(), agenciaDestino);
-        this.saldo -= valor;
-        transacoesContas.add(transacao);
-        return true;
-    }
+//    public boolean transferirParaContaExterna(double valor, int contaDestino, int agenciaDestino) {
+//        if (this.saldo < valor) {
+//            return false;
+//        }
+//        TransacaoConta transacao = new TransacaoConta();
+//        this.saldo -= valor;
+//        transacoesContas.add(transacao);
+//        return true;
+//    }
 
 //    public void receberTransferencia(double valor) {
 //        this.saldo += valor;
@@ -167,7 +167,7 @@ public class ContaCliente extends Conta {
         return "ContaCliente {" +
                 "id=" + getId() +
                 ", numeroConta='" + getNumeroConta() + '\'' +
-                ", agencia='" + getAgencia() + '\'' +
+                ", agencia='" + getNumeroAgencia() + '\'' +
                 ", saldo=" + saldo +
                 ", cliente=" + (cliente != null ? cliente.getNome() : "N/A") +
                 ", transacoesCryptos=" + transacoesCryptos.size() +

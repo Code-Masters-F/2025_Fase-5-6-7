@@ -7,11 +7,11 @@ import java.util.Set;
 
 public class Carteira {
 
-    private ContaCliente dono;
+    private ContaInterna dono;
     private int id;
     Set<PosseClienteCrypto> listaDeCryptos = new HashSet<>();
 
-    public Carteira(ContaCliente dono, int id) {
+    public Carteira(ContaInterna dono, int id) {
         this.dono = dono;
         this.id = id;
     }
@@ -19,11 +19,11 @@ public class Carteira {
     public Carteira() {
     }
 
-    public ContaCliente getContaCliente() {
+    public ContaInterna getContaCliente() {
         return dono;
     }
 
-    public void setContaCliente(ContaCliente novoDono) {
+    public void setContaCliente(ContaInterna novoDono) {
         this.dono = novoDono; 
     }
 

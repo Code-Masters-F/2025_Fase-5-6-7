@@ -3,21 +3,21 @@ package br.com.fiap.model;
 public class PosseClienteCrypto {
 
     private Carteira carteira;
-    private Crypto crypto;
+    private Criptomoeda criptomoeda;
     private double quantidade;
     private int id;
 
-    public PosseClienteCrypto(Carteira carteira, Crypto crypto, double quantidade, int id) {
+    public PosseClienteCrypto(Carteira carteira, Criptomoeda criptomoeda, double quantidade, int id) {
         this.carteira = carteira;
-        this.crypto = crypto;
+        this.criptomoeda = criptomoeda;
         this.quantidade = quantidade;
         this.id = id;
     }
 
     // Para ser APAGADO quando houver conexão com o banco de dados
     private static int proximoId = 1;
-    public PosseClienteCrypto(Crypto crypto) {
-        this.crypto = crypto;
+    public PosseClienteCrypto(Criptomoeda criptomoeda) {
+        this.criptomoeda = criptomoeda;
         this.quantidade = 0.0;
         this.id = proximoId++;
     }
@@ -26,12 +26,12 @@ public class PosseClienteCrypto {
 
     }
 
-    public Crypto getCrypto() {
-        return crypto;
+    public Criptomoeda getCrypto() {
+        return criptomoeda;
     }
 
-    public void setCrypto(Crypto novaCrypto) {
-        this.crypto = novaCrypto;
+    public void setCrypto(Criptomoeda novaCriptomoeda) {
+        this.criptomoeda = novaCriptomoeda;
     }
 
     public double getQuantidade() {
@@ -59,7 +59,7 @@ public class PosseClienteCrypto {
     @Override
     public String toString() {
         return "PosseClienteCrypto{" +
-                "crypto=" + crypto +
+                "crypto=" + criptomoeda +
                 ", quantidade=" + quantidade +
                 ", preço=" +  +
                 '}';

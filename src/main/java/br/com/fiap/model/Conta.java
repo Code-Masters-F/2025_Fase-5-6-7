@@ -23,7 +23,7 @@ public abstract class Conta {
         return numeroConta;
     }
 
-    public int getAgencia() {
+    public int getNumeroAgencia() {
         return agencia;
     }
 
