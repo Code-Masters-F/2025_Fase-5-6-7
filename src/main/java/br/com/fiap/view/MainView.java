@@ -8,6 +8,7 @@ import br.com.fiap.dao.ClienteDao;
 import br.com.fiap.utils.ContaExternaUtils;
 
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.time.LocalDate;
@@ -68,7 +69,7 @@ public class MainView {
                     case "5": atualizarCliente(scanner); break;
                     case "6": deletarCliente(scanner); break;
                     case "7": consultarCarteira(scanner); break;
-                    case "8": enviarTransferenciaContaInterna(scanner); break;
+                    case "8": enviarTransferenciaContaInternaParaExterna(scanner); break;
                     case "9": adicionarSaldo(scanner); break;
                     case "10": listarCriptoativos(); break;
                     case "11": comprarCrypto(scanner); break;
@@ -412,50 +413,39 @@ public class MainView {
 
     }
 
-    private static void enviarTransferenciaContaInterna(Scanner scanner) throws SQLException {
+    private static void enviarTransferenciaContaInternaParaExterna(Scanner scanner) throws SQLException {
+        System.out.println("\n=== Transferência de Conta Interna para Conta Externa ===");
+
+        System.out.print("Número da conta interna de origem: ");
+        int numeroContaInterna = Integer.parseInt(scanner.nextLine().trim());
+
+        System.out.print("Agência da conta interna: ");
+        int agenciaInterna = Integer.parseInt(scanner.next().trim());
+
+        System.out.print("Número da conta externa de destino: ");
+        int numeroContaExterna = Integer.parseInt(scanner.nextLine().trim());
+
+        System.out.print("Agência da conta externa: ");
+        int agenciaExterna = Integer.parseInt(scanner.nextLine().trim());
+
+        System.out.print("Valor da transferência: ");
+        double valor = Double.parseDouble(scanner.nextLine().trim());
+
+        TransacaoConta transacao = new TransacaoConta();
+        transacao.setNumeroContaInterna(numeroContaInterna);
+        transacao.setAgenciaContaInterna(agenciaInterna);
+        transacao.setNumeroContaExterna(numeroContaExterna);
+        transacao.setAgenciaContaExterna(agenciaExterna);
+        transacao.setValor(valor);
+        transacao.setTipo(TipoTransacaoFiat.SAQUE);
+        transacao.setDataHora(LocalDateTime.now());
+
         try {
-            System.out.print("Digite o número do id do cliente que realizará a transferência: ");
-            int idClienteOrigem = Integer.parseInt(scanner.nextLine().trim());
-
-            System.out.print("Digite o número do id do cliente que receberá a transferência: ");
-            int idClienteDestino = Integer.parseInt(scanner.nextLine().trim());
-
-            ClienteDao clienteDao = new ClienteDao();
-            Cliente clienteOrigem = clienteDao.consultarClientePorId(idClienteOrigem);
-            Cliente clienteDestino = clienteDao.consultarClientePorId(idClienteDestino);
-
-            if (clienteOrigem == null || clienteDestino == null) {
-                System.out.println("Cliente destino e/ou cliente origem não encontrado no sistema.");
-                return;
-            }
-
-            ContaInternaDao contaDao = new ContaInternaDao();
-
-            ContaInterna contaOrigem = escolherContaDoCliente(scanner, contaDao, idClienteOrigem, "ORIGEM");
-            if (contaOrigem == null) return;
-
-            ContaInterna contaDestino = escolherContaDoCliente(scanner, contaDao, idClienteDestino, "DESTINO");
-            if (contaDestino == null) return;
-
-            System.out.print("Digite o valor da transferencia: ");
-            double valorTransferencia = Double.parseDouble(scanner.nextLine().trim());
-
-            if (valorTransferencia <= 0) {
-                System.out.println("Valor inválido.");
-                return;
-            }
-
-            if (contaOrigem.getSaldo() < valorTransferencia) {
-                System.out.printf("Saldo insuficiente. Saldo atual: R$ %.2f%n", contaOrigem.getSaldo());
-                return;
-            }
-
-            contaDao.transferirParaContaInterna(contaOrigem.getId(), contaDestino.getId(), valorTransferencia);
-            System.out.println("Transferencia realizada com sucesso!");
-        } catch (NumberFormatException e) {
-            System.err.println("Entrada númerica inválida.");
+            TransacaoContaDao dao = new TransacaoContaDao();
+            dao.inserirTransacaoConta(transacao);
+            System.out.println("Transferência realizada com sucesso!");
         } catch (SQLException e) {
-            System.err.println("Erro na transferência: " + e.getMessage());
+            System.err.println("Erro ao realizar a transferência: " + e.getMessage());
         }
     }
 

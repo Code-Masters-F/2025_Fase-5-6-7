@@ -1,7 +1,6 @@
 package br.com.fiap.model;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class TransacaoConta {
     private int id;
@@ -22,6 +21,8 @@ public class TransacaoConta {
         this.tipoTransacao = tipo;
         this.dataHora = dataHora;
     }
+
+    public TransacaoConta() {}
     
     public int getId() {
         return id;
@@ -29,6 +30,26 @@ public class TransacaoConta {
 
     public TipoTransacaoFiat getTipo() {
         return tipoTransacao;
+    }
+
+    public void setTipo(TipoTransacaoFiat novoTipo) {
+        this.tipoTransacao = novoTipo;
+    }
+
+    public ContaExterna getContaExterna() {
+        return contaExterna;
+    }
+
+    public void setContaExterna(ContaExterna contaExterna) {
+        this.contaExterna = contaExterna;
+    }
+
+    public ContaInterna getContaInterna() {
+        return contaInterna;
+    }
+
+    public void setContaInterna(ContaInterna contaInterna) {
+        this.contaInterna = contaInterna;
     }
 
     public int getNumeroContaInterna() {
@@ -39,6 +60,14 @@ public class TransacaoConta {
         return contaExterna.getNumeroConta();
     }
 
+    public void setNumeroContaInterna(int novoNumero) {
+        this.contaInterna.setNumeroConta(novoNumero);
+    }
+
+    public void setNumeroContaExterna(int novoNumero) {
+        this.contaExterna.setNumeroConta(novoNumero);
+    }
+
     public int getAgenciaContaInterna() {
         return contaInterna.getNumeroAgencia();
     }
@@ -46,13 +75,30 @@ public class TransacaoConta {
     public int getAgenciaContaExterna() {
         return contaExterna.getNumeroAgencia();
     }
-    
+
+    public void setAgenciaContaInterna(int novaAgencia) {
+        this.contaInterna.setNumeroAgencia(novaAgencia);
+    }
+
+    public void setAgenciaContaExterna(int novaAgencia) {
+        this.contaExterna.setNumeroAgencia(novaAgencia);
+    }
+
     public double getValor() {
         return valor;
+    }
+
+    public void setValor(double novoValor) {
+        this.valor = novoValor;
     }
     
     public LocalDateTime getDataHora() {
         return this.dataHora;
+    }
+
+    public void setDataHora(LocalDateTime novaDataHora) {
+        this.dataHora = novaDataHora;
+
     }
     
     @Override

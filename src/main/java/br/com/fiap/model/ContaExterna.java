@@ -33,6 +33,34 @@ public class ContaExterna {
         return numeroConta;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public void setNumeroConta(int numeroConta) {
+        this.numeroConta = numeroConta;
+    }
+
+    public int getAgencia() {
+        return agencia;
+    }
+
+    public void setNumeroAgencia(int agencia) {
+        this.agencia = agencia;
+    }
+
+    public void setCodigoBancoExterno(int codigoBancoExterno) {
+        this.codigoBancoExterno = codigoBancoExterno;
+    }
+
+    public void setNomeBanco(String nomeBanco) {
+        this.nomeBanco = nomeBanco;
+    }
+
     public int getNumeroAgencia() {
         return agencia;
     }
