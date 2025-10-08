@@ -23,7 +23,7 @@ public class ContaInternaDao {
                 """;
 
         try (Connection conexao = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conexao.prepareStatement(sql, new String[] {"id_conta"})) {
+             PreparedStatement stmt = conexao.prepareStatement(sql, new String[] {"id_conta_interna"})) {
 
             stmt.setInt(1, idCliente);
             stmt.setInt(2, numeroConta);
@@ -71,7 +71,7 @@ public class ContaInternaDao {
     public ContaInterna buscarContaPorCliente(Cliente cliente) throws SQLException {
         final String sql = """
                 SELECT *
-                FROM conta
+                FROM conta_interna
                 WHERE cliente_id_cliente = ?
                 """;
 
@@ -102,8 +102,8 @@ public class ContaInternaDao {
         List<ContaInterna> contas = new ArrayList<>();
 
         final String sql = """
-                SELECT id_conta, cliente_id_cliente, numero_conta, agencia, saldo
-                FROM conta
+                SELECT id_conta_interna, cliente_id_cliente, numero_conta, agencia, saldo
+                FROM conta_interna
                 WHERE cliente_id_cliente = ?
                 """;
 
@@ -136,9 +136,9 @@ public class ContaInternaDao {
         if (idOrigem == idDestino) throw new SQLException("Origem e destino são a mesma conta.");
         if (valor <= 0) throw new SQLException("Valor inválido");
 
-        final String sqlLockSaldo = "SELECT saldo FROM conta WHERE id_conta = ? FOR UPDATE";
-        final String sqlDebito = "UPDATE conta SET saldo = saldo - ? WHERE id_conta = ?";
-        final String sqlCredito = "UPDATE conta SET saldo = saldo + ? WHERE id_conta = ?";
+        final String sqlLockSaldo = "SELECT saldo FROM conta_interna WHERE id_conta_interna = ? FOR UPDATE";
+        final String sqlDebito = "UPDATE conta_interna SET saldo = saldo - ? WHERE id_conta_interna = ?";
+        final String sqlCredito = "UPDATE conta_interna SET saldo = saldo + ? WHERE id_conta_interna = ?";
 
         Connection conexao = null;
         try {
@@ -190,9 +190,9 @@ public class ContaInternaDao {
         }
     }
 
-    public List<ContaInterna> listarContasPorCliente(int idCliente) throws SQLException {
-        String sql = "SELECT id_conta, numero_conta, agencia, saldo " +
-                "FROM CONTA WHERE CLIENTE_ID_cliente = ? ORDER BY id_conta";
+    public List<ContaInterna> listarContasInternasPorCliente(int idCliente) throws SQLException {
+        String sql = "SELECT id_conta_interna, numero_conta, agencia, saldo " +
+                "FROM conta_interna WHERE CLIENTE_ID_cliente = ? ORDER BY id_conta_interna";
 
         List<ContaInterna> contas = new ArrayList<>();
         try (Connection conexao = ConnectionFactory.getConnection();

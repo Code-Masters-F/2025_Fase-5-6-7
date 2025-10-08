@@ -3,7 +3,6 @@ package br.com.fiap.dao;
 import br.com.fiap.factory.ConnectionFactory;
 import br.com.fiap.model.TransacaoConta;
 
-import javax.xml.transform.Result;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -78,9 +77,9 @@ public class TransacaoContaDao {
         }
     }
 
-    public int buscarConta(int numeroConta, int numeroAgencia) throws SQLException {
+    public int buscarContaInterna(int numeroConta, int numeroAgencia) throws SQLException {
         String sql = """
-                SELECT * FROM conta
+                SELECT * FROM conta_interna
                 WHERE numero_conta = ?
                     AND agencia = ?;
                 """;
@@ -93,7 +92,7 @@ public class TransacaoContaDao {
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getInt("id_conta");
+                    return rs.getInt("id_conta_interna");
                 }
                 return -1;
             }

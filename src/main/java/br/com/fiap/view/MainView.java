@@ -109,7 +109,7 @@ public class MainView {
             System.out.print("Insira o número da conta do Banco Externo (5 a 9 dígitos, opcional -DV): ");
             String numeroContaInput = scanner.nextLine().trim();
 
-            if (!numeroContaInput.matches("\\\\d{5,9}(-[0-9X])?\"")) {
+            if (!numeroContaInput.matches("\\d{5,9}(-[0-9X])?")) {
                 System.err.println("Número da conta inválido. Ex: 123456 ou 123456-7.");
                 continue;
             }
@@ -126,7 +126,7 @@ public class MainView {
         while (true) {
             System.out.print("Insira o número da agência do Banco Externo (4 a 5 dígitos): ");
             String agenciaInput = scanner.nextLine().trim();
-            if (!agenciaInput.matches("\\\\d{4,5}")) {
+            if (!agenciaInput.matches("\\d{4,5}")) {
                 System.err.println("Número da agência inválido. Deve conter 4 ou 5 dígitos.");
                 continue;
             }
@@ -144,7 +144,7 @@ public class MainView {
         while (true) {
             System.out.print("Insira o código do Banco Externo (3 dígitos): ");
             String codigoBancoInput = scanner.nextLine().trim();
-            if (!codigoBancoInput.matches("\\\\d{3}")) {
+            if (!codigoBancoInput.matches("\\d{3}")) {
                 System.err.println("Código do banco inválido. Use 3 dígitos (ex: 001, 237, 341).");
                 continue;
             }
@@ -548,7 +548,7 @@ public class MainView {
     }
 
     private static ContaInterna escolherContaDoCliente(Scanner scanner, ContaInternaDao contaDao, int idCliente, String rotulo) throws SQLException {
-        List<ContaInterna> contas = contaDao.listarContasPorCliente(idCliente);
+        List<ContaInterna> contas = contaDao.listarContasInternasPorCliente(idCliente);
 
         if (contas == null || contas.isEmpty()) {
             System.out.println("O cliente não possui contas cadastradas (" + rotulo + ").");

@@ -16,7 +16,7 @@ public class CarteiraDao {
 
     public void inserirCarteira(int idConta) throws SQLException {
         String sql = """
-                INSERT INTO carteira (conta_id_conta)
+                INSERT INTO carteira (conta_interna_id)
                 VALUES (?)
                 """;
 
@@ -35,7 +35,7 @@ public class CarteiraDao {
         final String sql = """
                 SELECT id_carteira
                 FROM carteira
-                WHERE conta_id_conta = ?
+                WHERE conta_interna_id = ?
                 """;
 
         try (Connection conexao = ConnectionFactory.getConnection();
@@ -54,8 +54,8 @@ public class CarteiraDao {
         if (quantidade <= 0) throw new SQLException("Quantidade deve ser > 0.");
 
         final String sqlContaPorCliente = """
-                SELECT id_conta, saldo
-                FROM conta
+                SELECT id_conta_interna, saldo
+                FROM conta_interna
                 WHERE cliente_id_cliente = ?
                 FOR UPDATE
                 """;
@@ -63,13 +63,13 @@ public class CarteiraDao {
         final String sqlCarteiraPorConta = """
                 SELECT id_carteira
                 FROM carteira
-                WHERE conta_id_conta = ?
+                WHERE id_conta_interna = ?
                 """;
 
         final String sqlDebitaSaldo = """
                 UPDATE conta
                 SET saldo = saldo - ?
-                WHERE id_conta = ?
+                WHERE id_conta_interna = ?
                 """;
 
         final String sqlMergePosse = """
@@ -91,7 +91,7 @@ public class CarteiraDao {
                 stmt.setInt(1, idCliente);
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (!rs.next()) throw new SQLException("Conta não encontrada para o cliente id=" + idCliente);
-                    idConta = rs.getInt("id_conta");
+                    idConta = rs.getInt("id_conta_interna");
                     saldoAtual = rs.getDouble("saldo");
                 }
             }
@@ -137,8 +137,8 @@ public class CarteiraDao {
         if (quantidade <= 0) throw new SQLException("Quantidade deve ser > 0.");
 
         final String sqlContaPorCliente = """
-                SELECT id_conta, saldo
-                FROM conta
+                SELECT id_conta_interna, saldo
+                FROM conta_interna
                 WHERE cliente_id_cliente = ?
                 FOR UPDATE
                 """;
@@ -146,7 +146,7 @@ public class CarteiraDao {
         final String sqlCarteiraPorConta = """
                 SELECT id_carteira
                 FROM carteira
-                WHERE conta_id_conta = ?
+                WHERE id_conta_interna = ?
                 """;
 
         final String sqlQtdPosse = """
@@ -168,9 +168,9 @@ public class CarteiraDao {
                 """;
 
         final String sqlCreditaSaldo = """
-            UPDATE conta
+            UPDATE conta_interna
             SET saldo = saldo + ?
-            WHERE id_conta = ?
+            WHERE id_conta_interna = ?
             """;
 
         try (Connection conexao = ConnectionFactory.getConnection()) {
@@ -179,7 +179,7 @@ public class CarteiraDao {
                 stmt.setInt(1, idCliente);
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (!rs.next()) throw new SQLException("Conta não encontrada para o cliente id=" + idCliente);
-                    idConta = rs.getInt("id_conta");
+                    idConta = rs.getInt("id_conta_interna");
                 }
             }
 
