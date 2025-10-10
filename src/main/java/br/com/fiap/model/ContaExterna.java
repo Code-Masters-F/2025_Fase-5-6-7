@@ -4,12 +4,12 @@ public class ContaExterna {
 
     private int id;
     private Cliente cliente;
-    private int numeroConta;
-    private int agencia;
+    private String numeroConta;
+    private String agencia;
     private int codigoBancoExterno;
     private String nomeBanco;
 
-    public ContaExterna(Cliente cliente, int numeroConta, int agencia, int codigoBancoExterno, String nomeBanco) {
+    public ContaExterna(Cliente cliente, String numeroConta, String agencia, int codigoBancoExterno, String nomeBanco) {
         this.cliente = cliente;
         this.numeroConta = numeroConta;
         this.agencia = agencia;
@@ -29,7 +29,7 @@ public class ContaExterna {
         return cliente;
     }
 
-    public int getNumeroConta() {
+    public String getNumeroConta() {
         return numeroConta;
     }
 
@@ -41,15 +41,15 @@ public class ContaExterna {
         this.cliente = cliente;
     }
 
-    public void setNumeroConta(int numeroConta) {
+    public void setNumeroConta(String numeroConta) {
         this.numeroConta = numeroConta;
     }
 
-    public int getAgencia() {
+    public String getAgencia() {
         return agencia;
     }
 
-    public void setNumeroAgencia(int agencia) {
+    public void setNumeroAgencia(String agencia) {
         this.agencia = agencia;
     }
 
@@ -61,7 +61,7 @@ public class ContaExterna {
         this.nomeBanco = nomeBanco;
     }
 
-    public int getNumeroAgencia() {
+    public String getNumeroAgencia() {
         return agencia;
     }
 

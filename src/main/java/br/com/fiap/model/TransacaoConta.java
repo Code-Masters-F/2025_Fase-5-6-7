@@ -52,35 +52,35 @@ public class TransacaoConta {
         this.contaInterna = contaInterna;
     }
 
-    public int getNumeroContaInterna() {
+    public String getNumeroContaInterna() {
         return contaInterna.getNumeroConta();
     }
 
-    public int getNumeroContaExterna() {
+    public String getNumeroContaExterna() {
         return contaExterna.getNumeroConta();
     }
 
-    public void setNumeroContaInterna(int novoNumero) {
+    public void setNumeroContaInterna(String novoNumero) {
         this.contaInterna.setNumeroConta(novoNumero);
     }
 
-    public void setNumeroContaExterna(int novoNumero) {
+    public void setNumeroContaExterna(String novoNumero) {
         this.contaExterna.setNumeroConta(novoNumero);
     }
 
-    public int getAgenciaContaInterna() {
+    public String getAgenciaContaInterna() {
         return contaInterna.getNumeroAgencia();
     }
 
-    public int getAgenciaContaExterna() {
+    public String getAgenciaContaExterna() {
         return contaExterna.getNumeroAgencia();
     }
 
-    public void setAgenciaContaInterna(int novaAgencia) {
+    public void setAgenciaContaInterna(String novaAgencia) {
         this.contaInterna.setNumeroAgencia(novaAgencia);
     }
 
-    public void setAgenciaContaExterna(int novaAgencia) {
+    public void setAgenciaContaExterna(String novaAgencia) {
         this.contaExterna.setNumeroAgencia(novaAgencia);
     }
 

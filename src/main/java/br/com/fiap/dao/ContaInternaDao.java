@@ -49,42 +49,48 @@ public class ContaInternaDao {
         }
     }
 
-    public void atualizarSaldo(int numeroConta, int agencia, double valor) throws SQLException {
-        String sql = "UPDATE conta_interna SET saldo = saldo + ? WHERE numero_conta = ? AND agencia = ?";
+    public void debitarSaldo(Connection cx, int idConta, BigDecimal valor) throws SQLException {
+        try (PreparedStatement stmt = cx.prepareStatement(
+                "SELECT saldo FROM conta_interna WHERE id_conta_interna = ? FOR UPDATE")) {
+            stmt.setInt(1, idConta);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (!rs.next()) throw new SQLException("Conta interna não encontrada.");
+                BigDecimal saldo = rs.getBigDecimal(1);
+                if (saldo == null) saldo = BigDecimal.ZERO;
 
-        try (Connection conexao = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conexao.prepareStatement(sql)) {
-
-            stmt.setDouble(1, valor);
-            stmt.setInt(2, numeroConta);
-            stmt.setInt(3, agencia);
-
-            int linhas = stmt.executeUpdate();
-
-            if (linhas == 0) {
-                throw new SQLException("Conta não encontrada para atualização de saldo.");
+                if (saldo.compareTo(valor) < 0) {
+                    throw new SQLException("Saldo insuficiente.");
+                }
             }
         }
 
+        try (PreparedStatement stmt = cx.prepareStatement(
+                "UPDATE conta_interna SET saldo = saldo - ? WHERE id_conta_interna = ?")) {
+            stmt.setBigDecimal(1, valor);
+            stmt.setInt(2, idConta);
+            if (stmt.executeUpdate() != 1) {
+                throw new SQLException("Falha ao debitar saldo.");
+            }
+        }
     }
 
-    public ContaInterna buscarContaPorCliente(Cliente cliente) throws SQLException {
-        final String sql = """
+    public ContaInterna buscarContaInternaPorCliente(Cliente cliente) throws SQLException {
+        final String SQL = """
                 SELECT *
                 FROM conta_interna
                 WHERE cliente_id_cliente = ?
                 """;
 
         try (Connection conexao = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+             PreparedStatement stmt = conexao.prepareStatement(SQL)) {
 
             stmt.setInt(1, cliente.getId());
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    int id_conta = rs.getInt("id_conta");
-                    int numero_conta = rs.getInt("numero_conta");
-                    int agencia = rs.getInt("agencia");
+                    int id_conta = rs.getInt("id_conta_interna");
+                    String numero_conta = rs.getString("numero_conta");
+                    String agencia = rs.getString("agencia");
                     double saldo = rs.getDouble("saldo");
 
                     CarteiraDao daoCarteira = new CarteiraDao();
@@ -94,6 +100,32 @@ public class ContaInternaDao {
                 }
             }
         }
+        return null;
+    }
+
+    public static ContaInterna buscarContaInternaPorNumeroEAgencia(String numeroConta, String agencia) throws SQLException {
+        final String SQL = "SELECT * FROM conta_interna WHERE numero_conta = ? AND agencia = ?";
+
+        try (Connection conexao = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conexao.prepareStatement(SQL)) {
+
+            stmt.setString(1, numeroConta);
+            stmt.setString(2, agencia);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+
+                    ContaInterna contaInterna = new ContaInterna();
+                    contaInterna.setId(rs.getInt("id_conta_interna"));
+                    contaInterna.setNumeroConta(rs.getString("numero_conta"));
+                    contaInterna.setNumeroAgencia(rs.getString("agencia"));
+                    contaInterna.setSaldo(rs.getDouble("saldo"));
+
+                    return contaInterna;
+                }
+            }
+        }
+
         return null;
     }
 
@@ -121,8 +153,8 @@ public class ContaInternaDao {
                     cli.setId(rs.getInt("cliente_id_cliente"));
 
                     conta.setCliente(cli);
-                    conta.setNumeroConta(rs.getInt("numero_conta"));
-                    conta.setNumeroAgencia(rs.getInt("agencia"));
+                    conta.setNumeroConta(rs.getString("numero_conta"));
+                    conta.setNumeroAgencia(rs.getString("agencia"));
                     conta.setSaldo(rs.getDouble("saldo"));
 
                     contas.add(conta);
@@ -203,8 +235,8 @@ public class ContaInternaDao {
                 while (rs.next()) {
                     ContaInterna conta = new ContaInterna();
                     conta.setId(rs.getInt("id_conta"));
-                    conta.setNumeroConta(rs.getInt("numero_conta"));
-                    conta.setNumeroAgencia(rs.getInt("agencia"));
+                    conta.setNumeroConta(rs.getString("numero_conta"));
+                    conta.setNumeroAgencia(rs.getString("agencia"));
                     conta.setSaldo(rs.getDouble("saldo"));
 
                     contas.add(conta);
