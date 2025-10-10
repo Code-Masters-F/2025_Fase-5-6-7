@@ -3,77 +3,28 @@ package br.com.fiap.dao;
 import br.com.fiap.factory.ConnectionFactory;
 import br.com.fiap.model.TransacaoConta;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.math.BigDecimal;
+import java.sql.*;
 
 public class TransacaoContaDao {
 
     public TransacaoContaDao() {
     }
 
-    public void inserirTransacaoConta(TransacaoConta transacao) throws SQLException {
-        final String SQL_LOOKUP_CONTA_INTERNA = "SELECT id_conta_interna FROM conta_interna WHERE numero_conta = ? AND agencia = ?";
-        final String SQL_LOOKUP_CONTA_EXTERNA = "SELECT id_conta_externa FROM conta_externa WHERE numero_conta = ? AND agencia = ?";
-        final String SQL_INSERT = """
+    public void inserirTransacaoConta(Connection cx, TransacaoConta transacao) throws SQLException {
+        final String SQL = """
                 INSERT INTO transacao_fiat (conta_externa_id, conta_interna_id, valor, tipo, data_hora)
                 VALUES (?, ?, ?, ?, ?)
                 """;
 
-        if (transacao.getTipo() == null) {
-            throw new SQLException("Tipo da transação não informado (DEPOSITO/SAQUE).");
-        }
-        final String tipoStr = transacao.getTipo().name();
+        try (PreparedStatement stmt = cx.prepareStatement(SQL)) {
+            stmt.setInt(1, transacao.getContaExterna().getId());
+            stmt.setInt(2, transacao.getContaInterna().getId());
+            stmt.setBigDecimal(3, BigDecimal.valueOf(transacao.getValor()));
+            stmt.setString(4, transacao.getTipo().name());
+            stmt.setTimestamp(5, Timestamp.valueOf(transacao.getDataHora()));
 
-        final java.sql.Timestamp dataHora = java.sql.Timestamp.valueOf(
-                transacao.getDataHora() != null ? transacao.getDataHora() : java.time.LocalDateTime.now()
-        );
-
-        try (Connection cx = ConnectionFactory.getConnection()) {
-            cx.setAutoCommit(false);
-
-            Integer idContaInterna = null;
-            Integer idContaExterna = null;
-
-            try (PreparedStatement stmt = cx.prepareStatement(SQL_LOOKUP_CONTA_INTERNA)) {
-                stmt.setString(1, transacao.getNumeroContaInterna());
-                stmt.setString(2, transacao.getAgenciaContaInterna());
-                try (ResultSet rs = stmt.executeQuery()) {
-                    if (rs.next()) idContaInterna = rs.getInt(1);
-                }
-            }
-
-            if (idContaInterna == null) {
-                cx.rollback();
-                throw new SQLException("Conta interna não encontrada (número/agência).");
-            }
-
-            try (PreparedStatement stmt = cx.prepareStatement(SQL_LOOKUP_CONTA_EXTERNA)) {
-                stmt.setString(1, transacao.getNumeroContaExterna());
-                stmt.setString(2, transacao.getAgenciaContaExterna());
-                try (ResultSet rs = stmt.executeQuery()) {
-                    if (rs.next()) idContaExterna = rs.getInt(1);
-                }
-            }
-            if (idContaExterna == null) {
-                cx.rollback();
-                throw new SQLException("Conta externa não encontrada (número/agência).");
-            }
-
-            try (PreparedStatement stmt = cx.prepareStatement(SQL_INSERT)) {
-                stmt.setInt(1, idContaExterna);
-                stmt.setInt(2, idContaInterna);
-                stmt.setDouble(3, transacao.getValor());
-                stmt.setString(4, tipoStr);
-                stmt.setTimestamp(5, dataHora);
-                int rows = stmt.executeUpdate();
-                if (rows != 1) {
-                    cx.rollback();
-                    throw new SQLException("Falha ao inserir transação FIAT.");
-                }
-            }
-            cx.commit();
+            if (stmt.executeUpdate() != 1) throw new SQLException("Falha ao inserir transação.");
         }
     }
 

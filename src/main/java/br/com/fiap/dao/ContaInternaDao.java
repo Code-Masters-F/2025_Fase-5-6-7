@@ -49,23 +49,29 @@ public class ContaInternaDao {
         }
     }
 
-    public void atualizarSaldo(int numeroConta, int agencia, double valor) throws SQLException {
-        String sql = "UPDATE conta_interna SET saldo = saldo + ? WHERE numero_conta = ? AND agencia = ?";
+    public void debitarSaldo(Connection cx, int idConta, BigDecimal valor) throws SQLException {
+        try (PreparedStatement stmt = cx.prepareStatement(
+                "SELECT saldo FROM conta_interna WHERE id_conta_externa = ? FOR UPDATE")) {
+            stmt.setInt(1, idConta);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (!rs.next()) throw new SQLException("Conta interna não encontrada.");
+                BigDecimal saldo = rs.getBigDecimal(1);
+                if (saldo == null) saldo = BigDecimal.ZERO;
 
-        try (Connection conexao = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conexao.prepareStatement(sql)) {
-
-            stmt.setDouble(1, valor);
-            stmt.setInt(2, numeroConta);
-            stmt.setInt(3, agencia);
-
-            int linhas = stmt.executeUpdate();
-
-            if (linhas == 0) {
-                throw new SQLException("Conta não encontrada para atualização de saldo.");
+                if (saldo.compareTo(valor) < 0) {
+                    throw new SQLException("Saldo insuficiente.");
+                }
             }
         }
 
+        try (PreparedStatement stmt = cx.prepareStatement(
+                "UPDATE conta_interna SET saldo = saldo - ? WHERE id_conta_interna = ?")) {
+            stmt.setBigDecimal(1, valor);
+            stmt.setInt(2, idConta);
+            if (stmt.executeUpdate() != 1) {
+                throw new SQLException("Falha ao debitar saldo.");
+            }
+        }
     }
 
     public ContaInterna buscarContaInternaPorCliente(Cliente cliente) throws SQLException {

@@ -5,6 +5,7 @@ import br.com.fiap.dao.*;
 import br.com.fiap.model.*;
 
 import br.com.fiap.dao.ClienteDao;
+import br.com.fiap.service.TransacaoContaService;
 import br.com.fiap.utils.ContaExternaUtils;
 
 import java.sql.SQLException;
@@ -461,22 +462,20 @@ public class MainView {
                     TipoTransacaoFiat.SAQUE,
                     LocalDateTime.now()
             );
+
+            TransacaoContaService service = new TransacaoContaService();
+            service.registrarTransacao(transacao);
+            System.out.println("Transferência realizada com sucesso!");
+        } catch (SQLException e) {
+            System.err.println("Erro ao registrar transação: " + e.getMessage());
+            e.printStackTrace();
+
         } catch(Exception e) {
             System.err.println("Erro ao criar objeto Transação: " + e.getMessage());
             e.printStackTrace();
         }
-        
-        try {
-            TransacaoContaDao dao = new TransacaoContaDao();
-            dao.inserirTransacaoConta(transacao);
-            System.out.println("Transferência realizada com sucesso!");
-        } catch (SQLException e) {
-            System.err.println("Erro ao realizar a transferência: " + e.getMessage());
-            e.printStackTrace();
-        } catch (Exception e) {
-            System.err.println("Erro inesperado: " + e.getMessage());
-            e.printStackTrace();
-        }
+
+
     }
 
     private static void enviarTransferenciaContaExternaParaInterna(Scanner scanner) {
