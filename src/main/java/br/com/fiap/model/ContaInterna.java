@@ -12,7 +12,7 @@ public class ContaInterna extends Conta {
     private Carteira carteira;
 
     // Construtor usado para trazer informações do banco. Use o ClienteDao primeiro para conseguir o cliente
-    public ContaInterna(int numeroConta, int agencia, Cliente cliente, int idConta, int idCarteira) {
+    public ContaInterna(String numeroConta, String agencia, Cliente cliente, int idConta, int idCarteira) {
         super(numeroConta, agencia, idConta);
         this.cliente = cliente;
         this.saldo = 0.0;
@@ -21,7 +21,7 @@ public class ContaInterna extends Conta {
         this.carteira = new Carteira(this, idCarteira);
     }
 
-    public ContaInterna(int idConta, int numeroConta, int agencia, double saldo, int id_carteira, Cliente cliente) {
+    public ContaInterna(int idConta, String numeroConta, String agencia, double saldo, int id_carteira, Cliente cliente) {
         super(numeroConta, agencia, idConta);
         this.cliente = cliente;
         this.saldo = saldo;
@@ -52,11 +52,11 @@ public class ContaInterna extends Conta {
         this.cliente = cliente;
    }
 
-   public void setNumeroConta(int novoNumeroConta) {
+   public void setNumeroConta(String novoNumeroConta) {
         this.numeroConta = novoNumeroConta;
    }
 
-   public void setNumeroAgencia(int novaAgencia) {
+   public void setNumeroAgencia(String novaAgencia) {
         this.agencia = novaAgencia;
    }
 

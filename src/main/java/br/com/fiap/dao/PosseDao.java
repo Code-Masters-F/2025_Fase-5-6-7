@@ -47,8 +47,8 @@ public class PosseDao {
 
                     ContaInterna conta = new ContaInterna();
                     conta.setId(rs.getInt("id_conta"));
-                    conta.setNumeroConta(rs.getInt("numero_conta"));
-                    conta.setNumeroAgencia(rs.getInt("agencia"));
+                    conta.setNumeroConta(rs.getString("numero_conta"));
+                    conta.setNumeroAgencia(rs.getString("agencia"));
                     conta.setCliente(cliente);
 
                     Carteira carteira = new Carteira();

@@ -37,8 +37,8 @@ public class TransacaoContaDao {
             Integer idContaExterna = null;
 
             try (PreparedStatement stmt = cx.prepareStatement(SQL_LOOKUP_CONTA_INTERNA)) {
-                stmt.setInt(1, transacao.getNumeroContaInterna());
-                stmt.setInt(2, transacao.getAgenciaContaInterna());
+                stmt.setString(1, transacao.getNumeroContaInterna());
+                stmt.setString(2, transacao.getAgenciaContaInterna());
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) idContaInterna = rs.getInt(1);
                 }
@@ -50,8 +50,8 @@ public class TransacaoContaDao {
             }
 
             try (PreparedStatement stmt = cx.prepareStatement(SQL_LOOKUP_CONTA_EXTERNA)) {
-                stmt.setInt(1, transacao.getNumeroContaExterna());
-                stmt.setInt(2, transacao.getAgenciaContaExterna());
+                stmt.setString(1, transacao.getNumeroContaExterna());
+                stmt.setString(2, transacao.getAgenciaContaExterna());
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) idContaExterna = rs.getInt(1);
                 }

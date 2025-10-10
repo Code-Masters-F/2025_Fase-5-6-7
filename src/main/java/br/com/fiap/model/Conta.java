@@ -4,11 +4,11 @@ import java.time.LocalDate;
 
 public abstract class Conta {
     protected int id;
-    protected int numeroConta;
-    protected int agencia;
+    protected String numeroConta;
+    protected String agencia;
     private LocalDate dataAbertura;
 
-    public Conta(int numeroConta, int agencia, int id) {
+    public Conta(String numeroConta, String agencia, int id) {
         this.numeroConta = numeroConta;
         this.agencia = agencia;
         this.dataAbertura = LocalDate.now();
@@ -19,11 +19,11 @@ public abstract class Conta {
 
     }
 
-    public int getNumeroConta() {
+    public String getNumeroConta() {
         return numeroConta;
     }
 
-    public int getNumeroAgencia() {
+    public String getNumeroAgencia() {
         return agencia;
     }
 
