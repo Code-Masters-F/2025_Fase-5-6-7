@@ -7,6 +7,9 @@ import br.com.fiap.dao.ClienteDao;
 import br.com.fiap.service.TransacaoContaService;
 import br.com.fiap.utils.ContaExternaUtils;
 
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -76,6 +79,7 @@ public class MainView {
                     case "12": listarCriptoativos(); break;
                     case "13": comprarCrypto(scanner); break;
                     case "14": venderCrypto(scanner); break;
+                    case "15": consultarHistoricoTransacoes(scanner); break;
                     case "0": System.out.println("Saindo do sistema..."); break;
                     default: System.out.println("Opção inválida!");
                 }
@@ -198,6 +202,7 @@ public class MainView {
         System.out.println("12  - Adicionar saldo");
         System.out.println("13  - Enviar Transferência de Conta Interna Para Conta Externa");
         System.out.println("14 - Enviar Transferência de Conta Externa para Conta Interna");
+        System.out.println("15 - Consultar histórico de transações");
         System.out.println("0  - Sair");
         System.out.print("Escolha uma opção: ");
     }
@@ -567,4 +572,91 @@ public class MainView {
         }
     }
 
+    private static void consultarHistoricoTransacoes(Scanner scanner) {
+        System.out.println("\n=== Consultar Histórico de Transações ===");
+
+        // Solicita ID da conta
+        System.out.print("Digite o ID da conta interna: ");
+        int idConta;
+        try {
+            idConta = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.err.println("ID inválido!");
+            return;
+        }
+
+        // Solicita data inicial
+        System.out.println("\nData INICIAL do período:");
+        LocalDate dataInicio = lerData(scanner);
+
+        // Solicita data final
+        System.out.println("\nData FINAL do período:");
+        LocalDate dataFim = lerData(scanner);
+
+        // Validação
+        if (dataInicio.isAfter(dataFim)) {
+            System.err.println("A data inicial não pode ser posterior à data final!");
+            return;
+        }
+
+        try {
+            // Converte para Instant
+            Instant from = dataInicio.atStartOfDay(ZoneId.systemDefault()).toInstant();
+            Instant to = dataFim.atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant();
+
+            // Consulta o histórico
+            HistoricoTransacaoDao dao = new HistoricoTransacaoDao();
+            List<HistoricoTransacao> historico = dao.consultarHistoricoPorConta(idConta, from, to, 0, 100);
+
+            // Exibe resultados
+            if (historico.isEmpty()) {
+                System.out.println("\nNenhuma transação encontrada no período.");
+                return;
+            }
+
+            System.out.println("\n" + "=".repeat(120));
+            System.out.printf("%-10s | %-20s | %-10s | %-15s | %-15s | %-30s%n",
+                    "ID", "Data/Hora", "Tipo", "Valor", "Conta Destino", "Nome Contraparte");
+            System.out.println("=".repeat(120));
+
+            BigDecimal totalSaques = BigDecimal.ZERO;
+            BigDecimal totalDepositos = BigDecimal.ZERO;
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
+                    .withZone(ZoneId.systemDefault());
+
+            for (HistoricoTransacao t : historico) {
+                String dataHoraStr = formatter.format(t.dataHora());
+                String tipoStr = t.tipo().name();
+                String valorStr = String.format("R$ %,.2f", t.valor());
+
+                // Soma totais
+                if (t.tipo() == TipoTransacaoFiat.SAQUE) {
+                    totalSaques = totalSaques.add(t.valor());
+                } else {
+                    totalDepositos = totalDepositos.add(t.valor());
+                }
+
+                System.out.printf("%-10d | %-20s | %-10s | %15s | %15d | %-30s%n",
+                        t.idTransacao(),
+                        dataHoraStr,
+                        tipoStr,
+                        valorStr,
+                        t.idContaContraparte(),
+                        t.nomeContraparte());
+            }
+
+            System.out.println("=".repeat(120));
+            System.out.println("\n--- RESUMO DO PERÍODO ---");
+            System.out.printf("Total de transações: %d%n", historico.size());
+            System.out.printf("Total em SAQUES:     R$ %,.2f%n", totalSaques);
+            System.out.printf("Total em DEPÓSITOS:  R$ %,.2f%n", totalDepositos);
+            System.out.printf("SALDO DO PERÍODO:    R$ %,.2f%n", totalDepositos.subtract(totalSaques));
+            System.out.println();
+
+        } catch (SQLException e) {
+            System.err.println("Erro ao consultar histórico: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 }
