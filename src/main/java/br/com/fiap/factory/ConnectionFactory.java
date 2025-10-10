@@ -5,8 +5,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-// Vai ser usado sempre para fazer conexão, para não ficar
-// repetindo usuario e senha no codigo inteiro
 /**
  * Essa classe retorna um objeto Connection. Depois de usa-la precisa
  * fechar a instancia de connection, com o .close().

@@ -53,8 +53,6 @@ public class ContaExternaDao {
         return null;
     }
 
-
-
     public void enviarTransferenciaContaExternaParaInterna() {
 
     }

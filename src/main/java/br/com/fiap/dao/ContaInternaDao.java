@@ -51,7 +51,7 @@ public class ContaInternaDao {
 
     public void debitarSaldo(Connection cx, int idConta, BigDecimal valor) throws SQLException {
         try (PreparedStatement stmt = cx.prepareStatement(
-                "SELECT saldo FROM conta_interna WHERE id_conta_externa = ? FOR UPDATE")) {
+                "SELECT saldo FROM conta_interna WHERE id_conta_interna = ? FOR UPDATE")) {
             stmt.setInt(1, idConta);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (!rs.next()) throw new SQLException("Conta interna não encontrada.");

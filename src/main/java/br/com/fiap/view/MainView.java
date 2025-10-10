@@ -3,7 +3,6 @@ package br.com.fiap.view;
 
 import br.com.fiap.dao.*;
 import br.com.fiap.model.*;
-
 import br.com.fiap.dao.ClienteDao;
 import br.com.fiap.service.TransacaoContaService;
 import br.com.fiap.utils.ContaExternaUtils;
@@ -453,7 +452,7 @@ public class MainView {
             return;
         }
 
-        TransacaoConta transacao = null;
+        TransacaoConta transacao;
         try {
             transacao = new TransacaoConta(
                     contaDestino,
@@ -568,37 +567,6 @@ public class MainView {
         } catch (SQLException e) {
             System.err.println("Erro na venda: " + e.getMessage());
         }
-    }
-
-    private static ContaInterna escolherContaDoCliente(Scanner scanner, ContaInternaDao contaDao, int idCliente, String rotulo) throws SQLException {
-        List<ContaInterna> contas = contaDao.listarContasInternasPorCliente(idCliente);
-
-        if (contas == null || contas.isEmpty()) {
-            System.out.println("O cliente não possui contas cadastradas (" + rotulo + ").");
-            return null;
-        }
-
-        if (contas.size() == 1) {
-            return contas.getFirst();
-        }
-
-        System.out.println("Selecione a conta " + rotulo + ":");
-        for (int i = 0; i < contas.size(); i++) {
-            ContaInterna conta = contas.get(i);
-            System.out.printf("%d) id_conta=%d | nº=%d | ag=%d | saldo=R$ %.2f%n",
-                    i + 1, conta.getId(), conta.getNumeroConta(), conta.getNumeroAgencia(), conta.getSaldo());
-        }
-
-        int opcao = -1;
-        while (opcao < 1 || opcao > contas.size()) {
-            System.out.print("Escolha [1-" + contas.size() + "]: ");
-            try {
-                opcao = Integer.parseInt(scanner.nextLine().trim());
-            } catch (NumberFormatException e) {
-                opcao = -1;
-            }
-        }
-        return contas.get(opcao - 1);
     }
 
 }
