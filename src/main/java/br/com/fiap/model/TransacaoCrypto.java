@@ -11,22 +11,22 @@ public class TransacaoCrypto {
     private double quantidadeCrypto;
     private LocalDateTime dataHora;
     private double valorUnitarioCrypto;
-    private ContaCliente contaCliente;
+    private ContaInterna contaInterna;
     private StatusOperacao status;
-    private Crypto crypto;
+    private Criptomoeda criptomoeda;
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     // apagar proximoId quando houver conexao com banco de dados
     private static int proximoId = 1;
 
-    public TransacaoCrypto(ContaCliente contaCliente, double quantidadeCrypto, double valorUnitarioCrypto, Crypto crypto,
+    public TransacaoCrypto(ContaInterna contaInterna, double quantidadeCrypto, double valorUnitarioCrypto, Criptomoeda criptomoeda,
                            String tipoOperacao) {
 
-        this.contaCliente = contaCliente;
+        this.contaInterna = contaInterna;
         this.quantidadeCrypto = quantidadeCrypto;
         this.valorUnitarioCrypto = valorUnitarioCrypto;
-        this.crypto = crypto;
+        this.criptomoeda = criptomoeda;
         this.tipoOperacao = tipoOperacao;
         this.dataHora = LocalDateTime.now(); // Define a data atual
         this.valorTotal = quantidadeCrypto * valorUnitarioCrypto; // Calcula o valor total comprado/vendido
@@ -70,24 +70,24 @@ public class TransacaoCrypto {
         this.valorUnitarioCrypto = novoValorUnitario;
     }
 
-    public ContaCliente getContaCliente() {
-        return contaCliente;
+    public ContaInterna getContaCliente() {
+        return contaInterna;
     }
 
-    public void setContaCliente(ContaCliente novaContaCliente) {
-        this.contaCliente = novaContaCliente;
+    public void setContaCliente(ContaInterna novaContaInterna) {
+        this.contaInterna = novaContaInterna;
     }
 
     public StatusOperacao getStatus() {
         return status;
     }
 
-    public Crypto getCrypto() {
-        return crypto;
+    public Criptomoeda getCrypto() {
+        return criptomoeda;
     }
 
-    public void setCrypto(Crypto novaCrypto) {
-        this.crypto = novaCrypto;
+    public void setCrypto(Criptomoeda novaCriptomoeda) {
+        this.criptomoeda = novaCriptomoeda;
     }
 
     public String getTipoOperacao() {
@@ -115,8 +115,8 @@ public class TransacaoCrypto {
                 ", quantidadeCrypto=" + quantidadeCrypto +
                 ", valorUnitarioCrypto=" + valorUnitarioCrypto +
                 ", data=" + getDataHora() +
-                ", conta=" + contaCliente +
-                ", crypto=" + crypto +
+                ", conta=" + contaInterna +
+                ", crypto=" + criptomoeda +
                 ", status=" + status +
                 '}';
     }

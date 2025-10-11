@@ -1,9 +1,8 @@
 package br.com.fiap.model;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
-public class Crypto {
+public class Criptomoeda {
 
     private int id;
     private String nome;
@@ -12,20 +11,20 @@ public class Crypto {
     private double precoUnitario;
 
     //private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    public Crypto(String nome, String sigla, int id, LocalDate dataLancamento) {
+    public Criptomoeda(String nome, String sigla, int id, LocalDate dataLancamento) {
         this.nome = nome;
         this.sigla = sigla;
         this.dataLancamento = dataLancamento;
         this.id = id;
     }
 
-    public Crypto(String nome, String sigla, LocalDate dataLancamento) {
+    public Criptomoeda(String nome, String sigla, LocalDate dataLancamento) {
         this.nome = nome;
         this.sigla = sigla;
         this.dataLancamento = dataLancamento;
     }
 
-    public Crypto() {
+    public Criptomoeda() {
 
     }
 

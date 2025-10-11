@@ -16,7 +16,7 @@ public class CarteiraDao {
 
     public void inserirCarteira(int idConta) throws SQLException {
         String sql = """
-                INSERT INTO carteira (conta_id_conta)
+                INSERT INTO carteira (conta_interna_id)
                 VALUES (?)
                 """;
 
@@ -35,7 +35,7 @@ public class CarteiraDao {
         final String sql = """
                 SELECT id_carteira
                 FROM carteira
-                WHERE conta_id_conta = ?
+                WHERE conta_interna_id = ?
                 """;
 
         try (Connection conexao = ConnectionFactory.getConnection();
@@ -54,8 +54,8 @@ public class CarteiraDao {
         if (quantidade <= 0) throw new SQLException("Quantidade deve ser > 0.");
 
         final String sqlContaPorCliente = """
-                SELECT id_conta, saldo
-                FROM conta
+                SELECT id_conta_interna, saldo
+                FROM conta_interna
                 WHERE cliente_id_cliente = ?
                 FOR UPDATE
                 """;
@@ -63,24 +63,24 @@ public class CarteiraDao {
         final String sqlCarteiraPorConta = """
                 SELECT id_carteira
                 FROM carteira
-                WHERE conta_id_conta = ?
+                WHERE conta_interna_id = ?
                 """;
 
         final String sqlDebitaSaldo = """
-                UPDATE conta
+                UPDATE conta_interna
                 SET saldo = saldo - ?
-                WHERE id_conta = ?
+                WHERE id_conta_interna = ?
                 """;
 
         final String sqlMergePosse = """
                 MERGE INTO posse p
-                USING (SELECT ? AS carteira_id_carteira, ? AS crypto_id_crypto FROM dual) src
-                ON (p.carteira_id_carteira = src.carteira_id_carteira AND p.crypto_id_crypto = src.crypto_id_crypto)
+                USING (SELECT ? AS carteira_id_carteira, ? AS criptomoeda_id_criptomoeda FROM dual) src
+                ON (p.carteira_id_carteira = src.carteira_id_carteira AND p.criptomoeda_id_criptomoeda = src.criptomoeda_id_criptomoeda)
                 WHEN MATCHED THEN
-                    UPDATE SET p.quantidade_crypto = p.quantidade_crypto + ?
+                    UPDATE SET p.quantidade_criptomoeda = p.quantidade_criptomoeda + ?
                 WHEN NOT MATCHED THEN
-                    INSERT (carteira_id_carteira, crypto_id_crypto, quantidade_crypto)
-                    VALUES (src.carteira_id_carteira, src.crypto_id_crypto, ?)
+                    INSERT (carteira_id_carteira, criptomoeda_id_criptomoeda, quantidade_criptomoeda)
+                    VALUES (src.carteira_id_carteira, src.criptomoeda_id_criptomoeda, ?)
                 """;
 
         try (Connection conexao = ConnectionFactory.getConnection()) {
@@ -90,8 +90,8 @@ public class CarteiraDao {
             try (PreparedStatement stmt = conexao.prepareStatement(sqlContaPorCliente)) {
                 stmt.setInt(1, idCliente);
                 try (ResultSet rs = stmt.executeQuery()) {
-                    if (!rs.next()) throw new SQLException("Conta não encontrada para o cliente id=" + idCliente);
-                    idConta = rs.getInt("id_conta");
+                    if (!rs.next()) throw new SQLException("Conta Interna não encontrada para o cliente id=" + idCliente);
+                    idConta = rs.getInt("id_conta_interna");
                     saldoAtual = rs.getDouble("saldo");
                 }
             }
@@ -137,8 +137,8 @@ public class CarteiraDao {
         if (quantidade <= 0) throw new SQLException("Quantidade deve ser > 0.");
 
         final String sqlContaPorCliente = """
-                SELECT id_conta, saldo
-                FROM conta
+                SELECT id_conta_interna, saldo
+                FROM conta_interna
                 WHERE cliente_id_cliente = ?
                 FOR UPDATE
                 """;
@@ -146,31 +146,31 @@ public class CarteiraDao {
         final String sqlCarteiraPorConta = """
                 SELECT id_carteira
                 FROM carteira
-                WHERE conta_id_conta = ?
+                WHERE conta_interna_id = ?
                 """;
 
         final String sqlQtdPosse = """
-                SELECT quantidade_crypto
+                SELECT quantidade_criptomoeda
                 FROM posse
-                WHERE carteira_id_carteira = ? AND crypto_id_crypto = ?
+                WHERE carteira_id_carteira = ? AND criptomoeda_id_criptomoeda = ?
                 FOR UPDATE
                 """;
 
         final String sqlAtualizaPosse = """
                 UPDATE posse
-                SET quantidade_crypto = quantidade_crypto - ?
-                WHERE carteira_id_carteira = ? AND crypto_id_crypto = ? AND quantidade_crypto >= ?
+                SET quantidade_criptomoeda = quantidade_criptomoeda - ?
+                WHERE carteira_id_carteira = ? AND criptomoeda_id_criptomoeda = ? AND quantidade_criptomoeda >= ?
                 """;
 
         final String sqlDeleteSeZero = """
                 DELETE FROM posse
-                WHERE carteira_id_carteira = ? AND crypto_id_crypto = ? AND quantidade_crypto = 0
+                WHERE carteira_id_carteira = ? AND criptomoeda_id_criptomoeda = ? AND quantidade_criptomoeda = 0
                 """;
 
         final String sqlCreditaSaldo = """
-            UPDATE conta
+            UPDATE conta_interna
             SET saldo = saldo + ?
-            WHERE id_conta = ?
+            WHERE id_conta_interna = ?
             """;
 
         try (Connection conexao = ConnectionFactory.getConnection()) {
@@ -179,7 +179,7 @@ public class CarteiraDao {
                 stmt.setInt(1, idCliente);
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (!rs.next()) throw new SQLException("Conta não encontrada para o cliente id=" + idCliente);
-                    idConta = rs.getInt("id_conta");
+                    idConta = rs.getInt("id_conta_interna");
                 }
             }
 
@@ -197,7 +197,7 @@ public class CarteiraDao {
                 stmt.setInt(1, idCarteira);
                 stmt.setInt(2, idCrypto);
                 try (ResultSet rs = stmt.executeQuery()) {
-                    if (rs.next()) qtdAtual = rs.getDouble("quantidade_crypto");
+                    if (rs.next()) qtdAtual = rs.getDouble("quantidade_criptomoeda");
                 }
             }
             if (qtdAtual < quantidade) {

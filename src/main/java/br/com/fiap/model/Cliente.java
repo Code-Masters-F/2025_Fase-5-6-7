@@ -5,7 +5,7 @@ import java.time.LocalDate;
 public class Cliente extends Pessoa{
 
     private int id;
-    ContaCliente contaCliente;
+    ContaInterna contaInterna;
     private String email;
 
     // Construtor 1
@@ -37,8 +37,8 @@ public class Cliente extends Pessoa{
         return email;
     }
 
-    public ContaCliente getContaCliente() {
-        return contaCliente;
+    public ContaInterna getContaCliente() {
+        return contaInterna;
     }
 
     public int getId() {
@@ -71,7 +71,7 @@ public class Cliente extends Pessoa{
         return "Cliente{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
-                ", conta=" + contaCliente +
+                ", conta=" + contaInterna +
                 "} " +
                 super.toString()
                 ;

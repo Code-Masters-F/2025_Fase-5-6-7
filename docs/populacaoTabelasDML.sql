@@ -31,28 +31,28 @@ COMMIT;
 
 -- 3) CONTAS EXTERNAS
 INSERT INTO CONTA_EXTERNA (cliente_id_cliente, numero_conta, agencia, codigo_banco_externo, nome_banco)
-SELECT id_cliente, '12345-6', '1234', '001', 'Banco do Brasil S.A.' FROM CLIENTE WHERE nome = 'João Silva Santos';
+SELECT id_cliente, '123456', '1234', '001', 'Banco do Brasil S.A.' FROM CLIENTE WHERE nome = 'João Silva Santos';
 
 INSERT INTO CONTA_EXTERNA (cliente_id_cliente, numero_conta, agencia, codigo_banco_externo, nome_banco)
-SELECT id_cliente, '23456-7', '2345', '341', 'Itaú Unibanco S.A.' FROM CLIENTE WHERE nome = 'Maria Oliveira Costa';
+SELECT id_cliente, '234567', '2345', '341', 'Itaú Unibanco S.A.' FROM CLIENTE WHERE nome = 'Maria Oliveira Costa';
 
 INSERT INTO CONTA_EXTERNA (cliente_id_cliente, numero_conta, agencia, codigo_banco_externo, nome_banco)
-SELECT id_cliente, '34567-8', '3456', '237', 'Banco Bradesco S.A.' FROM CLIENTE WHERE nome = 'Pedro Ferreira Lima';
+SELECT id_cliente, '345678', '3456', '237', 'Banco Bradesco S.A.' FROM CLIENTE WHERE nome = 'Pedro Ferreira Lima';
 
 INSERT INTO CONTA_EXTERNA (cliente_id_cliente, numero_conta, agencia, codigo_banco_externo, nome_banco)
-SELECT id_cliente, '45678-9', '4567', '033', 'Banco Santander (Brasil) S.A.' FROM CLIENTE WHERE nome = 'Ana Carolina Souza';
+SELECT id_cliente, '456789', '4567', '033', 'Banco Santander (Brasil) S.A.' FROM CLIENTE WHERE nome = 'Ana Carolina Souza';
 
 INSERT INTO CONTA_EXTERNA (cliente_id_cliente, numero_conta, agencia, codigo_banco_externo, nome_banco)
-SELECT id_cliente, '56789-0', '5678', '104', 'Caixa Econômica Federal' FROM CLIENTE WHERE nome = 'Carlos Eduardo Pereira';
+SELECT id_cliente, '567890', '5678', '104', 'Caixa Econômica Federal' FROM CLIENTE WHERE nome = 'Carlos Eduardo Pereira';
 
 INSERT INTO CONTA_EXTERNA (cliente_id_cliente, numero_conta, agencia, codigo_banco_externo, nome_banco)
-SELECT id_cliente, '67890-1', '0001', '260', 'Nu Pagamentos S.A.' FROM CLIENTE WHERE nome = 'Fernanda Almeida';
+SELECT id_cliente, '678901', '0001', '260', 'Nu Pagamentos S.A.' FROM CLIENTE WHERE nome = 'Fernanda Almeida';
 
 INSERT INTO CONTA_EXTERNA (cliente_id_cliente, numero_conta, agencia, codigo_banco_externo, nome_banco)
-SELECT id_cliente, '78901-2', '0001', '077', 'Banco Inter S.A.' FROM CLIENTE WHERE nome = 'Ricardo Barbosa';
+SELECT id_cliente, '789012', '0001', '077', 'Banco Inter S.A.' FROM CLIENTE WHERE nome = 'Ricardo Barbosa';
 
 INSERT INTO CONTA_EXTERNA (cliente_id_cliente, numero_conta, agencia, codigo_banco_externo, nome_banco)
-SELECT id_cliente, '89012-3', '0001', '208', 'BTG Pactual S.A.' FROM CLIENTE WHERE nome = 'Juliana Rodrigues';
+SELECT id_cliente, '890123', '0001', '208', 'BTG Pactual S.A.' FROM CLIENTE WHERE nome = 'Juliana Rodrigues';
 COMMIT;
 
 -- 4) CONTAS INTERNAS (APENAS 1 POR CLIENTE)  [sem codigo_banco_externo]

@@ -1,12 +1,16 @@
 package br.com.fiap.view;
 
-
 import br.com.fiap.dao.*;
 import br.com.fiap.model.*;
-
 import br.com.fiap.dao.ClienteDao;
+import br.com.fiap.service.TransacaoContaService;
+import br.com.fiap.utils.ContaExternaUtils;
 
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.time.LocalDate;
@@ -61,21 +65,24 @@ public class MainView {
             try {
                 switch (opcao) {
                     case "1": cadastrarCliente(scanner); break;
-                    case "2": exibirClientesCadastrados(scanner); break;
-                    case "3": consultarCliente(scanner); break;
-                    case "4" : atualizarCliente(scanner); break;
-                    case "5" : deletarCliente(scanner); break;
-                    case "6": consultarCarteira(scanner); break;
-                    case "7": enviarTransferenciaContaInterna(scanner); break;
-                    case "8": adicionarSaldo(scanner); break;
-                    case "9": listarCriptoativos(); break;
-                    case "10": comprarCrypto(scanner); break;
-                    case "11": venderCrypto(scanner); break;
-                    case "12": cadastrarCrypto(scanner); break;
-//                  case "13": listarTransacoesContas(); break;
-//                  case "14": listarTransacoesCryptos(); break;
-                    case "0": System.out.println("Saindo do sistema..."); break;
-                    default: System.out.println("Opção inválida!");
+                    case "2": cadastrarContaExterna(scanner); break;
+                    case "3": cadastrarCriptomoeda(scanner); break;
+                    case "4": exibirClientesCadastrados(); break;
+                    case "5": consultarCliente(scanner); break;
+                    case "6": atualizarCliente(scanner); break;
+                    case "7": deletarCliente(scanner); break;
+                    case "8": consultarCarteira(scanner); break;
+                    case "9": enviarTransferenciaContaInternaParaExterna(scanner); break;
+                    case "10": enviarTransferenciaContaExternaParaInterna(scanner); break;
+                    case "11": listarCriptomoedas(); break;
+                    case "12": comprarCriptomoeda(scanner); break;
+                    case "13": venderCriptomoeda(scanner); break;
+                    case "14": consultarHistoricoTransacoes(scanner); break;
+                    case "0":
+                        System.out.println("Saindo do sistema...");
+                        break;
+                    default:
+                        System.out.println("Opção inválida!");
                 }
             } catch (Exception e) {
                 System.out.println("Algo deu errado! Tente novamente.");
@@ -84,24 +91,120 @@ public class MainView {
         } while (!opcao.equals("0"));
     }
 
+    private static void cadastrarContaExterna(Scanner scanner) {
+        int idCliente;
+        while (true) {
+            System.out.print("Digite o id do cliente: ");
+            String idClienteInput = scanner.nextLine().trim();
+
+            if (!idClienteInput.matches("\\d+")) {
+                System.err.println("ID inválido. Use apenas dígitos.");
+                continue;
+            }
+            try {
+                idCliente = Integer.parseInt(idClienteInput);
+                break;
+            } catch (NumberFormatException e) {
+                System.err.println("ID fora do intervalo de int.");
+            }
+        }
+
+        int numeroConta;
+        while (true) {
+            System.out.print("Insira o número da conta do Banco Externo (5 a 9 dígitos, opcional -DV): ");
+            String numeroContaInput = scanner.nextLine().trim();
+
+            if (!numeroContaInput.matches("\\d{5,9}(-[0-9X])?")) {
+                System.err.println("Número da conta inválido. Ex: 123456 ou 123456-7.");
+                continue;
+            }
+            String parteNumerica = numeroContaInput.split("-")[0];
+            try {
+                numeroConta = Integer.parseInt(parteNumerica);
+                break;
+            } catch (NumberFormatException e) {
+                System.err.println("Número da conta fora do intervalo de int.");
+            }
+        }
+
+        int numeroAgencia;
+        while (true) {
+            System.out.print("Insira o número da agência do Banco Externo (4 a 5 dígitos): ");
+            String agenciaInput = scanner.nextLine().trim();
+            if (!agenciaInput.matches("\\d{4,5}")) {
+                System.err.println("Número da agência inválido. Deve conter 4 ou 5 dígitos.");
+                continue;
+            }
+            try {
+                numeroAgencia = Integer.parseInt(agenciaInput);
+                break;
+            } catch (NumberFormatException e) {
+                System.err.println("Agência fora do intervalo de int.");
+            }
+        }
+
+        ContaExternaUtils.listarBancosExternosDisponiveis();
+
+        int codigoBancoExterno;
+        while (true) {
+            System.out.print("Insira o código do Banco Externo (3 dígitos): ");
+            String codigoBancoInput = scanner.nextLine().trim();
+            if (!codigoBancoInput.matches("\\d{3}")) {
+                System.err.println("Código do banco inválido. Use 3 dígitos (ex: 001, 237, 341).");
+                continue;
+            }
+            try {
+                codigoBancoExterno = Integer.parseInt(codigoBancoInput);
+                break;
+            } catch (NumberFormatException e) {
+                System.err.println("Código do banco fora do intervalo de int.");
+            }
+        }
+
+        String nomeBancoExterno;
+        while (true) {
+            System.out.print("Insira o nome do Banco Externo: ");
+            nomeBancoExterno = scanner.nextLine().trim();
+            if (nomeBancoExterno.isEmpty()) {
+                System.err.println("Nome do banco não pode ser vazio.");
+                continue;
+            }
+            break;
+        }
+
+        try {
+            ContaExternaDao contaExternaDao = new ContaExternaDao();
+            contaExternaDao.inserirContaExterna(
+                    idCliente,
+                    numeroConta,
+                    numeroAgencia,
+                    codigoBancoExterno,
+                    nomeBancoExterno
+            );
+            System.out.println("Conta externa cadastrada com sucesso!");
+        } catch (SQLException e) {
+            System.err.println("Erro ao cadastrar conta externa: " + e.getMessage());
+        }
+    }
+
     private static void exibirMenu() {
         System.out.println("\n======= MENU =======");
-        System.out.println("1 - Cadastrar novo cliente");
-        System.out.println("2 - Exibir clientes cadastrados");
-        System.out.println("3 - Consultar cliente");
-        System.out.println("4 - Atualizar cliente");
-        System.out.println("5 - Deletar cliente");
-        System.out.println("6 - Consultar carteira");
-        System.out.println("7 - Fazer tansferencia para uma conta interna");
-        System.out.println("8 - Adicionar saldo");
-        System.out.println("9 - Listar criptoativos");
-        System.out.println("10 - Comprar criptoativo");
-        System.out.println("11 - Vender criptoativo");
-        System.out.println("12 - Cadastrar novo criptoativo");
-//        System.out.println("13 - Consultar transações de contas no sistema");
-//        System.out.println("14 - Consultar transações de criptoativos no sistema");
-        System.out.println("0 - Sair");
-        System.out.print("Escolha a opção desejada: ");
+        System.out.println("1  - Cadastrar novo cliente");
+        System.out.println("2  - Cadastrar conta externa");
+        System.out.println("3  - Cadastrar nova criptomoeda");
+        System.out.println("4  - Exibir clientes cadastrados");
+        System.out.println("5  - Consultar cliente");
+        System.out.println("6  - Atualizar cliente");
+        System.out.println("7  - Deletar cliente");
+        System.out.println("8  - Consultar carteira");
+        System.out.println("9  - Enviar Transferência de Conta Interna para Conta Externa");
+        System.out.println("10 - Enviar Transferência de Conta Externa para Conta Interna");
+        System.out.println("11 - Listar criptomoedas");
+        System.out.println("12 - Comprar criptomoeda");
+        System.out.println("13 - Vender criptomoeda");
+        System.out.println("14 - Consultar histórico de transações");
+        System.out.println("0  - Sair");
+        System.out.print("Escolha uma opção: ");
     }
 
     private static void cadastrarCliente(Scanner scanner) {
@@ -153,8 +256,8 @@ public class MainView {
             int idCliente = clienteDao.inserirCliente(cliente);
             cliente.setId(idCliente);
 
-            ContaClienteDao contaClienteDao = new ContaClienteDao();
-            int idConta = contaClienteDao.inserirConta(idCliente, numeroConta, agencia);
+            ContaInternaDao contaInternaDao = new ContaInternaDao();
+            int idConta = contaInternaDao.inserirContaInterna(idCliente, numeroConta, agencia);
 
             CarteiraDao daoCarteira = new CarteiraDao();
             daoCarteira.inserirCarteira(idConta);
@@ -165,11 +268,11 @@ public class MainView {
         }
     }
 
-    private static void exibirClientesCadastrados(Scanner scanner) {
+    private static void exibirClientesCadastrados() {
         try {
             ClienteDao daoCliente = new ClienteDao();
-            // Integer é o id da conta que não está na tabela cliente
-            Map<Cliente, Integer> todosClientesCadastrados = daoCliente.listarClienteCadastrados();
+
+            Map<Cliente, Integer> todosClientesCadastrados = daoCliente.listarContaInternaClientesCadastrados();
             for(Map.Entry<Cliente, Integer> c : todosClientesCadastrados.entrySet()) {
                 System.out.print("ID do cliente: " + c.getKey().getId());
                 System.out.print(" | ID da conta: " + c.getValue());
@@ -217,7 +320,7 @@ public class MainView {
 
     }
 
-    private static void cadastrarCrypto(Scanner scanner) {
+    private static void cadastrarCriptomoeda(Scanner scanner) {
         System.out.print("Digite o nome do criptoativo: ");
         String nome = scanner.nextLine().trim();
 
@@ -226,11 +329,11 @@ public class MainView {
 
         LocalDate dataLancamento = lerData(scanner);
 
-        Crypto crypto = new Crypto(nome, sigla, dataLancamento);
+        Criptomoeda criptomoeda = new Criptomoeda(nome, sigla, dataLancamento);
 
         try {
             CryptoDao cryptoDao = new CryptoDao();
-            cryptoDao.inserirCrypto(crypto);
+            cryptoDao.inserirCriptomoeda(criptomoeda);
             System.out.println("Criptoativo cadastrado com sucesso!");
         } catch (SQLException e) {
             System.err.println("[SQLException] ao cadastrar Criptoativo");
@@ -264,8 +367,8 @@ public class MainView {
                 return;
             }
 
-            ContaClienteDao contaDaoCliente = new ContaClienteDao();
-            ContaCliente conta = contaDaoCliente.buscarContaPorCliente(cliente);
+            ContaInternaDao contaDaoCliente = new ContaInternaDao();
+            ContaInterna conta = contaDaoCliente.buscarContaInternaPorCliente(cliente);
 
             System.out.println("Cliente: " + cliente.getNome());
             System.out.println("Email: " + cliente.getEmail());
@@ -275,7 +378,7 @@ public class MainView {
             if (conta != null) {
                 System.out.println("ID da conta: " + conta.getId());
                 System.out.println("Número da Conta: " + conta.getNumeroConta());
-                System.out.println("Agência: " + conta.getAgencia());
+                System.out.println("Agência: " + conta.getNumeroAgencia());
                 System.out.printf("Saldo: R$ %.2f%n", conta.getSaldo());
             } else {
                 System.out.println("Este cliente ainda não possui conta cadastrada.");
@@ -300,7 +403,7 @@ public class MainView {
 
             System.out.println("\n--- Carteira ---");
             for (PosseClienteCrypto p : posses) {
-                System.out.printf("- %s (%s) | ID Crypto: %d | Quantidade: %.8f%n",
+                System.out.printf("- %s (%s) | ID Criptomoeda: %d | Quantidade: %.8f%n",
                         p.getCrypto().getNome(),
                         p.getCrypto().getSigla(),
                         p.getCrypto().getId(),
@@ -309,140 +412,181 @@ public class MainView {
             }
         } catch (SQLException e) {
             System.err.println("Erro ao consultar carteira: " + e.getMessage());
+            e.printStackTrace();
         }
 
     }
 
-    private static void enviarTransferenciaContaInterna(Scanner scanner) throws SQLException {
+    private static void enviarTransferenciaContaInternaParaExterna(Scanner scanner) throws SQLException {
+        System.out.println("\n=== Transferência de Conta Interna para Conta Externa ===");
+
+        System.out.print("Número da conta interna de origem: ");
+        String numeroContaInterna = scanner.nextLine().trim();
+
+        System.out.print("Agência da conta interna: ");
+        String agenciaInterna = scanner.nextLine().trim();
+
+        ContaInterna contaOrigem = ContaInternaDao.buscarContaInternaPorNumeroEAgencia(numeroContaInterna, agenciaInterna);
+
+        if (contaOrigem == null) {
+            System.err.println("Conta interna não encontrada. Verifique número/agência.");
+            return;
+        }
+
+        System.out.print("Número da conta externa de destino: ");
+        String numeroContaExterna = scanner.nextLine().trim();
+
+        System.out.print("Agência da conta externa: ");
+        String agenciaExterna = scanner.nextLine().trim();
+
+        ContaExterna contaDestino = ContaExternaDao.buscarContaExternaPorNumeroEAgencia(numeroContaExterna, agenciaExterna);
+
+        if (contaDestino == null) {
+            System.err.println("Conta externa não encontrada. Verifique número/agência.");
+            return;
+        }
+
+        System.out.print("Valor da transferência: ");
+        BigDecimal valor;
         try {
-            System.out.print("Digite o número do id do cliente que realizará a transferência: ");
-            int idClienteOrigem = Integer.parseInt(scanner.nextLine().trim());
-
-            System.out.print("Digite o número do id do cliente que receberá a transferência: ");
-            int idClienteDestino = Integer.parseInt(scanner.nextLine().trim());
-
-            ClienteDao clienteDao = new ClienteDao();
-            Cliente clienteOrigem = clienteDao.consultarClientePorId(idClienteOrigem);
-            Cliente clienteDestino = clienteDao.consultarClientePorId(idClienteDestino);
-
-            if (clienteOrigem == null || clienteDestino == null) {
-                System.out.println("Cliente destino e/ou cliente origem não encontrado no sistema.");
-                return;
-            }
-
-            ContaClienteDao contaDao = new ContaClienteDao();
-
-            ContaCliente contaOrigem = escolherContaDoCliente(scanner, contaDao, idClienteOrigem, "ORIGEM");
-            if (contaOrigem == null) return;
-
-            ContaCliente contaDestino = escolherContaDoCliente(scanner, contaDao, idClienteDestino, "DESTINO");
-            if (contaDestino == null) return;
-
-            System.out.print("Digite o valor da transferencia: ");
-            double valorTransferencia = Double.parseDouble(scanner.nextLine().trim());
-
-            if (valorTransferencia <= 0) {
-                System.out.println("Valor inválido.");
-                return;
-            }
-
-            if (contaOrigem.getSaldo() < valorTransferencia) {
-                System.out.printf("Saldo insuficiente. Saldo atual: R$ %.2f%n", contaOrigem.getSaldo());
-                return;
-            }
-
-            contaDao.transferirParaContaInterna(contaOrigem.getId(), contaDestino.getId(), valorTransferencia);
-            System.out.println("Transferencia realizada com sucesso!");
+            valor = new BigDecimal(scanner.nextLine().trim());
         } catch (NumberFormatException e) {
-            System.err.println("Entrada númerica inválida.");
-        } catch (SQLException e) {
-            System.err.println("Erro na transferência: " + e.getMessage());
+            System.err.println("Valor inválido! Digite apenas números com ponto decimal (ex: 100.50");
+            e.printStackTrace();
+            return;
         }
+
+        TransacaoConta transacao;
+        try {
+            transacao = new TransacaoConta(
+                    contaDestino,
+                    contaOrigem,
+                    valor,
+                    TipoTransacaoFiat.SAQUE,
+                    LocalDateTime.now()
+            );
+
+            TransacaoContaService service = new TransacaoContaService();
+            service.registrarTransacao(transacao);
+            System.out.println("Transferência realizada com sucesso!");
+        } catch (SQLException e) {
+            System.err.println("Erro ao registrar transação: " + e.getMessage());
+            e.printStackTrace();
+
+        } catch(Exception e) {
+            System.err.println("Erro ao criar objeto Transação: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+
     }
 
+    private static void enviarTransferenciaContaExternaParaInterna(Scanner scanner) {
+        System.out.println("\n=== Transferência de Conta Externa para Conta Interna ===");
 
-    private static void adicionarSaldo(Scanner scanner) {
-        System.out.print("Digite o numero do id do cliente que deseja adicionar saldo: ");
-        int idCliente = Integer.parseInt(scanner.nextLine().trim());
+        System.out.print("Digite o id da Conta Externa cadastrada: ");
+        int idContaExterna = Integer.parseInt(scanner.nextLine().trim());
 
-        Cliente cliente;
+        ContaExterna contaExterna = null;
         try {
-            cliente = new ClienteDao().consultarClientePorId(idCliente);
+            contaExterna = ContaExternaDao.buscarContaExternaPorId(idContaExterna);
 
-            if (cliente == null) {
-                System.out.println("\nCliente não encontrado no sistema.");
+            if (contaExterna == null) {
+                System.err.println("Conta externa não encontrada/não cadastrada. Verifique número/agência/id.");
                 return;
             }
         } catch (SQLException e) {
-            System.err.println("Não foi possível consultar o Cliente: " + e.getMessage());
-            return;
+            System.err.println("Erro ao procurar Conta Externa no Banco: " + e.getMessage());
         }
 
-        List<ContaCliente> contasDoCliente;
+        System.out.print("Digite o id da Conta Interna Cadastrada que deseja realizar a transferencia: ");
+        int idContaInterna = Integer.parseInt(scanner.nextLine().trim());
+
+        ContaInterna contaInterna = null;
         try {
-            contasDoCliente = new ContaClienteDao().buscarContasPorClienteId(idCliente);
-        } catch (SQLException e) {
-            System.err.println("Erro ao buscar contas do cliente: " + e.getMessage());
-            return;
-        }
+            contaInterna = ContaInternaDao.buscarContaInternaPorId(idContaInterna);
 
-        if (contasDoCliente == null || contasDoCliente.isEmpty()) {
-            System.out.println("Este clienten ão possui contas cadastradas.");
-            return;
-        }
-
-        System.out.print("Digite o número da conta que enviou a transferência: ");
-        int numeroConta = Integer.parseInt(scanner.nextLine().trim());
-
-        System.out.print("Digite a agência da conta que enviou a transferência: ");
-        int agencia = Integer.parseInt(scanner.nextLine().trim());
-
-        System.out.print("Digite o valor da transferência: ");
-        double valorTransferencia = Double.parseDouble(scanner.nextLine().trim());
-
-        try {
-            ContaClienteDao contaDao = new ContaClienteDao();
-            contaDao.atualizarSaldo(numeroConta, agencia, valorTransferencia);
-
-            System.out.println("Saldo adicionado com sucesso!");
+            if (contaInterna == null) {
+                System.err.println("Conta interna não encontrada/não cadastrada. Verifique número/agência/id.");
+                return;
+            }
 
         } catch (SQLException e) {
-            System.err.println("Erro ao atualizar saldo: " + e.getMessage());
+            System.err.println("Erro ao procurar Conta Interna no Banco: " + e.getMessage());
+            e.printStackTrace();
         }
+
+        System.out.print("Digite o valor que deseja transferir: ");
+        BigDecimal valor = null;
+        try {
+            valor = new BigDecimal(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.err.println("Erro ao converter valor para BigDecimal: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("Erro inesperado: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        TransacaoConta transacao = null;
+        try {
+            transacao = new TransacaoConta();
+            transacao.setContaInterna(contaInterna);
+            transacao.setContaExterna(contaExterna);
+            transacao.setValor(valor);
+            transacao.setTipo(TipoTransacaoFiat.DEPOSITO);
+            transacao.setDataHora(LocalDateTime.now());
+        } catch (Exception e) {
+            System.err.println("Erro inesperado: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        try {
+            TransacaoContaService service = new TransacaoContaService();
+            service.registrarTransacao(transacao);
+            System.out.println("Transferência realizada com sucesso!");
+        } catch(SQLException e) {
+            System.err.println("Erro ao registrar transação: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("Erro inesperado: " + e.getMessage());
+            e.printStackTrace();
+        }
+
     }
 
-    private static void listarCriptoativos() {
-        System.out.println("\n--- Cryptos cadastradas ---");
+    private static void listarCriptomoedas() {
+        System.out.println("\n--- Criptomoedas cadastradas ---");
         try {
             CryptoDao cryptoDao = new CryptoDao();
-            List<Crypto> cryptos = cryptoDao.listarCryptos();
+            List<Criptomoeda> criptomoedas = cryptoDao.listarCriptomoedas();
 
-            if (cryptos.isEmpty()) {
-                System.out.println("Nenhuma Crypto encontrada.");
+            if (criptomoedas.isEmpty()) {
+                System.out.println("Nenhuma Criptomoeda encontrada.");
             } else {
-                for (Crypto crypto : cryptos) {
+                for (Criptomoeda criptomoeda : criptomoedas) {
                     System.out.printf(
                             "- %-15s %-5s - ID: %3d - Lançamento: %s%n",
-                            crypto.getNome(),
-                            crypto.getSigla(),
-                            crypto.getId(),
-                            crypto.getDataLancamento()
+                            criptomoeda.getNome(),
+                            criptomoeda.getSigla(),
+                            criptomoeda.getId(),
+                            criptomoeda.getDataLancamento()
                     );
                 }
             }
         } catch (SQLException e) {
-            System.out.println("Erro ao consultar cryptos: " + e.getMessage());
+            System.out.println("Erro ao consultar Criptomoedas: " + e.getMessage());
         }
     }
 
-    private static void comprarCrypto(Scanner scanner) {
+    private static void comprarCriptomoeda(Scanner scanner) {
         System.out.print("Digite o id do cliente que deseja comprar: ");
         int idCliente = Integer.parseInt(scanner.nextLine());
 
-        System.out.print("Digite o id do criptoativo que deseja comprar: ");
+        System.out.print("Digite o id da criptomoeda que deseja comprar: ");
         int idCrypto = Integer.parseInt(scanner.nextLine().trim());
 
-        System.out.println("Digite a quantidade: ");
+        System.out.print("Digite a quantidade: ");
         double quantidade = Double.parseDouble(scanner.nextLine().trim());
 
         try {
@@ -465,10 +609,11 @@ public class MainView {
             );
         } catch (SQLException e) {
             System.err.println("Erro na compra: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    private static void venderCrypto(Scanner scanner) {
+    private static void venderCriptomoeda(Scanner scanner) {
         System.out.print("Digite o id do cliente que deseja vender: ");
         int idCliente = Integer.parseInt(scanner.nextLine().trim());
 
@@ -486,7 +631,7 @@ public class MainView {
             txDao.inserirTransacaoCrypto(result.contaId(), idCrypto, "VENDA", quantidade, result.precoUnitario(), StatusOperacao.CONCLUIDA);
 
             System.out.printf(
-                    "Venda realizada!\nConta: %d | Crypto: %d | Qtde: %.8f | Preço: %.8f | Crédito: %.8f%n",
+                    "Venda realizada!\nConta: %d | Criptomoeda: %d | Qtde: %.8f | Preço: %.8f | Crédito: %.8f%n",
                     result.contaId(), idCrypto, quantidade, result.precoUnitario(), result.totalCreditado()
             );
         } catch (SQLException e) {
@@ -494,35 +639,91 @@ public class MainView {
         }
     }
 
-    private static ContaCliente escolherContaDoCliente(Scanner scanner, ContaClienteDao contaDao, int idCliente, String rotulo) throws SQLException {
-        List<ContaCliente> contas = contaDao.listarContasPorCliente(idCliente);
+    private static void consultarHistoricoTransacoes(Scanner scanner) {
+        System.out.println("\n=== Consultar Histórico de Transações ===");
 
-        if (contas == null || contas.isEmpty()) {
-            System.out.println("O cliente não possui contas cadastradas (" + rotulo + ").");
-            return null;
+        // Solicita ID da conta
+        System.out.print("Digite o ID da conta interna: ");
+        int idConta;
+        try {
+            idConta = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.err.println("ID inválido!");
+            return;
         }
 
-        if (contas.size() == 1) {
-            return contas.getFirst();
+        // Solicita data inicial
+        System.out.println("\nData INICIAL do período:");
+        LocalDate dataInicio = lerData(scanner);
+
+        // Solicita data final
+        System.out.println("\nData FINAL do período:");
+        LocalDate dataFim = lerData(scanner);
+
+        // Validação
+        if (dataInicio.isAfter(dataFim)) {
+            System.err.println("A data inicial não pode ser posterior à data final!");
+            return;
         }
 
-        System.out.println("Selecione a conta " + rotulo + ":");
-        for (int i = 0; i < contas.size(); i++) {
-            ContaCliente conta = contas.get(i);
-            System.out.printf("%d) id_conta=%d | nº=%d | ag=%d | saldo=R$ %.2f%n",
-                    i + 1, conta.getId(), conta.getNumeroConta(), conta.getAgencia(), conta.getSaldo());;
-        }
+        try {
+            // Converte para Instant
+            Instant from = dataInicio.atStartOfDay(ZoneId.systemDefault()).toInstant();
+            Instant to = dataFim.atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant();
 
-        int opcao = -1;
-        while (opcao < 1 || opcao > contas.size()) {
-            System.out.print("Escolha [1-" + contas.size() + "]: ");
-            try {
-                opcao = Integer.parseInt(scanner.nextLine().trim());
-            } catch (NumberFormatException e) {
-                opcao = -1;
+            // Consulta o histórico
+            HistoricoTransacaoDao dao = new HistoricoTransacaoDao();
+            List<HistoricoTransacao> historico = dao.consultarHistoricoPorConta(idConta, from, to, 0, 100);
+
+            // Exibe resultados
+            if (historico.isEmpty()) {
+                System.out.println("\nNenhuma transação encontrada no período.");
+                return;
             }
-        }
-        return contas.get(opcao - 1);
-    }
 
+            System.out.println("\n" + "=".repeat(120));
+            System.out.printf("%-10s | %-20s | %-10s | %-15s | %-15s | %-30s%n",
+                    "ID", "Data/Hora", "Tipo", "Valor", "Conta Destino", "Nome Contraparte");
+            System.out.println("=".repeat(120));
+
+            BigDecimal totalSaques = BigDecimal.ZERO;
+            BigDecimal totalDepositos = BigDecimal.ZERO;
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
+                    .withZone(ZoneId.systemDefault());
+
+            for (HistoricoTransacao t : historico) {
+                String dataHoraStr = formatter.format(t.dataHora());
+                String tipoStr = t.tipo().name();
+                String valorStr = String.format("R$ %,.2f", t.valor());
+
+                // Soma totais
+                if (t.tipo() == TipoTransacaoFiat.SAQUE) {
+                    totalSaques = totalSaques.add(t.valor());
+                } else {
+                    totalDepositos = totalDepositos.add(t.valor());
+                }
+
+                System.out.printf("%-10d | %-20s | %-10s | %15s | %15d | %-30s%n",
+                        t.idTransacao(),
+                        dataHoraStr,
+                        tipoStr,
+                        valorStr,
+                        t.idContaContraparte(),
+                        t.nomeContraparte());
+            }
+
+            System.out.println("=".repeat(120));
+            System.out.println("\n--- RESUMO DO PERÍODO ---");
+            System.out.printf("Total de transações: %d%n", historico.size());
+            System.out.printf("Total em SAQUES:     R$ %,.2f%n", totalSaques);
+            System.out.printf("Total em DEPÓSITOS:  R$ %,.2f%n", totalDepositos);
+            System.out.printf("SALDO DO PERÍODO:    R$ %,.2f%n", totalDepositos.subtract(totalSaques));
+            System.out.println();
+
+        } catch (SQLException e) {
+            System.err.println("Erro ao consultar histórico: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 }

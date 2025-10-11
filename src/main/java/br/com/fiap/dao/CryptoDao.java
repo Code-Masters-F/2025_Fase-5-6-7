@@ -1,7 +1,7 @@
 package br.com.fiap.dao;
 
 import br.com.fiap.factory.ConnectionFactory;
-import br.com.fiap.model.Crypto;
+import br.com.fiap.model.Criptomoeda;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,50 +17,50 @@ public class CryptoDao {
     public CryptoDao() {
     }
 
-    public void inserirCrypto(Crypto crypto) throws SQLException {
-        String sql = "INSERT INTO crypto (nome, sigla, data_lancamento) VALUES (?, ?, ?)";
+    public void inserirCriptomoeda(Criptomoeda criptomoeda) throws SQLException {
+        String sql = "INSERT INTO criptomoeda (nome, sigla, data_lancamento) VALUES (?, ?, ?)";
 
         try (Connection conexao = ConnectionFactory.getConnection();
              PreparedStatement stmt = conexao.prepareStatement(sql)) {
 
-            stmt.setString(1, crypto.getNome().trim());
-            stmt.setString(2, crypto.getSigla().trim().toUpperCase());
-            stmt.setDate(3, java.sql.Date.valueOf(crypto.getDataLancamento()));
+            stmt.setString(1, criptomoeda.getNome().trim());
+            stmt.setString(2, criptomoeda.getSigla().trim().toUpperCase());
+            stmt.setDate(3, java.sql.Date.valueOf(criptomoeda.getDataLancamento()));
 
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new SQLException ("Falha ao inserir CRYPTO (nome=" + crypto.getNome() + ", sigla=" + crypto.getSigla() + ")", e);
+            throw new SQLException ("Falha ao inserir Criptomoeda (nome=" + criptomoeda.getNome() + ", sigla=" + criptomoeda.getSigla() + ")", e);
         }
     }
 
-    public List<Crypto> listarCryptos() throws SQLException {
-        List<Crypto> cryptos = new ArrayList<>();
+    public List<Criptomoeda> listarCriptomoedas() throws SQLException {
+        List<Criptomoeda> criptomoedas = new ArrayList<>();
 
-        String sql = "SELECT id_crypto, nome, sigla, data_lancamento FROM crypto";
+        String sql = "SELECT id_criptomoeda, nome, sigla, data_lancamento FROM criptomoeda";
 
         try (Connection conexao = ConnectionFactory.getConnection();
              PreparedStatement stmt = conexao.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                int id = rs.getInt("id_crypto");
+                int id = rs.getInt("id_criptomoeda");
                 String nome = rs.getString("nome").trim();
                 String sigla = rs.getString("sigla").trim();
 
                 Date data = rs.getDate("data_lancamento");
                 LocalDate dataLancamento = (data != null) ? data.toLocalDate() : null;
 
-                Crypto crypto = new Crypto(nome, sigla, dataLancamento);
-                crypto.setId(id);
+                Criptomoeda criptomoeda = new Criptomoeda(nome, sigla, dataLancamento);
+                criptomoeda.setId(id);
 
-                cryptos.add(crypto);
+                criptomoedas.add(criptomoeda);
             }
         }
-        return cryptos;
+        return criptomoedas;
     }
 
-    public Crypto consultarCrypto(int id) throws SQLException {
-        String sql = "SELECT id_crypto, nome, sigla, data_lancamento FROM crypto WHERE id_crypto = ?";
+    public Criptomoeda consultarCriptomoeda(int id) throws SQLException {
+        String sql = "SELECT id_criptomoeda, nome, sigla, data_lancamento FROM criptomoeda WHERE id_criptomoeda = ?";
 
         try (Connection conexao = ConnectionFactory.getConnection();
              PreparedStatement stm = conexao.prepareStatement(sql)) {
@@ -72,7 +72,7 @@ public class CryptoDao {
                     String nome = result.getString("nome");
                     String sigla = result.getString("sigla");
                     LocalDate dataLancamento = result.getDate("data_lancamento").toLocalDate();
-                    return new Crypto(nome, sigla, id, dataLancamento);
+                    return new Criptomoeda(nome, sigla, id, dataLancamento);
                 }
             }
             return null;

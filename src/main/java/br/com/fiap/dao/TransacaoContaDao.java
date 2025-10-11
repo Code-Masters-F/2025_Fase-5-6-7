@@ -3,66 +3,35 @@ package br.com.fiap.dao;
 import br.com.fiap.factory.ConnectionFactory;
 import br.com.fiap.model.TransacaoConta;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.math.BigDecimal;
+import java.sql.*;
 
 public class TransacaoContaDao {
 
     public TransacaoContaDao() {
     }
 
-    public void inserirTransacaoConta(TransacaoConta transacao) throws SQLException {
-        String sqlLookupConta = "SELECT id_conta FROM conta WHERE numero_conta = ? AND agencia = ?";
-        String sqlInsertTransacao = "INSERT INTO transacao_fiat (conta_id_conta_origem, conta_id_conta_destino, valor) VALUES (?, ?, ?)";
+    public void inserirTransacaoConta(Connection cx, TransacaoConta transacao) throws SQLException {
+        final String SQL = """
+                INSERT INTO transacao_fiat (conta_externa_id, conta_interna_id, valor, tipo, data_hora)
+                VALUES (?, ?, ?, ?, ?)
+                """;
 
-        try (Connection conexao = ConnectionFactory.getConnection();
-             PreparedStatement psOrigem = conexao.prepareStatement(sqlLookupConta);
-             PreparedStatement psDestino = conexao.prepareStatement(sqlLookupConta);
-             PreparedStatement psInsert = conexao.prepareStatement(sqlInsertTransacao)) {
+        try (PreparedStatement stmt = cx.prepareStatement(SQL)) {
+            stmt.setInt(1, transacao.getContaExterna().getId());
+            stmt.setInt(2, transacao.getContaInterna().getId());
+            stmt.setBigDecimal(3, transacao.getValor());
+            stmt.setString(4, transacao.getTipo().name());
+            stmt.setTimestamp(5, Timestamp.valueOf(transacao.getDataHora()));
 
-            psOrigem.setInt(1, transacao.getNumeroContaOrigem());
-            psOrigem.setInt(2, transacao.getAgenciaOrigem());
-
-            Integer idOrigem = null;
-
-            try (ResultSet rs = psOrigem.executeQuery()) {
-                if (rs.next()) {
-                    idOrigem = rs.getInt(1);
-                }
-            }
-
-            if (idOrigem == null) {
-                throw new SQLException("Conta de origem não encontrada (número/agência).");
-            }
-
-            psDestino.setInt(1, transacao.getNumeroContaDestino());
-            psDestino.setInt(2, transacao.getAgenciaDestino());
-
-            Integer idDestino = null;
-
-            try (ResultSet rs = psDestino.executeQuery()) {
-                if (rs.next()) {
-                    idDestino = rs.getInt(1);
-                }
-            }
-
-            if (idDestino == null) {
-                throw new SQLException("Conta de destino não encontrada (número/agência).");
-            }
-
-            psInsert.setInt(1, idOrigem);
-            psInsert.setInt(2, idDestino);
-            psInsert.setDouble(3, transacao.getValor());
-            psInsert.executeUpdate();
+            if (stmt.executeUpdate() != 1) throw new SQLException("Falha ao inserir transação.");
 
         }
     }
 
-    public int buscarConta(int numeroConta, int numeroAgencia) throws SQLException {
+    public int buscarContaInterna(int numeroConta, int numeroAgencia) throws SQLException {
         String sql = """
-                SELECT * FROM conta
+                SELECT * FROM conta_interna
                 WHERE numero_conta = ?
                     AND agencia = ?;
                 """;
@@ -75,7 +44,7 @@ public class TransacaoContaDao {
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getInt("id_conta");
+                    return rs.getInt("id_conta_interna");
                 }
                 return -1;
             }
