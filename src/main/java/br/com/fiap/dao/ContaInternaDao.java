@@ -74,6 +74,27 @@ public class ContaInternaDao {
         }
     }
 
+    public void adicionarSaldo(Connection cx, int idConta, BigDecimal valor) throws SQLException {
+        try (PreparedStatement stmt = cx.prepareStatement(
+                "SELECT saldo FROM conta_interna WHERE id_conta_interna = ? FOR UPDATE")) {
+            stmt.setInt(1, idConta);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (!rs.next()) {
+                    throw new SQLException("Conta interna não encontrada.");
+                }
+            }
+        }
+
+        try (PreparedStatement stmt = cx.prepareStatement(
+                "UPDATE conta_interna SET saldo = saldo + ? WHERE id_conta_interna = ?")) {
+            stmt.setBigDecimal(1, valor);
+            stmt.setInt(2, idConta);
+            if (stmt.executeUpdate() != 1) {
+                throw new SQLException("Falha ao adicionar saldo.");
+            }
+        }
+    }
+
     public ContaInterna buscarContaInternaPorCliente(Cliente cliente) throws SQLException {
         final String SQL = """
                 SELECT *
@@ -126,6 +147,26 @@ public class ContaInternaDao {
             }
         }
 
+        return null;
+    }
+
+    public static ContaInterna buscarContaInternaPorId(int idContaInterna) throws SQLException {
+        final String SQL = "SELECT * FROM conta_interna WHERE id_conta_interna = ?";
+
+        try (Connection conexao = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conexao.prepareStatement(SQL)) {
+
+            stmt.setInt(1, idContaInterna);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    ContaInterna contaInterna = new ContaInterna();
+                    contaInterna.setId(rs.getInt("id_conta_interna"));
+
+                    return contaInterna;
+                }
+            }
+        }
         return null;
     }
 

@@ -53,9 +53,27 @@ public class ContaExternaDao {
         return null;
     }
 
-    public void enviarTransferenciaContaExternaParaInterna() {
+    public static ContaExterna buscarContaExternaPorId(int idContaExterna) throws SQLException {
+        final String SQL = "SELECT * FROM conta_externa WHERE id_conta_externa = ?";
 
+        try (Connection conexao = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conexao.prepareStatement(SQL)) {
+
+            stmt.setInt(1, idContaExterna);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    ContaExterna contaExterna = new ContaExterna();
+                    contaExterna.setId(rs.getInt("id_conta_externa"));
+
+                    return contaExterna;
+                }
+            }
+
+        }
+        return null;
     }
+
 
 
 

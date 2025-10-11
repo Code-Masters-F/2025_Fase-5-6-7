@@ -20,11 +20,12 @@ public class TransacaoContaDao {
         try (PreparedStatement stmt = cx.prepareStatement(SQL)) {
             stmt.setInt(1, transacao.getContaExterna().getId());
             stmt.setInt(2, transacao.getContaInterna().getId());
-            stmt.setBigDecimal(3, BigDecimal.valueOf(transacao.getValor()));
+            stmt.setBigDecimal(3, transacao.getValor());
             stmt.setString(4, transacao.getTipo().name());
             stmt.setTimestamp(5, Timestamp.valueOf(transacao.getDataHora()));
 
             if (stmt.executeUpdate() != 1) throw new SQLException("Falha ao inserir transação.");
+
         }
     }
 

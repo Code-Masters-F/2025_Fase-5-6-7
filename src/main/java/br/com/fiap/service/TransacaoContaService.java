@@ -21,7 +21,11 @@ public class TransacaoContaService {
             cx.setAutoCommit(false);
 
             if (transacao.getTipo() == TipoTransacaoFiat.SAQUE) {
-                contaInternaDao.debitarSaldo(cx, transacao.getContaInterna().getId(), BigDecimal.valueOf(transacao.getValor()));
+                contaInternaDao.debitarSaldo(cx, transacao.getContaInterna().getId(), transacao.getValor());
+            }
+
+            if (transacao.getTipo() == TipoTransacaoFiat.DEPOSITO) {
+                contaInternaDao.adicionarSaldo(cx, transacao.getContaInterna().getId(), transacao.getValor());
             }
 
             transacaoDao.inserirTransacaoConta(cx, transacao);
@@ -29,7 +33,5 @@ public class TransacaoContaService {
         } catch (SQLException e) {
             throw e;
         }
-
     }
-
 }

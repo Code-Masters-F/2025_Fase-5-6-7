@@ -1,10 +1,11 @@
 package br.com.fiap.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class TransacaoConta {
     private int id;
-    private double valor;
+    private BigDecimal valor;
     private TipoTransacaoFiat tipoTransacao;
     private LocalDateTime dataHora;
     private ContaInterna contaInterna;
@@ -14,7 +15,7 @@ public class TransacaoConta {
      * Contrutor para registrar transferencias entre contas genéricamente
      * @param valor valor para transferencia
      */
-    public TransacaoConta(ContaExterna contaExterna, ContaInterna contaInterna, double valor, TipoTransacaoFiat tipo, LocalDateTime dataHora) {
+    public TransacaoConta(ContaExterna contaExterna, ContaInterna contaInterna, BigDecimal valor, TipoTransacaoFiat tipo, LocalDateTime dataHora) {
         this.contaExterna = contaExterna;
         this.contaInterna = contaInterna;
         this.valor = valor;
@@ -84,11 +85,11 @@ public class TransacaoConta {
         this.contaExterna.setNumeroAgencia(novaAgencia);
     }
 
-    public double getValor() {
+    public BigDecimal getValor() {
         return valor;
     }
 
-    public void setValor(double novoValor) {
+    public void setValor(BigDecimal novoValor) {
         this.valor = novoValor;
     }
     

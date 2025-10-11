@@ -18,8 +18,8 @@ public class TransacaoCryptoDao {
                                        double quantidade, double valorUnitario,
                                        StatusOperacao status) throws SQLException {
         String sql = """
-        INSERT INTO transacao_crypto
-            (conta_id_conta, crypto_id_crypto, tipo_operacao, quantidade_crypto, valor_unitario, status)\s
+        INSERT INTO transacao_criptomoeda
+            (conta_interna_id, criptomoeda_id_criptomoeda, tipo_operacao, quantidade_criptomoeda, valor_unitario, status)\s
         VALUES (?, ?, ?, ?, ?, ?)
        """;
 

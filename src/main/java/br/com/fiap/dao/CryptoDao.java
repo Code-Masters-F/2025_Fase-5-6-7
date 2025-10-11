@@ -17,8 +17,8 @@ public class CryptoDao {
     public CryptoDao() {
     }
 
-    public void inserirCrypto(Criptomoeda criptomoeda) throws SQLException {
-        String sql = "INSERT INTO crypto (nome, sigla, data_lancamento) VALUES (?, ?, ?)";
+    public void inserirCriptomoeda(Criptomoeda criptomoeda) throws SQLException {
+        String sql = "INSERT INTO criptomoeda (nome, sigla, data_lancamento) VALUES (?, ?, ?)";
 
         try (Connection conexao = ConnectionFactory.getConnection();
              PreparedStatement stmt = conexao.prepareStatement(sql)) {
@@ -29,21 +29,21 @@ public class CryptoDao {
 
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new SQLException ("Falha ao inserir CRYPTO (nome=" + criptomoeda.getNome() + ", sigla=" + criptomoeda.getSigla() + ")", e);
+            throw new SQLException ("Falha ao inserir Criptomoeda (nome=" + criptomoeda.getNome() + ", sigla=" + criptomoeda.getSigla() + ")", e);
         }
     }
 
-    public List<Criptomoeda> listarCryptos() throws SQLException {
+    public List<Criptomoeda> listarCriptomoedas() throws SQLException {
         List<Criptomoeda> criptomoedas = new ArrayList<>();
 
-        String sql = "SELECT id_crypto, nome, sigla, data_lancamento FROM crypto";
+        String sql = "SELECT id_criptomoeda, nome, sigla, data_lancamento FROM criptomoeda";
 
         try (Connection conexao = ConnectionFactory.getConnection();
              PreparedStatement stmt = conexao.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                int id = rs.getInt("id_crypto");
+                int id = rs.getInt("id_criptomoeda");
                 String nome = rs.getString("nome").trim();
                 String sigla = rs.getString("sigla").trim();
 
@@ -59,8 +59,8 @@ public class CryptoDao {
         return criptomoedas;
     }
 
-    public Criptomoeda consultarCrypto(int id) throws SQLException {
-        String sql = "SELECT id_crypto, nome, sigla, data_lancamento FROM crypto WHERE id_crypto = ?";
+    public Criptomoeda consultarCriptomoeda(int id) throws SQLException {
+        String sql = "SELECT id_criptomoeda, nome, sigla, data_lancamento FROM criptomoeda WHERE id_criptomoeda = ?";
 
         try (Connection conexao = ConnectionFactory.getConnection();
              PreparedStatement stm = conexao.prepareStatement(sql)) {
