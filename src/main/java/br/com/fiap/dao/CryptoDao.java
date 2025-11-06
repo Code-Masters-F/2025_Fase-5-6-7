@@ -78,4 +78,42 @@ public class CryptoDao {
             return null;
         }
     }
+
+    public void atualizarCriptomoeda(int id, String novoNome, String novaSigla) throws SQLException {
+        String sql = "UPDATE criptomoeda SET nome = ?, sigla = ? WHERE id_criptomoeda = ?";
+
+        try (Connection conexao = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+
+            stmt.setString(1, novoNome.trim());
+            stmt.setString(2, novaSigla.trim().toUpperCase());
+            stmt.setInt(3, id);
+
+            int linhasAfetadas = stmt.executeUpdate();
+
+            if (linhasAfetadas == 0) {
+                throw new SQLException("Nenhuma criptomoeda encontrada com o ID: " + id);
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Falha ao atualizar Criptomoeda (id=" + id + ")", e);
+        }
+    }
+
+    public void deletarCriptomoeda(int id) throws SQLException {
+        String sql = "DELETE FROM criptomoeda WHERE id_criptomoeda = ?";
+
+        try (Connection conexao = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+
+            int linhasAfetadas = stmt.executeUpdate();
+
+            if (linhasAfetadas == 0) {
+                throw new SQLException("Nenhuma criptomoeda encontrada com o ID: " + id);
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Falha ao deletar Criptomoeda (id=" + id + ")", e);
+        }
+    }
 }
