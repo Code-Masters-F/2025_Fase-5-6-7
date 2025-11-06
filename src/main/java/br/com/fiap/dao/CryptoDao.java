@@ -88,12 +88,8 @@ public class CryptoDao {
             stmt.setString(1, novoNome.trim());
             stmt.setString(2, novaSigla.trim().toUpperCase());
             stmt.setInt(3, id);
+            stmt.executeUpdate();
 
-            int linhasAfetadas = stmt.executeUpdate();
-
-            if (linhasAfetadas == 0) {
-                throw new SQLException("Nenhuma criptomoeda encontrada com o ID: " + id);
-            }
         } catch (SQLException e) {
             throw new SQLException("Falha ao atualizar Criptomoeda (id=" + id + ")", e);
         }
@@ -106,12 +102,7 @@ public class CryptoDao {
              PreparedStatement stmt = conexao.prepareStatement(sql)) {
 
             stmt.setInt(1, id);
-
-            int linhasAfetadas = stmt.executeUpdate();
-
-            if (linhasAfetadas == 0) {
-                throw new SQLException("Nenhuma criptomoeda encontrada com o ID: " + id);
-            }
+            stmt.executeUpdate();
         } catch (SQLException e) {
             throw new SQLException("Falha ao deletar Criptomoeda (id=" + id + ")", e);
         }
