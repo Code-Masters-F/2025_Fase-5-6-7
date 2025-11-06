@@ -66,7 +66,7 @@ public class MainView {
             try {
                 switch (opcao) {
                     case "1": opcoesCliente(scanner); break;
-                    case "2": cadastrarContaExterna(scanner); break;
+                    case "2": submenuContasCarteiras(scanner); break
                     case "3": cadastrarCriptomoeda(scanner); break;
                     case "8": consultarCarteira(scanner); break;
                     case "9": enviarTransferenciaContaInternaParaExterna(scanner); break;
@@ -187,15 +187,15 @@ public class MainView {
     private static void exibirMenu() {
         System.out.println("\n======= MENU =======");
         System.out.println("1  - Opções relacionadas a Cliente");
-        System.out.println("2  - Cadastrar conta externa");
+        System.out.println("2  - Opções relacionadas a Contas e Carteiras");  // ALTERADA
         System.out.println("3  - Cadastrar nova criptomoeda");
-        System.out.println("8  - Consultar carteira");
+        System.out.println("8  - Consultar carteira"); // para o sub-menu
         System.out.println("9  - Enviar Transferência de Conta Interna para Conta Externa");
         System.out.println("10 - Enviar Transferência de Conta Externa para Conta Interna");
         System.out.println("11 - Listar criptomoedas");
         System.out.println("12 - Comprar criptomoeda");
         System.out.println("13 - Vender criptomoeda");
-        System.out.println("14 - Consultar histórico de transações");
+        System.out.println("14 - Consultar histórico de transações"); // para o sub-menu
         System.out.println("0  - Sair");
         System.out.print("Escolha uma opção: ");
     }
@@ -233,6 +233,37 @@ public class MainView {
                 System.out.println("Opção inválida");
             }
         }while (!opcaoCliente.equals("0"));
+    }
+
+    /*
+      Sub-menu para gerenciar contas e carteiras
+    */
+
+    private static void submenuContasCarteiras(Scanner scanner) {
+        String opcao;
+        do {
+            exibirSubmenuContasCarteiras();
+            opcao = scanner.nextLine();
+            System.out.println();
+            try {
+                switch (opcao) {
+                    case "1": consultarContaInterna(scanner); break;
+                    case "2": consultarCarteira(scanner); break;
+                    case "3": transferirEntreContasInternas(scanner); break;
+                    case "4": adicionarSaldoConta(scanner); break;
+                    case "5": consultarHistoricoTransacoes(scanner); break;
+                    case "6": cadastrarContaExterna(scanner); break;
+                    case "0":
+                        System.out.println("Voltando ao menu principal...");
+                        break;
+                    default:
+                        System.out.println("Opção inválida!");
+                }
+            } catch (Exception e) {
+                System.out.println("Algo deu errado! Tente novamente.");
+                e.printStackTrace();
+            }
+        } while (!opcao.equals("0"));
     }
 
     private static void cadastrarCriptomoeda(Scanner scanner) {
