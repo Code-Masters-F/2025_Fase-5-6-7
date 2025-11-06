@@ -66,7 +66,7 @@ public class MainView {
             try {
                 switch (opcao) {
                     case "1": opcoesCliente(scanner); break;
-                    case "2": submenuContasCarteiras(scanner); break
+                    case "2": submenuContasCarteiras(scanner); break;
                     case "3": cadastrarCriptomoeda(scanner); break;
                     case "8": consultarCarteira(scanner); break;
                     case "9": enviarTransferenciaContaInternaParaExterna(scanner); break;
@@ -247,10 +247,10 @@ public class MainView {
             System.out.println();
             try {
                 switch (opcao) {
-                    case "1": consultarContaInterna(scanner); break;
+                    //case "1": consultarContaInterna(scanner); break;
                     case "2": consultarCarteira(scanner); break;
-                    case "3": transferirEntreContasInternas(scanner); break;
-                    case "4": adicionarSaldoConta(scanner); break;
+                    //case "3": transferirEntreContasInternas(scanner); break;
+                    //case "4": adicionarSaldoConta(scanner); break;
                     case "5": consultarHistoricoTransacoes(scanner); break;
                     case "6": cadastrarContaExterna(scanner); break;
                     case "0":
@@ -264,6 +264,21 @@ public class MainView {
                 e.printStackTrace();
             }
         } while (!opcao.equals("0"));
+    }
+
+    /**
+     * Exibe o submenu de contas e carteiras
+     */
+    private static void exibirSubmenuContasCarteiras() {
+        System.out.println("\n====== GERENCIAR CONTAS E CARTEIRAS ======");
+        System.out.println("1 - Consultar conta interna");
+        System.out.println("2 - Consultar carteira de criptomoedas");
+        System.out.println("3 - Transferir entre contas internas");
+        System.out.println("4 - Adicionar saldo à conta");
+        System.out.println("5 - Consultar histórico de transações");
+        System.out.println("6 - Cadastrar conta externa");
+        System.out.println("0 - Voltar ao menu principal");
+        System.out.print("Escolha uma opção: ");
     }
 
     private static void cadastrarCriptomoeda(Scanner scanner) {
