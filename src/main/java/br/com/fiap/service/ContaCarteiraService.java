@@ -20,9 +20,7 @@ public class ContaCarteiraService {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    /**
-     * Consulta dados de uma conta interna por ID do cliente
-     */
+
     public static void consultarContaInterna(Scanner scanner) {
         System.out.println("\n=== Consultar Conta Interna ===");
         System.out.print("Digite o ID do cliente: ");
@@ -68,9 +66,6 @@ public class ContaCarteiraService {
         }
     }
 
-    /**
-     * Consulta a carteira de criptomoedas de uma conta
-     */
     public static void consultarCarteira(Scanner scanner) {
         System.out.print("Digite o ID da conta que deseja consultar a carteira: ");
         int contaId;
@@ -104,9 +99,6 @@ public class ContaCarteiraService {
         }
     }
 
-    /**
-     * Realiza transferência entre duas contas internas
-     */
     public static void transferirEntreContasInternas(Scanner scanner) {
         System.out.println("\n=== Transferir Entre Contas Internas ===");
 
@@ -164,9 +156,6 @@ public class ContaCarteiraService {
         }
     }
 
-    /**
-     * Adiciona saldo a uma conta interna
-     */
     public static void adicionarSaldoConta(Scanner scanner) {
         System.out.println("\n=== Adicionar Saldo à Conta ===");
 
@@ -202,7 +191,7 @@ public class ContaCarteiraService {
                 return;
             }
 
-            // Adiciona o saldo (precisa de uma conexão)
+
             try (var conn = br.com.fiap.factory.ConnectionFactory.getConnection()) {
                 contaDao.adicionarSaldo(conn, idConta, BigDecimal.valueOf(valor));
                 System.out.println("\n✓ Saldo adicionado com sucesso!");
@@ -216,9 +205,6 @@ public class ContaCarteiraService {
         }
     }
 
-    /**
-     * Consulta o histórico de transações de uma conta
-     */
     public static void consultarHistoricoTransacoes(Scanner scanner) {
         System.out.println("\n=== Consultar Histórico de Transações ===");
 
@@ -232,26 +218,24 @@ public class ContaCarteiraService {
             return;
         }
 
-        // Solicita data inicial
+
         System.out.println("\nData INICIAL do período:");
         LocalDate dataInicio = lerData(scanner);
 
-        // Solicita data final
         System.out.println("\nData FINAL do período:");
         LocalDate dataFim = lerData(scanner);
 
-        // Validação
         if (dataInicio.isAfter(dataFim)) {
             System.err.println("A data inicial não pode ser posterior à data final!");
             return;
         }
 
         try {
-            // Converte para Instant
+
             Instant from = dataInicio.atStartOfDay(ZoneId.systemDefault()).toInstant();
             Instant to = dataFim.atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant();
 
-            // Consulta o histórico
+
             HistoricoTransacaoDao dao = new HistoricoTransacaoDao();
             List<HistoricoTransacao> historico = dao.consultarHistoricoPorConta(idConta, from, to, 0, 100);
 
@@ -277,7 +261,6 @@ public class ContaCarteiraService {
                 String tipoStr = t.tipo().name();
                 String valorStr = String.format("R$ %,.2f", t.valor());
 
-                // Soma totais
                 if (t.tipo() == TipoTransacaoFiat.SAQUE) {
                     totalSaques = totalSaques.add(t.valor());
                 } else {
@@ -307,9 +290,7 @@ public class ContaCarteiraService {
         }
     }
 
-    /**
-     * Cadastra uma conta externa
-     */
+
     public static void cadastrarContaExterna(Scanner scanner) {
         int idCliente;
         while (true) {
@@ -406,9 +387,6 @@ public class ContaCarteiraService {
         }
     }
 
-    /**
-     * Método auxiliar para ler datas
-     */
     private static LocalDate lerData(Scanner scanner) {
         while (true) {
             System.out.print("Digite a data (dd/MM/yyyy): ");
