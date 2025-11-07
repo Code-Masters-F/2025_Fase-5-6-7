@@ -5,6 +5,7 @@ import br.com.fiap.model.*;
 import br.com.fiap.dao.ClienteDao;
 import br.com.fiap.service.TransacaoContaService;
 import br.com.fiap.service.ClienteService;
+import br.com.fiap.service.ContaCarteiraService;
 import br.com.fiap.utils.ContaExternaUtils;
 
 import java.math.BigDecimal;
@@ -68,13 +69,11 @@ public class MainView {
                     case "1": opcoesCliente(scanner); break;
                     case "2": submenuContasCarteiras(scanner); break;
                     case "3": cadastrarCriptomoeda(scanner); break;
-                    case "8": consultarCarteira(scanner); break;
-                    case "9": enviarTransferenciaContaInternaParaExterna(scanner); break;
-                    case "10": enviarTransferenciaContaExternaParaInterna(scanner); break;
-                    case "11": listarCriptomoedas(); break;
-                    case "12": comprarCriptomoeda(scanner); break;
-                    case "13": venderCriptomoeda(scanner); break;
-                    case "14": consultarHistoricoTransacoes(scanner); break;
+                    case "4": enviarTransferenciaContaInternaParaExterna(scanner); break;
+                    case "5": enviarTransferenciaContaExternaParaInterna(scanner); break;
+                    case "6": listarCriptomoedas(); break;
+                    case "7": comprarCriptomoeda(scanner); break;
+                    case "8": venderCriptomoeda(scanner); break;
                     case "0":
                         System.out.println("Saindo do sistema...");
                         break;
@@ -185,18 +184,16 @@ public class MainView {
     }
 
     private static void exibirMenu() {
-        System.out.println("\n======= MENU =======");
-        System.out.println("1  - Opções relacionadas a Cliente");
-        System.out.println("2  - Opções relacionadas a Contas e Carteiras");  // ALTERADA
-        System.out.println("3  - Cadastrar nova criptomoeda");
-        System.out.println("8  - Consultar carteira"); // para o sub-menu
-        System.out.println("9  - Enviar Transferência de Conta Interna para Conta Externa");
-        System.out.println("10 - Enviar Transferência de Conta Externa para Conta Interna");
-        System.out.println("11 - Listar criptomoedas");
-        System.out.println("12 - Comprar criptomoeda");
-        System.out.println("13 - Vender criptomoeda");
-        System.out.println("14 - Consultar histórico de transações"); // para o sub-menu
-        System.out.println("0  - Sair");
+        System.out.println("\n======= MENU PRINCIPAL =======");
+        System.out.println("1 - Opções relacionadas a Cliente");
+        System.out.println("2 - Opções relacionadas a Contas e Carteiras");
+        System.out.println("3 - Cadastrar nova criptomoeda");
+        System.out.println("4 - Enviar Transferência de Conta Interna para Conta Externa");
+        System.out.println("5 - Enviar Transferência de Conta Externa para Conta Interna");
+        System.out.println("6 - Listar criptomoedas");
+        System.out.println("7 - Comprar criptomoeda");
+        System.out.println("8 - Vender criptomoeda");
+        System.out.println("0 - Sair");
         System.out.print("Escolha uma opção: ");
     }
 
@@ -247,12 +244,12 @@ public class MainView {
             System.out.println();
             try {
                 switch (opcao) {
-                    //case "1": consultarContaInterna(scanner); break;
-                    case "2": consultarCarteira(scanner); break;
-                    //case "3": transferirEntreContasInternas(scanner); break;
-                    //case "4": adicionarSaldoConta(scanner); break;
-                    case "5": consultarHistoricoTransacoes(scanner); break;
-                    case "6": cadastrarContaExterna(scanner); break;
+                    case "1": ContaCarteiraService.consultarContaInterna(scanner); break;
+                    case "2": ContaCarteiraService.consultarCarteira(scanner); break;
+                    case "3": ContaCarteiraService.transferirEntreContasInternas(scanner); break;
+                    case "4": ContaCarteiraService.adicionarSaldoConta(scanner); break;
+                    case "5": ContaCarteiraService.consultarHistoricoTransacoes(scanner); break;
+                    case "6": ContaCarteiraService.cadastrarContaExterna(scanner); break;
                     case "0":
                         System.out.println("Voltando ao menu principal...");
                         break;
@@ -266,9 +263,6 @@ public class MainView {
         } while (!opcao.equals("0"));
     }
 
-    /**
-     * Exibe o submenu de contas e carteiras
-     */
     private static void exibirSubmenuContasCarteiras() {
         System.out.println("\n====== GERENCIAR CONTAS E CARTEIRAS ======");
         System.out.println("1 - Consultar conta interna");
