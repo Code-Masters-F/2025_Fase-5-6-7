@@ -1,4 +1,4 @@
-package br.com.fiap.utils;
+package br.com.fiap.view;
 
 import br.com.fiap.service.ContaCarteiraService;
 
@@ -7,16 +7,18 @@ import java.util.Scanner;
 public class MenuContaCarteira {
 
     private static final String SUB_MENU_CONTA_CARTEIRA = """
-            ====== GERENCIAR CONTAS E CARTEIRAS ======
-                    1 - Consultar conta interna
-                    2 - Consultar carteira de criptomoedas
-                    3 - Transferir entre contas internas
-                    4 - Adicionar saldo à conta
-                    5 - Consultar histórico de transações
-                    6 - Cadastrar conta externa
-                    0 - Voltar ao menu principal
-                    Escolha uma opção:
-    """;
+    ========== GERENCIAR CONTAS E CARTEIRAS ==========
+
+      1 - Consultar conta interna
+      2 - Consultar carteira de criptomoedas
+      3 - Transferir entre contas internas
+      4 - Adicionar saldo à conta
+      5 - Consultar histórico de transações
+      6 - Cadastrar conta externa
+      0 - Voltar ao menu principal
+
+    Escolha uma opção: """;
+
 
     /*
       Sub-menu para gerenciar contas e carteiras
@@ -24,8 +26,8 @@ public class MenuContaCarteira {
     public static void exibirMenuContaCarteira(Scanner scanner) {
         String opcao;
         do {
-            System.out.println(SUB_MENU_CONTA_CARTEIRA);
-            opcao = scanner.nextLine();
+            System.out.print(SUB_MENU_CONTA_CARTEIRA);
+            opcao = scanner.nextLine().trim();
             System.out.println();
             try {
                 switch (opcao) {

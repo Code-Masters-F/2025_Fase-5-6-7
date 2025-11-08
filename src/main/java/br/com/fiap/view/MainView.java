@@ -3,9 +3,6 @@ package br.com.fiap.view;
 import br.com.fiap.service.ContaExternaService;
 import br.com.fiap.service.ContaInternaService;
 import br.com.fiap.service.CriptomoedaService;
-import br.com.fiap.utils.MenuCliente;
-import br.com.fiap.utils.MenuContaCarteira;
-import br.com.fiap.utils.MenuPrincipal;
 
 import java.util.*;
 
@@ -16,7 +13,7 @@ public class MainView {
 
         do {
             System.out.print(MenuPrincipal.MENU_PRINCIPAL);
-            opcao = scanner.nextLine();
+            opcao = scanner.nextLine().trim();
             System.out.println();
             try {
                 switch (opcao) {

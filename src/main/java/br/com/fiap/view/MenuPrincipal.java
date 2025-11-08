@@ -1,4 +1,4 @@
-package br.com.fiap.utils;
+package br.com.fiap.view;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -57,10 +57,6 @@ public class MenuPrincipal {
                 System.out.println("Formato de data inválido. Utilize dd/MM/yyyy.");
             }
         }
-    }
-
-    public static void exibirMenuPrincipal() {
-
     }
 
 

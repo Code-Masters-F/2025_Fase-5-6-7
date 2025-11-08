@@ -91,6 +91,7 @@ public class ClienteService {
                 System.out.print(" | Data de Nascimento: " + c.getKey().getDataNascimento().format(CondicoesUtils.FORMATTER));
                 System.out.print(" | Idade: " + c.getKey().getIdade() + System.lineSeparator());
             }
+            System.out.println();
 
         } catch (SQLException e) {
             System.err.println(e.getMessage());

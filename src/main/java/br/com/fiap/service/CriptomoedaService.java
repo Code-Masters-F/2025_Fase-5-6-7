@@ -5,7 +5,7 @@ import br.com.fiap.dao.CryptoDao;
 import br.com.fiap.dao.TransacaoCryptoDao;
 import br.com.fiap.model.Criptomoeda;
 import br.com.fiap.model.StatusOperacao;
-import br.com.fiap.utils.MenuPrincipal;
+import br.com.fiap.view.MenuPrincipal;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
