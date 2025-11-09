@@ -14,7 +14,6 @@ public class TestConnection {
 
     public static void main(String[] args) {
         try {
-
             conexao = ConnectionFactory.getConnection();
             System.out.println("Conexão estabelecida com sucesso!");
 

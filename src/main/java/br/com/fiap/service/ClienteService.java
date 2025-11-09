@@ -43,7 +43,7 @@ public class ClienteService {
 
         int agencia;
         while (true) {
-            System.out.print("Digite a agencia (até 5 dígitos): ");
+            System.out.print("Digite a agencia (4 até 5 dígitos): ");
             String agenciaInput = scanner.nextLine().trim();
             if (!agenciaInput.matches("\\d{4,5}")) {
                 System.err.println("Número da agência inválido. Deve conter 4 ou 5 dígitos.");
@@ -72,8 +72,10 @@ public class ClienteService {
             daoCarteira.inserirCarteira(idConta);
 
             System.out.println(System.lineSeparator() + "Cliente cadastrado com sucesso!");
+            System.out.println();
         } catch (SQLException e) {
             System.err.println("Erro ao cadastrar o usuário: " + e.getMessage());
+            System.out.println();
         }
     }
 
@@ -124,11 +126,14 @@ public class ClienteService {
                 System.out.println("Número da Conta: " + conta.getNumeroConta());
                 System.out.println("Agência: " + conta.getNumeroAgencia());
                 System.out.printf("Saldo: R$ %.2f%n", conta.getSaldo());
+                System.out.println();
             } else {
                 System.out.println("Este cliente ainda não possui conta cadastrada.");
+                System.out.println();
             }
         } catch (SQLException e) {
             System.out.println("Erro ao consultar cliente: " + e.getMessage());
+            System.out.println();
         }
     }
 
@@ -144,8 +149,10 @@ public class ClienteService {
             ClienteDao daoCliente = new ClienteDao();
             daoCliente.atualizarClientePorId(idCliete, novoNome, novoEmail);
             System.out.println("Cliente atualizado com sucesso!!");
+            System.out.println();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Erro ao atualizar cliente: " + e.getMessage());
+            System.out.println();
         }
     }
 
@@ -157,9 +164,10 @@ public class ClienteService {
             ClienteDao daoCliente = new ClienteDao();
             daoCliente.deletarClientePorId(idCliente);
             System.out.println("Cliente deletado!");
-
+            System.out.println();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            System.out.println();
         }
 
     }
