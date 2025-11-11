@@ -75,6 +75,7 @@ public class MainView {
                     case "12": comprarCriptomoeda(scanner); break;
                     case "13": venderCriptomoeda(scanner); break;
                     case "14": consultarHistoricoTransacoes(scanner); break;
+                    case "15": submenuCriptomoedas(scanner); break;
                     case "0":
                         System.out.println("Saindo do sistema...");
                         break;
@@ -196,6 +197,7 @@ public class MainView {
         System.out.println("12 - Comprar criptomoeda");
         System.out.println("13 - Vender criptomoeda");
         System.out.println("14 - Consultar histórico de transações");
+        System.out.println("15 - Gerenciar Criptomoedas");
         System.out.println("0  - Sair");
         System.out.print("Escolha uma opção: ");
     }

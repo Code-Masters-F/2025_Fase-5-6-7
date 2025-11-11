@@ -101,21 +101,18 @@ public class CryptoDao {
             conexao = ConnectionFactory.getConnection();
             conexao.setAutoCommit(false);
 
-            // 1. Deletar registros dependentes em POSSE
             String sqlPosse = "DELETE FROM posse WHERE criptomoeda_id_criptomoeda = ?";
             try (PreparedStatement stmtPosse = conexao.prepareStatement(sqlPosse)) {
                 stmtPosse.setInt(1, id);
                 stmtPosse.executeUpdate();
             }
 
-            // 2. Deletar registros dependentes em TRANSACAO_CRIPTOMOEDA
             String sqlTransacao = "DELETE FROM transacao_criptomoeda WHERE criptomoeda_id_criptomoeda = ?";
             try (PreparedStatement stmtTransacao = conexao.prepareStatement(sqlTransacao)) {
                 stmtTransacao.setInt(1, id);
                 stmtTransacao.executeUpdate();
             }
 
-            // 3. Deletar a criptomoeda
             String sqlCrypto = "DELETE FROM criptomoeda WHERE id_criptomoeda = ?";
             try (PreparedStatement stmtCrypto = conexao.prepareStatement(sqlCrypto)) {
                 stmtCrypto.setInt(1, id);
@@ -138,7 +135,7 @@ public class CryptoDao {
                     conexao.setAutoCommit(true);
                     conexao.close();
                 } catch (SQLException e) {
-                    // Log ou ignora erro de fechamento
+
                 }
             }
         }
