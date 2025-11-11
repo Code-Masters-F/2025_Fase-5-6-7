@@ -67,15 +67,13 @@ public class MainView {
                 switch (opcao) {
                     case "1": opcoesCliente(scanner); break;
                     case "2": cadastrarContaExterna(scanner); break;
-                    case "3": cadastrarCriptomoeda(scanner); break;
-                    case "8": consultarCarteira(scanner); break;
-                    case "9": enviarTransferenciaContaInternaParaExterna(scanner); break;
-                    case "10": enviarTransferenciaContaExternaParaInterna(scanner); break;
-                    case "11": listarCriptomoedas(); break;
-                    case "12": comprarCriptomoeda(scanner); break;
-                    case "13": venderCriptomoeda(scanner); break;
-                    case "14": consultarHistoricoTransacoes(scanner); break;
-                    case "15": submenuCriptomoedas(scanner); break;
+                    case "3": consultarCarteira(scanner); break;
+                    case "4": enviarTransferenciaContaInternaParaExterna(scanner); break;
+                    case "5": enviarTransferenciaContaExternaParaInterna(scanner); break;
+                    case "6": comprarCriptomoeda(scanner); break;
+                    case "7": venderCriptomoeda(scanner); break;
+                    case "8": consultarHistoricoTransacoes(scanner); break;
+                    case "9": submenuCriptomoedas(scanner); break;
                     case "0":
                         System.out.println("Saindo do sistema...");
                         break;
@@ -189,15 +187,13 @@ public class MainView {
         System.out.println("\n======= MENU =======");
         System.out.println("1  - Opções relacionadas a Cliente");
         System.out.println("2  - Cadastrar conta externa");
-        System.out.println("3  - Cadastrar nova criptomoeda");
-        System.out.println("8  - Consultar carteira");
-        System.out.println("9  - Enviar Transferência de Conta Interna para Conta Externa");
-        System.out.println("10 - Enviar Transferência de Conta Externa para Conta Interna");
-        System.out.println("11 - Listar criptomoedas");
-        System.out.println("12 - Comprar criptomoeda");
-        System.out.println("13 - Vender criptomoeda");
-        System.out.println("14 - Consultar histórico de transações");
-        System.out.println("15 - Gerenciar Criptomoedas");
+        System.out.println("3  - Consultar carteira");
+        System.out.println("4  - Enviar Transferência de Conta Interna para Conta Externa");
+        System.out.println("5  - Enviar Transferência de Conta Externa para Conta Interna");
+        System.out.println("6  - Comprar criptomoeda");
+        System.out.println("7  - Vender criptomoeda");
+        System.out.println("8  - Consultar histórico de transações");
+        System.out.println("9  - Gerenciar Criptomoedas");
         System.out.println("0  - Sair");
         System.out.print("Escolha uma opção: ");
     }
