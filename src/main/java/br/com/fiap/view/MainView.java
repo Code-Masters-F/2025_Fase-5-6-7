@@ -608,4 +608,156 @@ public class MainView {
             e.printStackTrace();
         }
     }
+
+    private static void submenuCriptomoedas(Scanner scanner) {
+        String opcao;
+        do {
+            exibirSubmenuCriptomoedas();
+            opcao = scanner.nextLine();
+            System.out.println();
+            try {
+                switch (opcao) {
+                    case "1": cadastrarCriptomoeda(scanner); break;
+                    case "2": alterarCriptomoeda(scanner); break;
+                    case "3": excluirCriptomoeda(scanner); break;
+                    case "4": listarCriptomoedas(); break;
+                    case "5": exibirCriptomoedaPorId(scanner); break;
+                    case "0":
+                        System.out.println("Voltando ao menu principal...");
+                        break;
+                    default:
+                        System.out.println("Opção inválida!");
+                }
+            } catch (Exception e) {
+                System.out.println("Algo deu errado! Tente novamente.");
+                e.printStackTrace();
+            }
+        } while (!opcao.equals("0"));
+    }
+
+    private static void exibirSubmenuCriptomoedas() {
+        System.out.println("\n====== GERENCIAR CRIPTOMOEDAS ======");
+        System.out.println("1 - Incluir nova criptomoeda");
+        System.out.println("2 - Alterar criptomoeda");
+        System.out.println("3 - Excluir criptomoeda");
+        System.out.println("4 - Exibir todas as criptomoedas");
+        System.out.println("5 - Exibir uma criptomoeda (por ID)");
+        System.out.println("0 - Voltar ao menu principal");
+        System.out.print("Escolha uma opção: ");
+    }
+
+    private static void alterarCriptomoeda(Scanner scanner) {
+        System.out.print("Digite o ID da criptomoeda que deseja alterar: ");
+        int id;
+        try {
+            id = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.err.println("ID inválido!");
+            return;
+        }
+
+        try {
+            CryptoDao cryptoDao = new CryptoDao();
+            Criptomoeda criptoAtual = cryptoDao.consultarCriptomoeda(id);
+
+            if (criptoAtual == null) {
+                System.err.println("Criptomoeda não encontrada com o ID: " + id);
+                return;
+            }
+
+            System.out.println("\n--- Dados atuais ---");
+            System.out.println("Nome: " + criptoAtual.getNome());
+            System.out.println("Sigla: " + criptoAtual.getSigla());
+            System.out.println("Data de Lançamento: " + criptoAtual.getDataLancamento().format(FORMATTER));
+
+            System.out.print("\nDigite o NOVO nome (ou Enter para manter): ");
+            String novoNome = scanner.nextLine().trim();
+            if (novoNome.isEmpty()) {
+                novoNome = criptoAtual.getNome();
+            }
+
+            System.out.print("Digite a NOVA sigla (ou Enter para manter): ");
+            String novaSigla = scanner.nextLine().trim();
+            if (novaSigla.isEmpty()) {
+                novaSigla = criptoAtual.getSigla();
+            }
+
+            cryptoDao.atualizarCriptomoeda(id, novoNome, novaSigla);
+            System.out.println("Criptomoeda atualizada com sucesso!");
+
+        } catch (SQLException e) {
+            System.err.println("Erro ao atualizar criptomoeda: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private static void excluirCriptomoeda(Scanner scanner) {
+        System.out.print("Digite o ID da criptomoeda que deseja EXCLUIR: ");
+        int id;
+        try {
+            id = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.err.println("ID inválido!");
+            return;
+        }
+
+        try {
+            CryptoDao cryptoDao = new CryptoDao();
+            Criptomoeda criptomoeda = cryptoDao.consultarCriptomoeda(id);
+
+            if (criptomoeda == null) {
+                System.err.println("Criptomoeda não encontrada com o ID: " + id);
+                return;
+            }
+
+            System.out.println("\n--- Criptomoeda a ser excluída ---");
+            System.out.println("Nome: " + criptomoeda.getNome());
+            System.out.println("Sigla: " + criptomoeda.getSigla());
+
+            System.out.print("\nTem certeza que deseja excluir? (S/N): ");
+            String confirmacao = scanner.nextLine().trim().toUpperCase();
+
+            if (confirmacao.equals("S")) {
+                cryptoDao.deletarCriptomoeda(id);
+                System.out.println("Criptomoeda excluída com sucesso!");
+            } else {
+                System.out.println("Exclusão cancelada.");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erro ao excluir criptomoeda: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private static void exibirCriptomoedaPorId(Scanner scanner) {
+        System.out.print("Digite o ID da criptomoeda que deseja consultar: ");
+        int id;
+        try {
+            id = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.err.println("ID inválido!");
+            return;
+        }
+
+        try {
+            CryptoDao cryptoDao = new CryptoDao();
+            Criptomoeda criptomoeda = cryptoDao.consultarCriptomoeda(id);
+
+            if (criptomoeda == null) {
+                System.err.println("Criptomoeda não encontrada com o ID: " + id);
+                return;
+            }
+
+            System.out.println("\n--- Detalhes da Criptomoeda ---");
+            System.out.println("ID: " + criptomoeda.getId());
+            System.out.println("Nome: " + criptomoeda.getNome());
+            System.out.println("Sigla: " + criptomoeda.getSigla());
+            System.out.println("Data de Lançamento: " + criptomoeda.getDataLancamento().format(FORMATTER));
+
+        } catch (SQLException e) {
+            System.err.println("Erro ao consultar criptomoeda: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 }
