@@ -96,15 +96,51 @@ public class CryptoDao {
     }
 
     public void deletarCriptomoeda(int id) throws SQLException {
-        String sql = "DELETE FROM criptomoeda WHERE id_criptomoeda = ?";
+        Connection conexao = null;
+        try {
+            conexao = ConnectionFactory.getConnection();
+            conexao.setAutoCommit(false);
 
-        try (Connection conexao = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            // 1. Deletar registros dependentes em POSSE
+            String sqlPosse = "DELETE FROM posse WHERE criptomoeda_id_criptomoeda = ?";
+            try (PreparedStatement stmtPosse = conexao.prepareStatement(sqlPosse)) {
+                stmtPosse.setInt(1, id);
+                stmtPosse.executeUpdate();
+            }
 
-            stmt.setInt(1, id);
-            stmt.executeUpdate();
+            // 2. Deletar registros dependentes em TRANSACAO_CRIPTOMOEDA
+            String sqlTransacao = "DELETE FROM transacao_criptomoeda WHERE criptomoeda_id_criptomoeda = ?";
+            try (PreparedStatement stmtTransacao = conexao.prepareStatement(sqlTransacao)) {
+                stmtTransacao.setInt(1, id);
+                stmtTransacao.executeUpdate();
+            }
+
+            // 3. Deletar a criptomoeda
+            String sqlCrypto = "DELETE FROM criptomoeda WHERE id_criptomoeda = ?";
+            try (PreparedStatement stmtCrypto = conexao.prepareStatement(sqlCrypto)) {
+                stmtCrypto.setInt(1, id);
+                stmtCrypto.executeUpdate();
+            }
+
+            conexao.commit();
         } catch (SQLException e) {
+            if (conexao != null) {
+                try {
+                    conexao.rollback();
+                } catch (SQLException ex) {
+                    throw new SQLException("Erro ao fazer rollback: " + ex.getMessage(), ex);
+                }
+            }
             throw new SQLException("Falha ao deletar Criptomoeda (id=" + id + ")", e);
+        } finally {
+            if (conexao != null) {
+                try {
+                    conexao.setAutoCommit(true);
+                    conexao.close();
+                } catch (SQLException e) {
+                    // Log ou ignora erro de fechamento
+                }
+            }
         }
     }
 }
