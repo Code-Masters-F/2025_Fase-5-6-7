@@ -18,7 +18,9 @@ public class MainView {
             try {
                 switch (opcao) {
                     case "1": MenuCliente.exibirMenuCliente(scanner); break;
-                    case "2": MenuContaCarteira.exibirMenuContaCarteira(scanner); break;
+                    case "2": MenuCarteira.exibirMenuCarteira(scanner); break;
+                    case "3": MenuConta.exibirMenuConta(scanner); break;
+                    case "3": MenuContaCarteira.exibirMenuContaCarteira(scanner); break;
                     case "3": CriptomoedaService.cadastrarCriptomoeda(scanner); break;
                     case "4": ContaInternaService.enviarTransferenciaContaInternaParaExterna(scanner); break;
                     case "5": ContaExternaService.enviarTransferenciaContaExternaParaInterna(scanner); break;
