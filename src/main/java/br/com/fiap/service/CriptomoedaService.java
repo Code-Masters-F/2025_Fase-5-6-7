@@ -5,6 +5,7 @@ import br.com.fiap.dao.CryptoDao;
 import br.com.fiap.dao.TransacaoCryptoDao;
 import br.com.fiap.model.Criptomoeda;
 import br.com.fiap.model.StatusOperacao;
+import br.com.fiap.utils.CondicoesUtils;
 import br.com.fiap.view.MenuPrincipal;
 
 import java.sql.SQLException;
@@ -21,7 +22,7 @@ public class CriptomoedaService {
         System.out.print("Digite a sigla do criptoativo: ");
         String sigla = scanner.nextLine().trim();
 
-        LocalDate dataLancamento = MenuPrincipal.lerData(scanner);
+        LocalDate dataLancamento = CondicoesUtils.lerData(scanner);
 
         Criptomoeda criptomoeda = new Criptomoeda(nome, sigla, dataLancamento);
 
