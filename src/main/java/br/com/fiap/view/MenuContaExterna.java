@@ -17,17 +17,13 @@ public class MenuContaExterna {
     public static void exibirMenuContaExterna(Scanner scanner) {
         String opcao;
         do {
+            System.out.println(OPCOES_CONTA_EXTERNA);
             opcao = scanner.nextLine().trim();
 
             switch (opcao) {
-                case "1":
-                    ContaExternaService.cadastrarContaExterna(scanner);
-                    break;
-                case "0":
-                    System.out.println("Voltando ao menu principal...");
-                    break;
-                default:
-                    System.out.println("Opção inválida!");
+                case "1" -> ContaExternaService.cadastrarContaExterna(scanner);
+                case "0" -> System.out.println("Voltando ao menu principal...");
+                default -> System.out.println("Opção inválida!");
             }
 
         } while (!opcao.equals("0"));

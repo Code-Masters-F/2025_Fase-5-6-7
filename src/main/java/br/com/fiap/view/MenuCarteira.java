@@ -22,13 +22,9 @@ public class MenuCarteira {
             System.out.println();
 
             switch (opcao) {
-                case "1":
-                    CarteiraService.consultarCarteira(scanner);
-                case "0":
-                    System.out.println("Voltando ao menu principal...");
-                    break;
-                default:
-                    System.out.println("Opção inválida!");
+                case "1" -> CarteiraService.consultarCarteira(scanner);
+                case "0" -> System.out.println("Voltando ao menu principal...");
+                default -> System.out.println("Opção inválida!");
             }
         } while (!opcao.equals("0"));
     }

@@ -26,16 +26,13 @@ public class MenuCliente {
                 opcaoCliente = scanner.nextLine().trim();
 
                 switch (opcaoCliente){
-                    case "1": ClienteService.cadastrarCliente(scanner); break;
-                    case "2": ClienteService.exibirClientesCadastrados(); break;
-                    case "3": ClienteService.consultarCliente(scanner); break;
-                    case "4": ClienteService.atualizarCliente(scanner); break;
-                    case "5": ClienteService.deletarCliente(scanner); break;
-                    case "0":
-                        System.out.println("Voltando para o menu principal");
-                        break;
-                    default:
-                        System.out.println("Opção inválida!");
+                    case "1" -> ClienteService.cadastrarCliente(scanner);
+                    case "2" -> ClienteService.exibirClientesCadastrados();
+                    case "3" -> ClienteService.consultarCliente(scanner);
+                    case "4" -> ClienteService.atualizarCliente(scanner);
+                    case "5" -> ClienteService.deletarCliente(scanner);
+                    case "0" -> System.out.println("Voltando para o menu principal");
+                    default -> System.out.println("Opção inválida!");
                 }
             } catch (Exception e) {
                 System.out.println("Opção inválida");

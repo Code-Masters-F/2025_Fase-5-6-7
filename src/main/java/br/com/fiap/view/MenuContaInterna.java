@@ -19,23 +19,15 @@ public class MenuContaInterna {
     public static void exibirMenuContaInterna(Scanner scanner) {
         String opcao;
         do {
+            System.out.println(OPCOES_CONTA_INTERNA);
             opcao = scanner.nextLine().trim();
 
             switch (opcao) {
-                case "1":
-                    ContaInternaService.consultarContaInterna(scanner);
-                    break;
-                case "2":
-                    ContaInternaService.consultarContaInterna(scanner);
-                    break;
-                case "3":
-                    ContaInternaService.consultarHistoricoTransacoes(scanner);
-                    break;
-                case "0":
-                    System.out.println("Voltando ao menu principal...");
-                    break;
-                default:
-                    System.out.println("Opção inválida!");
+                case "1" -> ContaInternaService.consultarContaInterna(scanner);
+                case "2" -> ContaInternaService.transferirEntreContasInternas(scanner);
+                case "3" -> ContaInternaService.consultarHistoricoTransacoes(scanner);
+                case "0" -> System.out.println("Voltando ao menu principal...");
+                default -> System.out.println("Opção inválida!");
             }
 
         } while (!opcao.equals("0"));
