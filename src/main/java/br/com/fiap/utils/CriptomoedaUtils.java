@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class CryptoPriceSimulator {
+public class CriptomoedaUtils {
     private static final Map<Integer, Double> lastPrice = new ConcurrentHashMap<>();
 
     private static final double MAX_STEP_PCT = 0.05;
@@ -12,7 +12,7 @@ public class CryptoPriceSimulator {
     private static final double SEED_MIN = 1.0;
     private static final double SEED_MAX = 500.0;
 
-    private CryptoPriceSimulator() {}
+    private CriptomoedaUtils() {}
 
     public static double nextPrice(int cryptoId) {
 

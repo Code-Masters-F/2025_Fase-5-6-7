@@ -1,7 +1,7 @@
 package br.com.fiap.dao;
 
 import br.com.fiap.factory.ConnectionFactory;
-import br.com.fiap.utils.CryptoPriceSimulator;
+import br.com.fiap.utils.CriptomoedaUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -105,7 +105,7 @@ public class CarteiraDao {
             }
             if (idCarteira == null) throw new SQLException("Carteira não encontrada para a conta id=" + idConta);
 
-            double precoUnitario = CryptoPriceSimulator.nextPrice(idCrypto);
+            double precoUnitario = CriptomoedaUtils.nextPrice(idCrypto);
 
             double total = quantidade * precoUnitario;
             if (saldoAtual < total) throw new SQLException("Saldo insuficiente. Saldo=" + saldoAtual + ", total=" + total);
@@ -204,7 +204,7 @@ public class CarteiraDao {
                 throw new SQLException("Quantidade insuficiente em posse. Atual=" + qtdAtual + ", desejada=" + quantidade);
             }
 
-            double precoUnitario = CryptoPriceSimulator.nextPrice(idCrypto);
+            double precoUnitario = CriptomoedaUtils.nextPrice(idCrypto);
             double totalCreditado = quantidade * precoUnitario;
 
             try (PreparedStatement stmt = conexao.prepareStatement(sqlAtualizaPosse)) {
